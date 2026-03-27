@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미야코지마 3박4일 — 맛집 포함 완성 일정</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ocean:   #1B6CA8;
+    --teal:    #0D8A7A;
+    --sand:    #E8DCC8;
+    --coral:   #D4603A;
+    --mango:   #E8A020;
+    --ink:     #1A1A1A;
+    --mid:     #555;
+    --soft:    #888;
+    --bg:      #F6F4F0;
+    --white:   #FFFFFF;
+    --border:  #E0DBD2;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header { margin-bottom: 2.5rem; }
+  .header-eyebrow {
+    font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--ocean); font-weight: 500; margin-bottom: 6px;
+  }
+  .header-date {
+    color: var(--ocean); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    color: var(--ink); line-height: 1.15; margin-bottom: 10px;
+  }
+  .header-title em { font-style: italic; color: var(--ocean); }
+  .header-meta {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px;
+  }
+  .pill {
+    font-size: 11px; padding: 4px 12px; border-radius: 99px;
+    border: 1px solid var(--border); color: var(--mid); background: var(--white);
+    white-space: nowrap;
+  }
+  .pill-warn { background: var(--white); border-color: #FFCC80; color: #BF6A00; }
+  .pill-ok   { background: #E8F5E9; border-color: #A5D6A7; color: #2E7D32; }
+
+  /* ── Flight Banner ── */
+  .flight-banner {
+    background: var(--ocean); color: #fff;
+    border-radius: 16px; padding: 20px 24px;
+    display: flex; flex-wrap: wrap; gap: 0;
+    margin-bottom: 20px;
+  }
+  .flight-section {
+    display: flex; flex-direction: column; gap: 8px; flex: 1;
+  }
+  .flight-direction {
+    font-size: 18px; font-weight: 700; letter-spacing: .02em;
+    opacity: 1;
+  }
+  .flight-route {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .flight-divider {
+    width: 1px; background: rgba(255,255,255,0.25);
+    margin: 0 24px; align-self: stretch;
+  }
+  .flight-item { display: flex; flex-direction: column; gap: 2px; }
+  .flight-label { font-size: 10px; opacity: .7; letter-spacing: .1em; text-transform: uppercase; }
+  .flight-val { font-size: 20px; font-weight: 600; }
+  .flight-arrow { font-size: 18px; opacity: .6; align-self: center; }
+
+  /* ── Day Block ── */
+  .day-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .day-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .day-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .d1 { background: #E3F2FD; color: #0D47A1; }
+  .d2 { background: #E8F5E9; color: #1B5E20; }
+  .d3 { background: #FFF8E1; color: #E65100; }
+  .d4 { background: #FCE4EC; color: #880E4F; }
+
+  .day-title-wrap { flex: 1; }
+  .day-name { font-size: 15px; font-weight: 600; }
+  .day-theme { font-size: 12px; color: var(--soft); margin-top: 1px; }
+  .day-date {
+    font-size: 13px; font-weight: 600;
+    color: var(--teal); margin-left: auto;
+    white-space: nowrap; letter-spacing: 0.3px;
+    background: rgba(78,166,147,0.1);
+    padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* ── Timeline ── */
+  .timeline { padding: 18px 20px; }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 52px 12px 1fr;
+    column-gap: 12px;
+    margin-bottom: 0;
+  }
+  .tl-time {
+    font-size: 10px; color: var(--soft);
+    padding-top: 4px; text-align: right; font-weight: 500;
+    line-height: 1.3;
+  }
+  .tl-track { display: flex; flex-direction: column; align-items: center; }
+  .tl-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 4px;
+  }
+  .tl-line {
+    width: 1.5px; flex: 1; background: var(--border);
+    min-height: 20px; margin-top: 3px;
+  }
+  .tl-row:last-child .tl-line { display: none; }
+
+  .dot-fly   { background: #7C4DFF; }
+  .dot-drive { background: var(--ocean); }
+  .dot-act   { background: var(--teal); }
+  .dot-eat   { background: var(--coral); }
+  .dot-snack { background: var(--mango); }
+
+  .tl-body { padding-bottom: 20px;  min-width: 0; overflow-wrap: break-word; }
+  .tl-title { font-size: 13px; font-weight: 600; line-height: 1.4; }
+  .tl-desc  { font-size: 12px; color: var(--mid); margin-top: 3px; line-height: 1.5; }
+
+  .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .tag  { font-size: 10px; padding: 2px 9px; border-radius: 99px; font-weight: 500; }
+  .tag-eat   { background: #FBE9E7; color: #BF360C; }
+  .tag-act   { background: #E0F2F1; color: #004D40; }
+  .tag-drive { background: #E3F2FD; color: #0D47A1; }
+  .tag-tip   { background: #EDE7F6; color: #4527A0; }
+  .tag-warn  { background: #FFF3E0; color: #BF6A00; }
+  .tag-info  { background: #F3E5F5; color: #6A1B9A; }
+
+  /* ── Restaurant Card ── */
+  .rest-candidates {
+    margin-top: 10px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rest-label {
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--soft); font-weight: 600; margin-bottom: 4px;
+  }
+  .rest-cards { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .rest-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    width: 200px;
+    min-width: 160px;
+    flex-direction: column;
+    transition: box-shadow .2s;
+  }
+  .rest-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+
+  .rest-img-wrap {
+    width: 100%; aspect-ratio: 16/9; overflow: hidden;
+    background: #ddd;
+    position: relative;
+  }
+  .rest-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+  }
+  .rest-img-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; background: linear-gradient(135deg, #e8e0d4, #d0c8bc);
+  }
+
+  .rest-badge {
+    position: absolute; top: 6px; right: 6px;
+    background: rgba(0,0,0,.65); color: white;
+    font-size: 9px; padding: 2px 6px; border-radius: 99px;
+    font-weight: 600; letter-spacing: .04em;
+  }
+  .rest-info { padding: 8px 10px 10px; }
+  .rest-name { font-size: 12px; font-weight: 700; line-height: 1.3; margin-bottom: 2px; }
+  .rest-sub  { font-size: 10px; color: var(--soft); line-height: 1.4; }
+  .rest-hours {
+    font-size: 10px; margin-top: 5px;
+    display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
+  }
+  .hours-ok   { color: #2E7D32; font-weight: 600; }
+  .hours-off  { color: #B71C1C; font-weight: 600; }
+  .rest-menu { font-size: 10px; color: var(--mid); margin-top: 3px; }
+
+  /* ── Plan B ── */
+  .planb-box {
+    background: #FFF8E1;
+    border: 1px solid #FFE082;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 12px;
+  }
+  .planb-title {
+    font-size: 11px; font-weight: 700; color: #E65100;
+    letter-spacing: .08em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .planb-text { font-size: 12px; color: #5D4037; line-height: 1.6; }
+
+  /* ── Notice / Tip Box ── */
+  .tip-box {
+    background: #EDE7F6; border: 1px solid #CE93D8;
+    border-radius: 12px; padding: 12px 16px; margin-top: 12px;
+    width: 100%; box-sizing: border-box;
+  }
+  .tip-text { font-size: 12px; color: #4A148C; line-height: 1.6; }
+
+  /* ── Summary Table ── */
+  .summary-section { margin-top: 2rem; }
+  .summary-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; margin-bottom: 14px;
+  }
+  .summary-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 12px; background: var(--white);
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .summary-table th {
+    background: var(--ink); color: white;
+    padding: 10px 14px; text-align: left;
+    font-weight: 500; font-size: 11px; letter-spacing: .06em;
+  }
+  .summary-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    vertical-align: top; line-height: 1.5;
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:nth-child(even) td { background: #FAFAF8; }
+  .closed { color: #B71C1C; font-weight: 600; }
+  .open   { color: #2E7D32; }
+
+  /* ── Footer ── */
+  .footer-note {
+    margin-top: 2.5rem;
+    padding: 16px 20px;
+    background: var(--ink); color: rgba(255,255,255,.7);
+    border-radius: 14px;
+    font-size: 11px; line-height: 1.7;
+  }
+  .footer-note strong { color: white; }
+
+  @media (max-width: 520px) {
+    .rest-card { width: 100%; min-width: unset; flex-direction: column; }
+    .rest-img-wrap { width: 100%; aspect-ratio: 16/9; flex-shrink: 0; }
+    .day-date { font-size: 12px; padding: 2px 8px; }
+  }
+
+  /* ── 이름 발음 표기 ── */
+  .name-reading {
+    font-size: 10px; font-weight: 400;
+    color: var(--soft); display: block; margin-top: 1px;
+  }
+  .rest-name .name-reading { font-size: 10px; }
+  strong .name-reading { font-size: 10px; font-weight: 400; }
+
+  /* ── 맨 위로 버튼 ── */
+  #scroll-top {
+    position: fixed; bottom: 24px; right: 20px;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--ocean); color: #fff;
+    border: none; cursor: pointer; font-size: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s; z-index: 999;
+  }
+  #scroll-top.visible { opacity: 1; pointer-events: auto; }
+  #scroll-top:hover { background: var(--ink); }
+
+  /* ── 구글 맵스 링크 ── */
+  .rest-card[data-maps-url] { cursor: pointer; }
+  .rest-card[data-maps-url]:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-1px); }
+  .maps-icon {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; color: #1a73e8; margin-top: 5px;
+    font-weight: 600; letter-spacing: 0.2px;
+  }
+  .maps-icon svg { flex-shrink: 0; }
+
+  /* ── 체크 카운터 ── */
+  .chk-counter {
+    font-size: 11px; color: var(--soft); margin-bottom: 8px;
+    text-align: right; padding-right: 4px;
+  }
+  .chk-counter span { color: var(--teal); font-weight: 700; }
+
+  /* ── 모바일 최적화 ── */
+  @media (max-width: 600px) {
+    body { padding: 0 4px; }
+    .card { padding: 14px 12px; border-radius: 14px; }
+    .day-header { padding: 12px 14px; border-radius: 12px; }
+    .tl-row { gap: 8px; }
+    .tl-time { width: 44px; font-size: 10px; }
+    .rest-cards { grid-template-columns: 1fr !important; }
+    .rest-img-wrap { height: 160px; }
+    .rest-card { flex-direction: column; width: 100%; }
+    .rest-info { padding: 8px 10px; }
+    .rest-name { font-size: 12px; }
+    .flight-banner { padding: 16px; gap: 16px; }
+    .flight-divider { width: 100%; height: 1px; margin: 4px 0; }
+    .flight-section { gap: 6px; }
+    .flight-val { font-size: 17px; }
+    .flight-direction { font-size: 15px; }
+
+    .summary-table { font-size: 11px; }
+    .summary-table td, .summary-table th { padding: 6px 8px; }
+    #scroll-top { bottom: 16px; right: 14px; width: 38px; height: 38px; font-size: 16px; }
+    .tip-box { font-size: 11px; }
+    .tags { flex-wrap: wrap; }
+  }
+
+</style>
+
+<style>
+.img-slideshow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.img-slideshow img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.img-slideshow img.active {
+  opacity: 1;
+}
+.slideshow-dots {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+}
+.slideshow-dots span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.slideshow-dots span.active {
+  background: #fff;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-eyebrow">Travel Plan · 2026 · <span class="header-date">Jun 16–19</span></div>
+    <h1 class="header-title">미야코지마<br><em>3박 4일</em></h1>
+    <div class="header-meta">
+      <span class="pill">진에어 직항</span>
+      <span class="pill">렌터카 전일</span>
+      <span class="pill">2인 여행</span>
+      <span class="pill">인당 150~200만원</span>
+      <span class="pill" style="color:#BF6A00; border-color:#FFCC80;">⚠ 6월 강수 50% — 우비 필수</span>
+    </div>
+  </div>
+
+  <!-- Flight -->
+  <div class="flight-banner">
+    <div class="flight-section">
+      <div class="flight-direction">출국</div>
+      <div class="flight-route">
+        <div class="flight-item">
+          <span class="flight-label">출발</span>
+          <span class="flight-val">ICN 08:25</span>
+        </div>
+        <div class="flight-arrow">→</div>
+        <div class="flight-item">
+          <span class="flight-label">도착</span>
+          <span class="flight-val">SHI 11:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="flight-divider"></div>
+    <div class="flight-section">
+      <div class="flight-direction">귀국</div>
+      <div class="flight-route">
+        <div class="flight-item">
+          <span class="flight-label">출발</span>
+          <span class="flight-val">SHI 12:00</span>
+        </div>
+        <div class="flight-arrow">→</div>
+        <div class="flight-item">
+          <span class="flight-label">도착</span>
+          <span class="flight-val">ICN 14:30</span>
+        </div>
+      </div>
+    </div>
+    <div style="width:100%; margin-top:10px; font-size:11px; opacity:.6;">
+      진에어 직항 · 시모지시마 공항(SHI) · 렌터카 픽업 공항 내 5분
+    </div>
+  </div>
+
+  <!-- ───── DAY 1 ───── -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-num d1">1</div>
+      <div class="day-title-wrap">
+        <div class="day-name">도착 → 이라부·시모지 루트</div>
+        <div class="day-theme">공항에서 바로 서쪽으로 — 섬 첫인상</div>
+      </div>
+      <div class="day-date">6/16 월</div>
+    </div>
+    <div class="timeline">
+
+      <!-- 렌터카 -->
+      <div class="tl-row">
+        <div class="tl-time">11:00</div>
+        <div class="tl-track"><div class="tl-dot dot-fly"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">시모지시마 공항 도착 · 렌터카 픽업</div>
+          <div class="tl-desc">국제면허·한국면허·여권 3종 필수. 공항 내 렌터카 영업소 5분.</div>
+          <div class="tags"><span class="tag tag-tip">준비물 확인</span></div>
+        </div>
+      </div>
+
+      <!-- 토오리이케 -->
+      <div class="tl-row">
+        <div class="tl-time">11:10</div>
+        <div class="tl-track"><div class="tl-dot dot-act"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">토오리이케 연못 (시모지섬)</div>
+          <div class="tl-desc">공항에서 차로 5분. 두 개의 연못이 해수와 담수로 나뉘며, 코발트블루·에메랄드색이 선명하게 대비되는 자연 명소. <strong>이라부 대교 진입 전 시모지섬에서 먼저 처리</strong>하는 것이 동선상 효율적 — 이후 대교 건너 이라부 루트 진입.</div>
+          <div class="tags"><span class="tag tag-act">자연</span><span class="tag tag-tip">무료입장 · 주차 무료</span></div>
+        </div>
+      </div>
+
+      <!-- Nakayukui -->
+      <div class="tl-row">
+        <div class="tl-time">11:30<br>간식</div>
+        <div class="tl-track"><div class="tl-dot dot-snack"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">Nakayukui Shoten — 오키나와 덴푸라</div>
+          <div class="tl-desc">이라부섬 진입 직후 구니나카. 정기 휴무는 <strong>목요일</strong>만 (월요일 영업 가능). ⚠ <strong>브레이크 타임 12:00~13:30</strong> — 11:30 도착 목표로 이동할 것.</div>
+          <div class="rest-cards" style="margin-top:8px;">
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/Nakayukui+Shoten/@24.8258947,125.1700315,17z/data=!4m6!3m5!1s0x34f5abcb0d49ccd3:0x6ba4be9a93fde287!8m2!3d24.8258947!4d125.1700315!16s%2Fg%2F11j8p7zvvp">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9pt9htZTfdnexNgpL5vaZjWf20d8fGeMm6N3dn3cE6Cn0IGI-UlYKqzHBHfwiT2rZuQHbVz1Gb6JW9tDwxm6ujv5HOtkHP37O6C3LJVIK7BISR84L0JbFyfuFnGu9U-bp8KqbwYOUp8b9Hg=w400-h300-k-no" alt="Nakayukui" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9ptdSPma5f0ZTCD8w1BSesVHW_OYxzWw9QUaWDxPATTuYH0zcRwBsVQrUEI9uqjwrhckvHZ9Gq4ZtwJB3ukDmo3X5mPw1TQnNB45KNLUIyPGcXUXrK2zQAOvSUB5HtrSVIXrsgWDtg=w400-h300-k-no" alt="Nakayukui" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9pue2pqol744g7yKpR19ZFEqb6cRbalL5rNW-_UuDYD5W5EBI8NbQAq4UeNgaQxZUGnlmMh-lq8PjCt9qjHxGvtNhw_mb1Tlf83Qrh4aoDmLz56ReEgUFjVESMNcv9x3lT1ZtDvf=w400-h300-k-no" alt="Nakayukui" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9psGzpM_hKyaDOcKAQveDp6yxxStwH4zywTyEHXA3t3vzk1mHJtU2eIWyhmYGfZ7wjykY2LpqEBAWETg8MFfgoU4rtuPD3DC-bG5dLhHaTydyuRU7ykGRvGulUnl3uKJL8Q5NxiOwg=w400-h300-k-no" alt="Nakayukui" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.5 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">Nakayukui Shoten</div>
+                <div class="rest-sub">이라부섬 구니나카 · 덴푸라·과자</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 09:30~12:00 / 13:30~16:00</span>
+                  <span class="hours-off">월·목 휴무</span>
+                </div>
+                <div class="rest-menu">오키나와식 덴푸라 · 흑당 과자 · 아이스크림</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 점심 -->
+      <div class="tl-row">
+        <div class="tl-time">12:30<br>점심</div>
+        <div class="tl-track"><div class="tl-dot dot-eat"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">점심 후보</div>
+          <div class="tl-desc">이라부섬 내 또는 히라라 귀환 후 소바 1회 소진. 조기 마감 주의.</div>
+          <div class="tags"><span class="tag tag-eat">소바 1회</span><span class="tag tag-warn">조기마감 주의</span></div>
+          <div class="rest-candidates">
+            <div class="rest-label">👇 후보 식당</div>
+            <div class="rest-cards">
+
+              <div class="rest-card" data-maps-url="https://www.google.com/maps/place/%E3%82%BD%E3%83%BC%E3%82%AD%E4%BA%AD%E3%81%84%E3%82%8A%E3%81%8F%E3%82%93%E3%82%84%E3%81%81/@24.835807,125.1643777,17z/data=!4m6!3m5!1s0x34f5ad0e0f921111:0x4db7334697f98b66!8m2!3d24.835807!4d125.1643777!16s%2Fg%2F11svrd54gc">
+                <div class="rest-img-wrap">
+                  <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipO6HH8d-uiSjF7WNMlhs-A-vzlP2Wp9SiVA7fqN=w400-h300-k-no" alt="ソーキ亭" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwepjJRO_T4pkqkhnFGD3ORVFMeSWrpEAtYlL5Rfv4j0wyJpv_hTZVTkh3r-xOeKceD3KaU0fnk3Qwv2cbABQ-NsU6LjYcvAUlu8Umn5ApqS6CS55CMnsvfAuQqYxld5sjIe9Hno1eppFP90j=w400-h300-k-no" alt="ソーキ亭" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwepyxnYOGV1uB744zjCuLWLL5_8T4gw5e0inXfW5AwuY-ZSgEmRFngjX3ILyvJwHVBydhTHsQZ2e4V0X5JzT0_OmwYKRvPvG3KvLccqQjuD-xoclk8nLRrkGnjRdPgLdYT0vfaZ88PkuQ5zu=w400-h300-k-no" alt="ソーキ亭" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweq4dDPr09AUMZIwRkiBPJAqWGe_04jbm1CHE4oewl9gH-xs5OW72TvS7oMSjZeQX_BaNwab2qaq1JcLoVx75IJE9WvmD3RF7svr1oU84TTFZDf6rOtWYyqz--1GAz2yjvAH8qmQkLxFd80r=w400-h300-k-no" alt="ソーキ亭" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                  <span class="rest-badge">4.6 ★</span>
+                </div>
+                <div class="rest-info">
+                  <div class="rest-name">ソーキ亭 いりくんやぁ<br><span class="name-reading">소키테이 이리쿤야</span></div>
+                  <div class="rest-sub">이라부섬 나가하마 · 소키 정식</div>
+                  <div class="rest-hours">
+                    <span class="hours-ok">✓ 11:00~15:00</span>
+                    <span class="hours-off">화·수 휴무</span>
+                  </div>
+                  <div class="rest-menu">소키 국물 정식 · 미야코 소바</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+              </div>
+
+              <div class="rest-card" data-maps-url="https://www.google.com/maps/place/Minato+Shokudou/@24.8166033,125.2805382,17z/data=!4m6!3m5!1s0x34f453f71a9954cf:0x91f40fc2403749f4!8m2!3d24.8166033!4d125.2805382!16s%2Fg%2F11fp2yrm0q">
+                <div class="rest-img-wrap">
+                  <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/geougc/AF1QipPjZ1dMKv0MBPLga3CXkxEJ0ku4vtuM60AHlk_C=w400-h300-k-no" alt="みなと食堂" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9pseEHqSU5moeG1-mHi8zo5-4D8mn9iNz27olqZr3A_NfH5Zcl_YmdwB7ZB4CuCrE4dqB9RKasuP1gSG0xcuJ5k3XNiaW287nkqcvzpSZQFGyfq_UNhKOt5lDzPcd3AhN4jb4hxyCtZQuYhM=w400-h300-k-no" alt="みなと食堂" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9pv3zq0gmVRSvdm4DRNUGjC81KMHIZX_4-B4pEBzreqbakfmZ1KUiAQoSMrj3E8jBG56IX1g5hNcR4-d_T942JlT_PS_RDBbO297toS5hkP_3pNFgSg3MfNXEc0NU_PsZKvIhNmJ-ZeeYeUd=w400-h300-k-no" alt="みなと食堂" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9ptcTMaMkn-t7K9ZthGDx3JJy7yx2y2-bPyqfw7BgFI06dLLdLoNvz_cCwUzOykRFgGUXnupGermLpgxhMeF4hz0tFB8AXBEOYFwLLodKU3TOY0r9MSBlzLgErfgxS_cvZoaSga6=w400-h300-k-no" alt="みなと食堂" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                  <span class="rest-badge">3.57 ★</span>
+                </div>
+                <div class="rest-info">
+                  <div class="rest-name">みなと食堂<br><span class="name-reading">미나토 쇼쿠도</span></div>
+                  <div class="rest-sub">히라라 북항(니가와도리) · 아사 소바 · 이라부 귀환 후 적합</div>
+                  <div class="rest-hours">
+                    <span class="hours-ok">✓ 11:00~16:00 (L.O. 15:30)</span>
+                    <span class="hours-off">수 휴무 · 매진 시 조기 마감</span>
+                  </div>
+                  <div class="rest-menu">가다랑어 소금 아사 소바 · 오키나와 덴푸라</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 도구치 -->
+      <div class="tl-row">
+        <div class="tl-time">14:00</div>
+        <div class="tl-track"><div class="tl-dot dot-act"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">도구치 해변 (이라부섬)</div>
+          <div class="tl-desc">이라부섬 최고 해변. 에메랄드빛 바다. 첫 수영 포인트.</div>
+          <div class="tags"><span class="tag tag-act">해변</span></div>
+        </div>
+      </div>
+
+      <!-- 체크인 -->
+      <div class="tl-row">
+        <div class="tl-time">15:00</div>
+        <div class="tl-track"><div class="tl-dot dot-drive"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">숙소 체크인</div>
+          <div class="tl-desc">히라라 시내 숙소. 통상 체크인 15:00. 짐 풀고 이라부 대교로 출발.</div>
+          <div class="tags"><span class="tag tag-info">체크인</span></div>
+        </div>
+      </div>
+
+      <!-- 이라부대교 -->
+      <div class="tl-row">
+        <div class="tl-time">16:30</div>
+        <div class="tl-track"><div class="tl-dot dot-drive"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">이라부 대교 역방향 드라이브 → 요나하마에하마 일몰</div>
+          <div class="tl-desc">길이 3,540m, 일본 최장 무료 대교. 양쪽이 에메랄드빛 바다로 펼쳐지는 절경 드라이브. 다리 위 주정차 금지 — 속도 줄이며 감상. 이후 요나하마에하마 해변에서 일몰 감상 (미야코지마 최고의 선셋 스팟).</div>
+          <div class="tags"><span class="tag tag-drive">드라이브</span><span class="tag tag-act">일몰</span></div>
+        </div>
+      </div>
+
+      <!-- 젤라또 제거 후 저녁 직행 안내 -->
+      <div class="tl-row">
+        <div class="tl-time">18:00</div>
+        <div class="tl-track"><div class="tl-dot dot-snack"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">히라라 귀환 · 저녁 준비</div>
+          <div class="tl-desc">RICCO 젤라또는 16:45 마감으로 이 시간대 방문 불가. Nakayukui 간식으로 대체 완료. 히라라 숙소 체크인 후 저녁 준비.</div>
+          <div class="tags"><span class="tag tag-warn">RICCO 방문 불가 — Day4 목(11:00~)로 이동 검토</span></div>
+        </div>
+      </div>
+
+      <!-- 저녁 1 -->
+      <div class="tl-row">
+        <div class="tl-time">19:00<br>저녁</div>
+        <div class="tl-track"><div class="tl-dot dot-eat"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">저녁 후보 — 히라라 이자카야</div>
+          <div class="tl-desc">히라라 시내. 요예약 권장.</div>
+          <div class="rest-cards" style="margin-top:8px;">
+
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/%E3%82%A4%E3%82%B6%E3%82%AB%E3%83%A4+%E3%83%95%E3%83%A9/@24.804785,125.2780718,17z/data=!4m6!3m5!1s0x34f4533ebfa66a4b:0x71aa8034a7856d73!8m2!3d24.804785!4d125.2780718!16s%2Fg%2F11t9bx9f_6">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwera2VZpjjs3wSZ71ydVla_B1FVA9PKpJ88IDu7TQEGoPPsMk85hurN5gkLA-RIzu-8r3L3AjH0d_1IuTbJlQf-FmKmvSU7ARxsX8ntX8PCAXAogfu8WUDL6JM-3CAQk1AcSSAuBMe6osxPt=w400-h300-k-no" alt="HULAR" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwervYPfzYW2SEWxEj3_LWv8t8172CfAY2ABXhOo-Zak8YMC5wTPEuUSz32nWjQ9pnx56b8aYL-IRKYoA3uYOgIvC_7ozOTsRPNdYuqT6WoVto9A_-RifnIMHEe41uWZMEILidxmyriF_qBU=w400-h300-k-no" alt="HULAR" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipMssDSC5KtR-JV71w_akFGDUeCvDCdA9HQ459Gj=w400-h300-k-no" alt="HULAR" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweosu0X8guqWCtTDftPXXnfBtWUI3i6D2Sok2CPf15Kkx3AYH2foUIH4KirxroKyZREWw-UXqpO5Iufg9hmCzB9MmAPsPV8lit9xn8JfUEa5fitKzMtLOFos-WxlOwncWQvCFJFig5bgJgLr=w400-h300-k-no" alt="HULAR" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.7 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">이자카야 훌라 HULAR</div>
+                <div class="rest-sub">히라라 · 창작 이자카야</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 17:00~23:00</span>
+                  <span class="hours-off">화 휴무</span>
+                </div>
+                <div class="rest-menu">섬 해산물 창작 요리 · 아와모리</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/%E3%83%84%E3%83%9E%E3%83%B3%E3%83%87%E5%91%91%E3%82%81%E3%82%8B+%E3%81%BF%E3%82%84%E3%81%93%E3%83%91%E3%83%BC%E3%83%A9%E3%83%BC/@24.8022192,125.2804107,17z/data=!4m6!3m5!1s0x34f4536d7cfd868d:0x74dfe5dfde3363b5!8m2!3d24.8022192!4d125.2804107!16s%2Fg%2F11t4gvv1q9">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipPec_CIJz-UOst2dGD_Qme6UN7u8zDDnLm1OTQR=w400-h300-k-no" alt="ツマンデ" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqoYT15l3dg_tdCsGIQPIeJjzHAWhTiXd0wAoiA8zCKboWMkcaULAkc0QkZtrqzURFhSQ7VxCZvPC3dai8N8yYfapRxkwdpZnUcQLyQBZenbqqpBAvvVszFSMJO55kvUWuxUwQVJVD4j7Pt=w400-h300-k-no" alt="ツマンデ" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwerAWm6jTTwIJWgwbKdyEWN4cFtB-J7rUA6DBhJBZypL9NUOkEze8j6BXSfqWMWtM82dw-WCv22N1v1SMZhunLd8Pd3nGKMsxenyCmRD5ZhTC0ANvoeTy9WyPBMUWL0pjrfH7kpo=w400-h300-k-no" alt="ツマンデ" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwep-Bakx2RB4F77HJ8EWWsfYwQADtTKjoxFTKZEpMs01FJPMgixPyl0ThPc4aidYCPwXapyQufHV2kc74WVwE_9zGW_yMEYKCjfubhm3YvdafVBWXELhJc5DQ43h6HU2zW3t6JoE=w400-h300-k-no" alt="ツマンデ" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">3.69 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">ツマンデ呑める みやこパーラー<br><span class="name-reading">츠만데 노메루 미야코파라</span></div>
+                <div class="rest-sub">히라라 · 이자카야 백명점 2025</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 17:00~24:00</span>
+                  <span class="hours-off">연중무휴</span>
+                </div>
+                <div class="rest-menu">NEW 오키나와 요리 · 사탕수수 주스</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───── DAY 2 ───── -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-num d2">2</div>
+      <div class="day-title-wrap">
+        <div class="day-name">북쪽 루트 — 유니섬 · 이케마 · 해리스</div>
+        <div class="day-theme">07:30 Fish Lab → 08:00 스나야마 → 조석 맞춰 유니섬 — 北쪽 풀코스</div>
+      </div>
+      <div class="day-date">6/17 화</div>
+    </div>
+    <div class="timeline">
+
+      <!-- 아침 Fish Lab -->
+      <div class="tl-row">
+        <div class="tl-time">07:30<br>아침</div>
+        <div class="tl-track"><div class="tl-dot dot-eat"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">아침 후보 (선택)</div>
+          <div class="rest-cards" style="margin-top:6px;">
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/Fish+Lab+%E9%AD%9A%E7%86%9F/@24.7958761,125.2742848,17z/data=!4m6!3m5!1s0x34f4531ad21790d3:0xda3274e50c0a4087!8m2!3d24.7958761!4d125.2742848!16s%2Fg%2F11yclj898p">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipMdyZlhTZVLyxJXcrAW-dMtkG3Q8vxLCvuApR88=w400-h300-k-no" alt="Fish Lab" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweoPkwWwVKh3gPfvx1ngn7LQgBAc3xooRg8shZpAC7lOndGYFRv483KZK4fAPAHsQPfiLRWWjL1ryQnCLaBNVmOBKR-GcLpqZhvnGClfkWd86qIaPjzr6vOMeojDNmz1FvbEqTpy7bv8wGLD=w400-h300-k-no" alt="Fish Lab" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwerBlxv_0Hm98IIWJPTzahNsnyxO7ZfyrwBqKKOir6WDUXtMtucjot5g3W5zLBv6o5cMSI33beIN2obXPtEV7VzkUwNs5GzmzqXYWT180160MbH5db-ORtDnMp_en1PqONcWN0vNY-9MN66S=w400-h300-k-no" alt="Fish Lab" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipNto0Z7Twobpaxiiz4NPbSa17ueGIGKYanXPKP6=w400-h300-k-no" alt="Fish Lab" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.8 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">Fish Lab 魚熟<br><span class="name-reading">피시랩 우오주쿠</span></div>
+                <div class="rest-sub">히라라 남쪽 · 아침 해산물</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 07:30~15:00</span>
+                  <span class="hours-off">연중무휴</span>
+                </div>
+                <div class="rest-menu">숙성 해산물 · 아침 정식</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 스나야마 -->
+      <div class="tl-row">
+        <div class="tl-time">08:00<br>산책</div>
+        <div class="tl-track"><div class="tl-dot dot-act"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">스나야마 비치 — 아침 산책</div>
+          <div class="tl-desc">히라라 바로 북쪽. 암석 아치 포토 명소. 이른 아침 한산. Fish Lab(07:30) 아침 후 이동 가능.</div>
+          <div class="tags"><span class="tag tag-act">해변</span></div>
+        </div>
+      </div>
+
+      <!-- 유니섬 -->
+      <div class="tl-row">
+        <div class="tl-time">⚠ 미정</div>
+        <div class="tl-track"><div class="tl-dot dot-act"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">유니섬 (환상의 섬) 카약 투어</div>
+          <div class="tl-desc">썰물 때만 해수면 위로 나타나는 새하얀 모래섬. 투리바 해양공원에서 카약으로 편도 약 1.5km. 소요 약 2시간. ¥8,000~12,000/인. 6월 오전 출발 예시 8~11시 사이 — 조석에 따라 약 1주 전 확정.<br><span style="font-size:11px;color:#1a73e8;">📎 예약: <a href="https://experiences.myrealtrip.com/products/3511509" target="_blank" style="color:#1a73e8;">마이리얼트립</a> · <a href="https://www.waug.com/ko/activities/138111" target="_blank" style="color:#1a73e8;">WAUG</a> (한국어 대응 가능)</span></div>
+          <div class="tags"><span class="tag tag-act">카약</span><span class="tag tag-warn">⚠ 투어 미예약 — 조석 확인 후 시각 확정</span><span class="tag tag-tip">Fish Lab·스나야마 순서도 예약 후 조정</span></div>
+        </div>
+      </div>
+
+      <!-- 해리스 점심 -->
+      <div class="tl-row">
+        <div class="tl-time">12:00<br>점심</div>
+        <div class="tl-track"><div class="tl-dot dot-eat"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">점심 — 해리스 슈림프 트럭</div>
+          <div class="tl-desc">서평안나자키 전망대 앞. 미야코 선셋 비치(유니섬 투어 출발지)에서 차로 약 20~25분. 9시 출발 기준 11시 종료 → 11:30 도착 — 영업 시간(11:00~17:00) 내 문제없음 ✓</div>
+          <div class="rest-cards" style="margin-top:6px;">
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/%E3%83%8F%E3%83%AA%E3%83%BC%E3%82%BA+%E3%82%B7%E3%83%A5%E3%83%AA%E3%83%B3%E3%83%97+%E3%83%88%E3%83%A9%E3%83%83%E3%82%AF/@24.9080822,125.258247,17z/data=!4m6!3m5!1s0x34f44d8ee8d4434b:0x6f76e48c78ee18ae!8m2!3d24.9080822!4d125.258247!16s%2Fg%2F11j598ptq3">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipPI6yC9Ygn2uuhugiXDMLZnoOTvNKninEkPIdEb=w400-h300-k-no" alt="HARRY'S Shrimp Truck" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqXY36CnO6pE98oPoBvB8klwJXmDPYDzWW2dT9dO0saBmnMao4T8uSnMvQ6kSNkSSYfREcswX0_DZphUyzeIXCy6OQRV6uM_RdXK5JbEqoVsML59HlAK7N64XF46zA7B8BFj0bt=w400-h300-k-no" alt="HARRY'S Shrimp Truck" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwery0jdOR9BS4MES2JAhvricob2tf4NWRwBaHXSgiuQNkUDfleMj8cpoNapal6aKfrTRVHCae_YUhmrIjdTilClBTW-Ip3aU0A9fPJNXSQNYZCm9reuXa8Q0n6qQuqPWY52CAwPRAB-ZmpNk=w400-h300-k-no" alt="HARRY'S Shrimp Truck" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqCEKolpdC9hcRIHhPt4WvYnSgp5vE_VJPPZjZsv0kyAM6L-KyYHhI7yDh2GCiwsH8V9BmFhRVUPED0-8VGQhrTeQOj92-l8xkQrhOQ1jH4iotv3YEDeqiyH8NDNM6M_o-uFONu16CGkGI=w400-h300-k-no" alt="HARRY'S Shrimp Truck" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.3 ★ 1,764개</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">HARRY'S Shrimp Truck</div>
+                <div class="rest-sub">서평안나자키 · 갈릭 쉬림프</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 11:00~17:00</span>
+                  <span class="hours-off">연중무휴</span>
+                </div>
+                <div class="rest-menu">갈릭 쉬림프 · 버터레몬 · 스파이시</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 이케마 -->
+      <div class="tl-row">
+        <div class="tl-time">오후</div>
+        <div class="tl-track"><div class="tl-dot dot-drive"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">이케마 대교 → 이케마섬 일주</div>
+          <div class="tl-desc">사탕수수밭·에메랄드 바다. 섬 30분 일주 가능.</div>
+          <div class="tags"><span class="tag tag-drive">드라이브</span></div>
+        </div>
+      </div>
+
+      <!-- 저녁 샤부 -->
+      <div class="tl-row">
+        <div class="tl-time">19:00<br>저녁</div>
+        <div class="tl-track"><div class="tl-dot dot-eat"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">특별 디너 — 아구 샤브샤브 🎉</div>
+          <div class="tl-desc">이번 여행 최고 사치 식사. 2인 예산 약 1.5만엔 내외. 요예약 필수.</div>
+          <div class="rest-cards" style="margin-top:6px;">
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/%E6%B2%96%E7%B8%84%E3%82%84%E3%82%93%E3%81%B0%E3%82%8B%E3%82%A2%E3%82%B0%E3%83%BC%E3%81%97%E3%82%83%E3%81%B6%E3%81%97%E3%82%83%E3%81%B6+%E5%98%89%E7%A6%8F/@24.8051964,125.2789267,17z/data=!4m6!3m5!1s0x34f45300290588b7:0xd955edc8fffafaba!8m2!3d24.8051964!4d125.2789267!16s%2Fg%2F11y58xghzb">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipMBPXbuUnVZNB6_dzdQWcX1BE5MRY7DVoe-VMGK=w400-h300-k-no" alt="嘉福" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipPsQni7h9gJ9fccT_z3ETIoYkQccWu46I6awXys=w400-h300-k-no" alt="嘉福" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipOX3iUGhyfylBY6PWHXsdgUsD7QeAEXRQue0mr_=w400-h300-k-no" alt="嘉福" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipPvlhANI9tC62FnJb20mgQQB4BsTo_m-abawv_8=w400-h300-k-no" alt="嘉福" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.8 ★ 517개</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">沖縄やんばるアグーしゃぶしゃぶ 嘉福<br><span class="name-reading">오키나와 얀바루 아구 샤브샤브 카후쿠</span></div>
+                <div class="rest-sub">히라라 시내 · 아구 돼지 샤브샤브</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 17:00~24:00</span>
+                  <span class="hours-off">연중무휴</span>
+                </div>
+                <div class="rest-menu">아구 소금 샤브샤브 · 스키야키 · 라후테</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+          </div>
+          <div class="tags" style="margin-top:8px;"><span class="tag tag-tip">📞 사전 예약 필수</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───── DAY 3 ───── -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-num d3">3</div>
+      <div class="day-title-wrap">
+        <div class="day-name">동쪽 루트 — 야비지 투어 · 아라구스쿠</div>
+        <div class="day-theme">일본 최대 산호초 + 동쪽 절경</div>
+      </div>
+      <div class="day-date">6/18 수</div>
+    </div>
+    <div class="timeline">
+
+      <!-- 야비지 -->
+      <div class="tl-row">
+        <div class="tl-time">오전</div>
+        <div class="tl-track"><div class="tl-dot dot-act"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">야비지 산호초 스노클링 투어</div>
+          <div class="tl-desc">남북 17km·동서 6.5km에 달하는 일본 최대 탁상산호 군락. 보트로 약 20~30분 이동 후 3~5시간 체험. 바다거북 조우 확률 높음. ¥8,000~15,000/인.<br><span style="font-size:11px;color:#1a73e8;">📎 예약: <a href="https://experiences.myrealtrip.com/products/4298407" target="_blank" style="color:#1a73e8;">마이리얼트립 (한국어 가이드)</a> · <a href="https://www.waug.com/ko/activities/147991" target="_blank" style="color:#1a73e8;">WAUG</a></span></div>
+          <div class="tags"><span class="tag tag-act">스노클링 투어</span><span class="tag tag-tip">사전 예약 필수</span></div>
+        </div>
+      </div>
+
+      <!-- 점심 Utopia -->
+      <div class="tl-row">
+        <div class="tl-time">13:00<br>점심</div>
+        <div class="tl-track"><div class="tl-dot dot-eat"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">점심 후보 — 망고 파를러 or 식당</div>
+          <div class="tl-desc">투어 귀환 후. Utopia Farms는 우에노(섬 동남쪽) 위치 — 동쪽 귀환 동선에 부합.</div>
+          <div class="rest-cards" style="margin-top:6px;">
+
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/Utopia+Farms+Miyakojima/@24.738253,125.322026,17z/data=!4m6!3m5!1s0x34f45667cb1645ef:0x90bd531afc2e6858!8m2!3d24.738253!4d125.322026!16s%2Fg%2F1tddvj8g">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9pvlCLSaorC64r3yWBg95wc2OsL4r59utjdg7B39ubu8gviILudUGGM2P7kG9d7-HglVMh_nrUiEobg-R-O3iUBb7RNEea14kk8HnDFT-88BZQJ29pd27z0yoMvNUYMZdRI2TSzy4zIxdzRT=w400-h300-k-no" alt="Utopia" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9ptvpqpbJfk0TOu5rZdRftcxPojx_LtXqFcLXjsNppvz9ln1_2N5R8JLmnoi00ljeQd8K3HGG4oJ7g7IsUuKykMmTWmbpfjbD34xdMK8ibL88iu9sz2xH2GlRxaMXmW_X0ooYJl1=w400-h300-k-no" alt="Utopia" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9psMQ65Cz4syPsGbl8JWb1snD5OYkyAIbCOz7k_r6bRcB1xyxFEL_NcDjstZL12f1Xg4vHIhgviCA8bj6El8jG3FYthqdQ2QZq090oIRuXqK_YQBj8aLykReKackbCftYMBWe6bEWw=w400-h300-k-no" alt="Utopia" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/geougc-cs/ABOP9psVEJP1cBxpm1ik5V47rUXEyugY2AbQ4sY2jYsx1aQNhAyxoLnV9vTNlfNvIkjDr1LxVMfbkdFhj1YpPyreOLitrpUETzkUtp5KHHs0Ma1Sj2Fpek9gk5Gsg6MuIeX0eY4o1xI=w400-h300-k-no" alt="Utopia" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.4 ★ 487개</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">Utopia Farms Miyakojima</div>
+                <div class="rest-sub">우에노 · 과일 파를러</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 10:00~17:00</span>
+                  <span class="hours-off">일 휴무</span>
+                </div>
+                <div class="rest-menu">6월 망고 제철 🥭 · 망고 스무디</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/GOODMANS+COFFEE/@24.7998052,125.2685873,17z/data=!4m6!3m5!1s0x34f4554e15a7d3df:0x26583d30746459b9!8m2!3d24.7998052!4d125.2685873!16s%2Fg%2F11rz8dk35z">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwepV0gtzNbfxRnvMLkkSj6jwARIrpE1dMP6DxDwIcOD-v_9hfG5HR7yFkyc9kWwK0pqwovpm0_GW0_xTNHloQk3x3Hu-z7AX5_6DY6Nikz6FkEPUY_fAnmtLUrwf9DdhlyRRD3iMFw=w400-h300-k-no" alt="GOODMANS" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqGfa1wT_jjO5LoH04R6M2D2Q7uhGPrHo-nEWG8Mcq6NZDX02XJeJwoDhJWvWyXrhqqO6SctXc8rUqfzXYRH1ZZw-1k2HEkienagqf_WuJ-9_6yLNZSllXSDocMCeQYJZof1rpLj1Mf8xDK=w400-h300-k-no" alt="GOODMANS" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwerpUrSZKQqgXQUNtTE24DjDPzV2BaNmCaQ3M57kKtjTVc0PTbq6_DKeb3fY--AfOggPsZi_-kEv4B0eQXVEenX5J7ZuOjcpGWK4hI4-TxdLBFGJE8Z6UHls9K8riZQHFl82aVi8pJVErAM1=w400-h300-k-no" alt="GOODMANS" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqMX0x1ZVzzgyU4dARL-e2-RPEJd5Cbqt0tmAbtfnnQNg9REuXsAGOba_rvO3xZ24nOWz3VbDQGzWNG9LZxcbMB_tx3NqCBz23RdzUno1QC71yXrCtzbFUs5RCRFN_rULv3j8kI=w400-h300-k-no" alt="GOODMANS" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.9 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">GOODMANS COFFEE</div>
+                <div class="rest-sub">히라라 시내 · 스페셜티 카페</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">⚠ 4월 이후 영업 재개 예정</span>
+                  <span class="hours-off">영업시간 4월 재확인 필수</span>
+                </div>
+                <div class="rest-menu">스페셜티 커피 · 경량 식사</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 아라구스쿠 -->
+      <div class="tl-row">
+        <div class="tl-time">오후</div>
+        <div class="tl-track"><div class="tl-dot dot-act"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">아라구스쿠 비치 — 거북이 스노클링</div>
+          <div class="tl-desc">현지인 비밀의 바다. 얕은 수심, 바다거북 조우 확률 높음.</div>
+          <div class="tags"><span class="tag tag-act">스노클링</span></div>
+        </div>
+      </div>
+
+      <!-- 히가시헨나자키 -->
+      <div class="tl-row">
+        <div class="tl-time">오후</div>
+        <div class="tl-track"><div class="tl-dot dot-drive"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">히가시헨나자키 곶 전망대</div>
+          <div class="tl-desc">섬 최동단. 양쪽으로 다른 색 바다가 펼쳐지는 절경. ✓ 아라구스쿠 스노클링 + 히가시헨나자키 전망대 이 두 곳이 오후 핵심 — 이무갸는 여력 있을 때만.</div>
+          <div class="tags"><span class="tag tag-drive">드라이브</span><span class="tag tag-act">전망</span></div>
+        </div>
+      </div>
+
+      <!-- 이무갸 -->
+      <div class="tl-row">
+        <div class="tl-time">이른<br>저녁</div>
+        <div class="tl-track"><div class="tl-dot dot-act"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">이무갸 마린가든 (선택)</div>
+          <div class="tl-desc">자연 조수풀. 귀환 동선에 포함 가능. ⚠ 야비지 투어 후 피로도에 따라 생략 판단 — 아라구스쿠·히가시헨나자키 이후 여력이 있을 때만.</div>
+          <div class="tags"><span class="tag tag-act">스노클링</span><span class="tag tag-warn">체력 보고 결정</span></div>
+        </div>
+      </div>
+
+      <!-- 저녁 3 -->
+      <div class="tl-row">
+        <div class="tl-time">19:00<br>저녁</div>
+        <div class="tl-track"><div class="tl-dot dot-eat"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">저녁 후보 — 히라라 이자카야</div>
+          <div class="rest-cards" style="margin-top:6px;">
+
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/%E3%83%84%E3%83%9E%E3%83%B3%E3%83%87%E5%91%91%E3%82%81%E3%82%8B+%E3%81%BF%E3%82%84%E3%81%93%E3%83%91%E3%83%BC%E3%83%A9%E3%83%BC/@24.8022192,125.2804107,17z/data=!4m6!3m5!1s0x34f4536d7cfd868d:0x74dfe5dfde3363b5!8m2!3d24.8022192!4d125.2804107!16s%2Fg%2F11t4gvv1q9">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipPec_CIJz-UOst2dGD_Qme6UN7u8zDDnLm1OTQR=w400-h300-k-no" alt="ツマンデ" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqoYT15l3dg_tdCsGIQPIeJjzHAWhTiXd0wAoiA8zCKboWMkcaULAkc0QkZtrqzURFhSQ7VxCZvPC3dai8N8yYfapRxkwdpZnUcQLyQBZenbqqpBAvvVszFSMJO55kvUWuxUwQVJVD4j7Pt=w400-h300-k-no" alt="ツマンデ" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwerAWm6jTTwIJWgwbKdyEWN4cFtB-J7rUA6DBhJBZypL9NUOkEze8j6BXSfqWMWtM82dw-WCv22N1v1SMZhunLd8Pd3nGKMsxenyCmRD5ZhTC0ANvoeTy9WyPBMUWL0pjrfH7kpo=w400-h300-k-no" alt="ツマンデ" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwep-Bakx2RB4F77HJ8EWWsfYwQADtTKjoxFTKZEpMs01FJPMgixPyl0ThPc4aidYCPwXapyQufHV2kc74WVwE_9zGW_yMEYKCjfubhm3YvdafVBWXELhJc5DQ43h6HU2zW3t6JoE=w400-h300-k-no" alt="ツマンデ" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">3.69 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">ツマンデ呑める みやこパーラー<br><span class="name-reading">츠만데 노메루 미야코파라</span></div>
+                <div class="rest-sub">히라라 · 이자카야 백명점 2025</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 17:00~24:00</span>
+                  <span class="hours-off">연중무휴 — 화요일도 OK</span>
+                </div>
+                <div class="rest-menu">NEW 오키나와 요리 · 뚝배기 솥밥</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/%E3%82%A4%E3%82%B6%E3%82%AB%E3%83%A4+%E3%83%95%E3%83%A9/@24.804785,125.2780718,17z/data=!4m6!3m5!1s0x34f4533ebfa66a4b:0x71aa8034a7856d73!8m2!3d24.804785!4d125.2780718!16s%2Fg%2F11t9bx9f_6">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwera2VZpjjs3wSZ71ydVla_B1FVA9PKpJ88IDu7TQEGoPPsMk85hurN5gkLA-RIzu-8r3L3AjH0d_1IuTbJlQf-FmKmvSU7ARxsX8ntX8PCAXAogfu8WUDL6JM-3CAQk1AcSSAuBMe6osxPt=w400-h300-k-no" alt="HULAR" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwervYPfzYW2SEWxEj3_LWv8t8172CfAY2ABXhOo-Zak8YMC5wTPEuUSz32nWjQ9pnx56b8aYL-IRKYoA3uYOgIvC_7ozOTsRPNdYuqT6WoVto9A_-RifnIMHEe41uWZMEILidxmyriF_qBU=w400-h300-k-no" alt="HULAR" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipMssDSC5KtR-JV71w_akFGDUeCvDCdA9HQ459Gj=w400-h300-k-no" alt="HULAR" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweosu0X8guqWCtTDftPXXnfBtWUI3i6D2Sok2CPf15Kkx3AYH2foUIH4KirxroKyZREWw-UXqpO5Iufg9hmCzB9MmAPsPV8lit9xn8JfUEa5fitKzMtLOFos-WxlOwncWQvCFJFig5bgJgLr=w400-h300-k-no" alt="HULAR" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.7 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">이자카야 훌라 HULAR</div>
+                <div class="rest-sub">히라라 · 창작 이자카야</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 17:00~23:00</span>
+                  <span class="hours-off">화 휴무 (6/18 수요일 영업 ✓)</span>
+                </div>
+                <div class="rest-menu">섬 해산물 창작 요리 · 아와모리</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="planb-box">
+            <div class="planb-title">☁ Plan B — 야비지 투어 취소 시</div>
+            <div class="planb-text">
+              히라라 <strong>공설시장</strong> 탐방 → <strong>바나나케이크 monte doll</strong> 기념품 쇼핑 (09:00~19:00, 연중무휴) → 아라구스쿠·히가시헨나자키 오후 루트 그대로 진행 → 저녁 ツマンデ呑める (화요일 유일 선택지)
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───── DAY 4 ───── -->
+  <div class="day-block">
+    <div class="day-header">
+      <div class="day-num d4">4</div>
+      <div class="day-title-wrap">
+        <div class="day-name">히라라 여유 → 귀국</div>
+        <div class="day-theme">마지막 아침 — 10:00 렌터카 반납 목표</div>
+      </div>
+      <div class="day-date">6/19 목</div>
+    </div>
+    <div class="timeline">
+
+      <!-- 아침 -->
+      <div class="tl-row">
+        <div class="tl-time">07:30<br>아침</div>
+        <div class="tl-track"><div class="tl-dot dot-eat"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">아침 후보</div>
+          <div class="rest-cards" style="margin-top:6px;">
+
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/Fish+Lab+%E9%AD%9A%E7%86%9F/@24.7958761,125.2742848,17z/data=!4m6!3m5!1s0x34f4531ad21790d3:0xda3274e50c0a4087!8m2!3d24.7958761!4d125.2742848!16s%2Fg%2F11yclj898p">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipMdyZlhTZVLyxJXcrAW-dMtkG3Q8vxLCvuApR88=w400-h300-k-no" alt="Fish Lab" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweoPkwWwVKh3gPfvx1ngn7LQgBAc3xooRg8shZpAC7lOndGYFRv483KZK4fAPAHsQPfiLRWWjL1ryQnCLaBNVmOBKR-GcLpqZhvnGClfkWd86qIaPjzr6vOMeojDNmz1FvbEqTpy7bv8wGLD=w400-h300-k-no" alt="Fish Lab" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwerBlxv_0Hm98IIWJPTzahNsnyxO7ZfyrwBqKKOir6WDUXtMtucjot5g3W5zLBv6o5cMSI33beIN2obXPtEV7VzkUwNs5GzmzqXYWT180160MbH5db-ORtDnMp_en1PqONcWN0vNY-9MN66S=w400-h300-k-no" alt="Fish Lab" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipNto0Z7Twobpaxiiz4NPbSa17ueGIGKYanXPKP6=w400-h300-k-no" alt="Fish Lab" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.8 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">Fish Lab 魚熟<br><span class="name-reading">피시랩 우오주쿠</span></div>
+                <div class="rest-sub">히라라 남쪽 · 07:30 오픈</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 07:30~15:00</span>
+                  <span class="hours-off">연중무휴</span>
+                </div>
+                <div class="rest-menu">숙성 해산물 · 가벼운 아침 정식</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/GOODMANS+COFFEE/@24.7998052,125.2685873,17z/data=!4m6!3m5!1s0x34f4554e15a7d3df:0x26583d30746459b9!8m2!3d24.7998052!4d125.2685873!16s%2Fg%2F11rz8dk35z">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwepV0gtzNbfxRnvMLkkSj6jwARIrpE1dMP6DxDwIcOD-v_9hfG5HR7yFkyc9kWwK0pqwovpm0_GW0_xTNHloQk3x3Hu-z7AX5_6DY6Nikz6FkEPUY_fAnmtLUrwf9DdhlyRRD3iMFw=w400-h300-k-no" alt="GOODMANS" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqGfa1wT_jjO5LoH04R6M2D2Q7uhGPrHo-nEWG8Mcq6NZDX02XJeJwoDhJWvWyXrhqqO6SctXc8rUqfzXYRH1ZZw-1k2HEkienagqf_WuJ-9_6yLNZSllXSDocMCeQYJZof1rpLj1Mf8xDK=w400-h300-k-no" alt="GOODMANS" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwerpUrSZKQqgXQUNtTE24DjDPzV2BaNmCaQ3M57kKtjTVc0PTbq6_DKeb3fY--AfOggPsZi_-kEv4B0eQXVEenX5J7ZuOjcpGWK4hI4-TxdLBFGJE8Z6UHls9K8riZQHFl82aVi8pJVErAM1=w400-h300-k-no" alt="GOODMANS" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqMX0x1ZVzzgyU4dARL-e2-RPEJd5Cbqt0tmAbtfnnQNg9REuXsAGOba_rvO3xZ24nOWz3VbDQGzWNG9LZxcbMB_tx3NqCBz23RdzUno1QC71yXrCtzbFUs5RCRFN_rULv3j8kI=w400-h300-k-no" alt="GOODMANS" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.9 ★</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">GOODMANS COFFEE</div>
+                <div class="rest-sub">히라라 시내 · 스페셜티</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 6월 영업 예정</span>
+                  <span class="hours-off">영업시간 현장 확인 요망</span>
+                </div>
+                <div class="rest-menu">스페셜티 커피 · 귀국 전 여유</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 체크아웃 -->
+      <div class="tl-row">
+        <div class="tl-time">08:30</div>
+        <div class="tl-track"><div class="tl-dot dot-drive"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">숙소 체크아웃</div>
+          <div class="tl-desc">09:30 렌터카 반납 목표에 맞춰 08:30 체크아웃. 짐은 차에 싣고 기념품 쇼핑 후 바로 출발.</div>
+          <div class="tags"><span class="tag tag-info">체크아웃</span></div>
+        </div>
+      </div>
+
+      <!-- 기념품 -->
+      <div class="tl-row">
+        <div class="tl-time">09:00<br>기념품</div>
+        <div class="tl-track"><div class="tl-dot dot-snack"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">기념품 — バナナケーキ monte doll</div>
+          <div class="rest-cards" style="margin-top:6px;">
+            <div class="rest-card" data-maps-url="https://www.google.com/maps/place/%E3%83%90%E3%83%8A%E3%83%8A%E3%82%B1%E3%83%BC%E3%82%AD+monte+doll/@24.8074893,125.2793098,17z/data=!4m6!3m5!1s0x34f4538ce74396a1:0xd22ffd3c1303e5f!8m2!3d24.8074893!4d125.2793098!16s%2Fg%2F1tf77vst">
+              <div class="rest-img-wrap">
+                <div class="img-slideshow">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwepz4psj9FdFzBa_El0uzJ8mStYCoGiYXZysRj5xTMs7eCWO4aqacxFWr_gFIDWbtWyEmMtcG2kSn86vrD3FlJ3Nq3hTBeEeaPKBiqNf3FhCj6qVIfwr3eAElcHY-LgTvSz5VWH_IQ=w400-h300-k-no" alt="バナナケーキ monte doll" class="active" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqTDLEmhTCPraVL2dNjtZXoYjEPA7IAqV42cudw4MflTClPClqry-OnyUY4kkZpMOFpVvLDv7W5fRWUkCu2OOedOABi1xCzhw6TFNrQo2kYB6EoBmWAE0pUK7ohquuhbt0lUaXO=w400-h300-k-no" alt="バナナケーキ monte doll" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/p/AF1QipPZSGDvRqiIwOupZMe0dPvL9HtiRKUFB4rs3jbS=w400-h300-k-no" alt="バナナケーキ monte doll" loading="lazy">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwer8Hy5hOjq6xGrSI7sI8vHjjWt6f9_WQlvegFkhawog4FEbPz4G2fjaiNEuFL_nwR38TUhl0MhcvGJuwbHcLCwT0ah7lfqOqOaB7QVlUFiJWaO_xDToAOUFyckjrfWvLJRivcH4BntaPvc=w400-h300-k-no" alt="バナナケーキ monte doll" loading="lazy">
+      <div class="slideshow-dots"><span  class="active"></span><span></span><span></span><span></span></div>
+    </div>
+                <span class="rest-badge">4.3 ★ 290개</span>
+              </div>
+              <div class="rest-info">
+                <div class="rest-name">バナナケーキ monte doll<br><span class="name-reading">바나나케이크 몬테 돌</span></div>
+                <div class="rest-sub">히라라 시내 · 페이스트리</div>
+                <div class="rest-hours">
+                  <span class="hours-ok">✓ 09:00~19:00</span>
+                  <span class="hours-off">연중무휴</span>
+                </div>
+                <div class="rest-menu">바나나 케이크 · 기념품용</div>
+                <div class="maps-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Google Maps에서 보기</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 렌터카 반납 -->
+      <div class="tl-row">
+        <div class="tl-time">09:30</div>
+        <div class="tl-track"><div class="tl-dot dot-drive"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">렌터카 반납</div>
+          <div class="tl-desc">반납 절차(점검·서류) 10~15분 + 공항 이동 10~15분 + 국제선 수속 90분 = 09:30 반납이 안전. 공항 면세점 여유도 확보.</div>
+          <div class="tags"><span class="tag tag-warn">⚠ 09:30 반납 목표 (10:00는 너무 타이트)</span></div>
+        </div>
+      </div>
+
+      <!-- 귀국 -->
+      <div class="tl-row">
+        <div class="tl-time">12:00</div>
+        <div class="tl-track"><div class="tl-dot dot-fly"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-title">시모지시마 공항 출발 → 14:30 인천 도착</div>
+          <div class="tl-desc">면세점 흑당 과자·베니이모 타르트 구매.</div>
+          <div class="tags"><span class="tag tag-tip">면세점 쇼핑</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───── 예약 체크리스트 ───── -->
+  <div class="summary-section" style="margin-top:2rem;">
+    <h2 class="summary-title">예약 체크리스트</h2>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+
+      <div style="background:var(--ink);color:white;padding:10px 18px;font-size:11px;font-weight:500;letter-spacing:.08em;">
+        ✈️ 출발 전 반드시 예약 완료할 것
+      </div>
+
+      <div style="padding:8px 0;">
+
+        <div style="padding:10px 0 4px 18px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);">항공 · 이동</div>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">진에어 직항 항공권 (ICN ↔ SHI)</span><span class="chk-badge chk-hi">필수</span></label>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">렌터카 (전일 대여 · 공항 픽업)</span><span class="chk-badge chk-hi">필수</span></label>
+
+        <div style="padding:10px 0 4px 18px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);">숙소</div>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">히라라 시내 숙소 3박 (성수기 조기 마감 주의) — 추천: 힐튼 오키나와 미야코 아일랜드 리조트 / 호텔 아톨 에메랄드 / 호텔 브리즈베이 마리나</span><span class="chk-badge chk-hi">필수</span></label>
+
+        <div style="padding:10px 0 4px 18px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);">액티비티</div>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">야비지 산호초 스노클링 투어 (3일차 오전)</span><span class="chk-badge chk-hi">필수</span></label>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">유니섬 카약 투어 — 조석 타이밍 확인 후 예약 (2일차)</span><span class="chk-badge chk-hi">필수</span></label>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">투어사에 날씨 취소·변경 정책 사전 확인</span><span class="chk-badge chk-mid">권장</span></label>
+
+        <div style="padding:10px 0 4px 18px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);">식당</div>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">沖縄やんばるアグーしゃぶしゃぶ 嘉福 (2일차 저녁)</span><span class="chk-badge chk-hi">필수</span></label>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">ツマンデ呑める みやこパーラー (3일차 저녁)</span><span class="chk-badge chk-mid">권장</span></label>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">이자카야 훌라 HULAR (1일차 저녁 선택 시)</span><span class="chk-badge chk-mid">권장</span></label>
+
+        <div style="padding:10px 0 4px 18px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);">기타</div>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">국제운전면허증 발급 (출발 최소 1주 전)</span><span class="chk-badge chk-hi">필수</span></label>
+        <label class="chk-row"><input type="checkbox"><span class="chk-label">일본 eSIM 또는 포켓 와이파이 준비</span><span class="chk-badge chk-hi">필수</span></label>
+        <label class="chk-row" style="border-bottom:none;margin-bottom:8px;"><input type="checkbox"><span class="chk-label">여행자 보험 가입</span><span class="chk-badge chk-mid">권장</span></label>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── 준비물 ───── -->
+  <div class="summary-section" style="margin-top:2rem;">
+    <h2 class="summary-title">준비물</h2>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ocean);margin-bottom:8px;">🚗 운전</div>
+        <div style="font-size:12px;line-height:1.9;color:var(--mid);">국제운전면허증<br>한국 운전면허증<br>여권</div>
+      </div>
+
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">🌊 바다 · 액티비티</div>
+        <div style="font-size:12px;line-height:1.9;color:var(--mid);">래시가드<br>아쿠아슈즈<br>방수 파우치<br>스노클 세트 (현장 렌탈 가능)</div>
+      </div>
+
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:8px;">☀️ 날씨 대비</div>
+        <div style="font-size:12px;line-height:1.9;color:var(--mid);">접이식 우비<br>선크림 SPF50+<br>모자 / 선글라스<br>갈아입을 여유 옷</div>
+      </div>
+
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mango);margin-bottom:8px;">💳 결제 · 통신</div>
+        <div style="font-size:12px;line-height:1.9;color:var(--mid);">현금 (소규모 식당 대비)<br>IC카드 or 교통카드<br>일본 eSIM or 포켓 와이파이<br>충전기 · 보조배터리</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───── 맛집 영업시간 요약 ───── -->
+  <div class="summary-section" style="margin-top:2rem;">
+    <h2 class="summary-title">맛집 영업 시간 요약</h2>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>가게</th>
+          <th>영업 시간</th>
+          <th>정기 휴무</th>
+          <th>위치</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>ソーキ亭 いりくんやぁ<br><span class="name-reading">소키테이 이리쿤야</span></strong></td><td>11:00~15:00</td><td class="closed">화·수</td><td>이라부섬 나가하마</td></tr>
+        <tr><td><strong>にいまそば<br><span class="name-reading">니이마 소바</span></strong></td><td>11:00~15:00</td><td class="closed">목</td><td>섬 북쪽 가리마타</td></tr>
+        <tr><td><strong>Nakayukui Shoten</strong></td><td>09:30~12:00 / 13:30~16:00</td><td class="closed">목 (월 영업 가능)</td><td>이라부섬 구니나카</td></tr>
+        <tr><td><strong>GOODMANS COFFEE</strong></td><td>영업시간 현장 확인</td><td>3월 임시휴업 (6월 OK)</td><td>히라라 시내</td></tr>
+        <tr><td><strong>Fish Lab 魚熟<br><span class="name-reading">피시랩 우오주쿠</span></strong></td><td>07:30~15:00</td><td class="open">연중무휴</td><td>히라라 남쪽</td></tr>
+        <tr><td><strong>みなと食堂<br><span class="name-reading">미나토 쇼쿠도</span></strong></td><td>11:00~16:00 (L.O.15:30)</td><td class="closed">수</td><td>니가와도리 어항</td></tr>
+        <tr><td><strong>HARRY'S Shrimp Truck</strong></td><td>11:00~17:00</td><td class="open">연중무휴</td><td>서평안나자키</td></tr>
+        <tr><td><strong>Utopia Farms Miyakojima</strong></td><td>10:00~17:00</td><td class="closed">일요일</td><td>우에노 (섬 남동쪽)</td></tr>
+        <tr><td><strong>RICCO gelato リッコジェラート<br><span class="name-reading">릿코 젤라토</span></strong></td><td>11:00~16:45 (금토 +야간)</td><td class="closed">화·수</td><td>히라라 시내</td></tr>
+        <tr><td><strong>沖縄やんばるアグーしゃぶしゃぶ 嘉福<br><span class="name-reading">오키나와 얀바루 아구 샤브샤브 카후쿠</span></strong></td><td>17:00~24:00</td><td class="open">연중무휴</td><td>히라라 시내</td></tr>
+        <tr><td><strong>ツマンデ呑める みやこパーラー<br><span class="name-reading">츠만데 노메루 미야코파라</span></strong></td><td>17:00~24:00</td><td class="open">연중무휴</td><td>히라라 시내</td></tr>
+        <tr><td><strong>이자카야 훌라 HULAR</strong></td><td>17:00~23:00</td><td class="closed">화</td><td>히라라 시내</td></tr>
+        <tr><td><strong>居酒家でいりぐち 下里通り店<br><span class="name-reading">이자카야 데이리구치 시모자토도리점</span></strong></td><td>18:00~23:00</td><td class="closed">화</td><td>히라라 시내</td></tr>
+        <tr><td><strong>バナナケーキ monte doll<br><span class="name-reading">바나나케이크 몬테 돌</span></strong></td><td>09:00~19:00</td><td class="open">연중무휴</td><td>히라라 시내</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <style>
+    .chk-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 18px; cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .chk-row:hover { background: var(--bg); }
+    .chk-row input[type="checkbox"] {
+      width: 16px; height: 16px; flex-shrink: 0;
+      accent-color: var(--teal); cursor: pointer;
+    }
+    .chk-label { font-size: 13px; flex: 1; color: var(--ink); line-height: 1.4; }
+    .chk-row input:checked ~ .chk-label { text-decoration: line-through; color: var(--soft); }
+    .chk-badge {
+      font-size: 10px; padding: 2px 8px; border-radius: 99px;
+      font-weight: 600; white-space: nowrap; flex-shrink: 0;
+    }
+    .chk-hi  { background: #FFEBEE; color: #C62828; }
+    .chk-mid { background: #E8F5E9; color: #2E7D32; }
+    .chk-lo  { background: #E3F2FD; color: #1565C0; }
+  </style>
+
+  <!-- Footer -->
+  <div class="footer-note">
+    <strong>📋 사전 예약 필수 항목:</strong> 아구 샤브샤브 嘉福 · ツマンデ呑める · 야비지 스노클링 투어 · 유니섬 카약 투어 · 렌터카<br>
+    <strong>⏱ Day 4 시각:</strong> 08:30 체크아웃 → 09:00 기념품 (monte doll 오픈 맞춤) → <strong>09:30 렌터카 반납 목표</strong> → 공항 10분 이동 → 10:30 수속 → 12:00 출발. 10:00 반납은 국제선 90분 수속 기준 위험.<br>
+    <strong>⚠ 주의:</strong> 소바 맛집은 재료 소진 시 조기 마감. 오픈 직후 방문 권장. にいまそば (타베로그 3위, 섬 북쪽 가리마타) 는 북쪽 루트 시 추가 고려 가능 — 목요일 휴무.<br>
+    <strong>🌦 날씨 정보:</strong> 6월 평균 기온 28℃ / 강수량 약 200mm. 장마 기간이나 오키나와형 스콜(쏟아지다 1~2시간 내 개는 경우가 대부분)이 많아 야외 활동 큰 지장 없음. 자외선 강하므로 SPF50+ 선크림 필수. 투어사에 날씨 취소·변경 정책 미리 확인.<br>
+    <strong>🏨 숙소 추천:</strong> 힐튼 오키나와 미야코 아일랜드 리조트 (리조트형·풀·오션뷰 / 가장 추천) · 호텔 아톨 에메랄드 (루프탑 풀·세련된 디자인 / 젊은층 선호) · 호텔 브리즈베이 마리나 (항구뷰·가성비 / 위치 탁월). 성수기(6~8월)는 2~3개월 전 예약 권장.<br>
+    <strong>📱 투어 예약 팁:</strong> 야비지 스노클링·유니섬 카약 모두 마이리얼트립·WAUG에서 한국어 가이드 포함 상품 예약 가능. 출발 1개월 전 예약 시작 권장.
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.img-slideshow').forEach(function(ss) {
+    var imgs = ss.querySelectorAll('img');
+    var dots = ss.querySelectorAll('.slideshow-dots span');
+    var cur = 0;
+    if (imgs.length <= 1) return;
+    setInterval(function() {
+      imgs[cur].classList.remove('active');
+      dots[cur] && dots[cur].classList.remove('active');
+      cur = (cur + 1) % imgs.length;
+      imgs[cur].classList.add('active');
+      dots[cur] && dots[cur].classList.add('active');
+    }, 2500);
+  });
+});
+</script>
+
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="맨 위로">↑</button>
+
+<script>
+// 맨 위로 버튼
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('scroll-top');
+  if (btn) btn.classList.toggle('visible', window.scrollY > 300);
+});
+
+// 체크리스트 카운터
+function updateCounter() {
+  var all = document.querySelectorAll('.chk-row input[type="checkbox"]');
+  var done = document.querySelectorAll('.chk-row input[type="checkbox"]:checked');
+  var t = document.getElementById('chk-total');
+  var d = document.getElementById('chk-done');
+  if (t) t.textContent = all.length;
+  if (d) d.textContent = done.length;
+}
+document.addEventListener('DOMContentLoaded', function() {
+  updateCounter();
+  document.querySelectorAll('.chk-row input').forEach(function(cb) {
+    cb.addEventListener('change', updateCounter);
+  });
+
+  // 구글 맵스 클릭
+  document.querySelectorAll('.rest-card[data-maps-url]').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      if (e.target.tagName === 'INPUT') return;
+      window.open(card.getAttribute('data-maps-url'), '_blank');
+    });
+  });
+});
+</script>
+
+</body>
+</html>
