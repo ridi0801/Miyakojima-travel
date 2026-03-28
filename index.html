@@ -81,13 +81,19 @@ header::after {
   color: var(--sand-dark);
   margin-bottom: .6rem;
 }
+.header-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+}
 header h1 {
   font-family: 'Noto Serif KR', serif;
   font-size: 2.6rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  margin-bottom: .5rem;
+  margin-bottom: 0;
 }
 .header-sub {
   font-size: 13px;
@@ -98,6 +104,42 @@ header h1 {
   margin-top: .8rem;
 }
 .header-sub span { display: flex; align-items: center; gap: .4rem; }
+.dday-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px;
+  padding: .6rem 1.3rem;
+  min-width: 96px;
+  flex-shrink: 0;
+}
+.dday-badge .dday-top {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: .1em;
+  margin-bottom: 3px;
+}
+.dday-badge .dday-num {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--white);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.dday-badge .dday-suffix {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  margin-top: 3px;
+  letter-spacing: .04em;
+}
 
 /* ── 레이아웃 ── */
 .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
@@ -571,12 +613,114 @@ footer {
   white-space: nowrap;
 }
 
+/* ── 투어 카드 ── */
+.tour-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.tour-card-header {
+  padding: 1rem 1.3rem .8rem;
+  border-bottom: 1px solid var(--border);
+}
+.tour-card-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .2rem;
+}
+.tour-card-sub {
+  font-size: 11px;
+  color: var(--ink-light);
+}
+.tour-card-body { padding: .8rem 1.3rem 1rem; }
+.tour-row {
+  display: flex;
+  gap: .8rem;
+  padding: .35rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.tour-row:last-child { border-bottom: none; }
+.tour-key {
+  font-weight: 500;
+  color: var(--ink-light);
+  min-width: 36px;
+  flex-shrink: 0;
+}
+.tour-val { color: var(--ink-mid); }
+
+/* ── 일정 뷰 토글 ── */
+.schedule-view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.2rem;
+}
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-dark);
+  background: var(--white);
+  font-size: 11px;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--ink-light);
+  cursor: pointer;
+  transition: all .15s;
+}
+.view-btn.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+.view-btn:hover:not(.active) {
+  border-color: var(--ink-mid);
+  color: var(--ink-mid);
+}
+
+/* 탭 뷰 */
+.day-tabs {
+  display: none;
+  gap: 4px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.day-tabs.visible { display: flex; }
+.day-tab {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-dark);
+  background: var(--white);
+  font-size: 11px;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--ink-light);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.day-tab.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+/* 탭 모드에서 비활성 day-block 숨기기 */
+.tab-mode .day-block { display: none; }
+.tab-mode .day-block.tab-active { display: block; }
+
 /* ── print ── */
 @media print {
   body { background: white; font-size: 11px; }
   header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .card, .pack-card, .todo-item, .budget-card { break-inside: avoid; }
   .day-block { break-inside: avoid; }
+  .schedule-view-toggle, .day-tabs { display: none; }
 }
 </style>
 </head>
@@ -585,7 +729,14 @@ footer {
 <header>
   <div class="header-inner">
     <p class="header-eyebrow">Travel Plan · 2026</p>
-    <h1>미야코지마<br>여행 계획서</h1>
+    <div class="header-title-row">
+      <h1>미야코지마<br>여행 계획서</h1>
+      <div class="dday-badge">
+        <span class="dday-top">출발까지</span>
+        <span class="dday-num" id="dday-num">-</span>
+        <span class="dday-suffix" id="dday-suffix">일 남음</span>
+      </div>
+    </div>
     <div class="header-sub">
       <span>📅 2026.06.16 ~ 06.19</span>
       <span>🧳 3박 4일</span>
@@ -664,17 +815,22 @@ footer {
   </div>
 </div>
 
-<!-- 야비지 투어 -->
+<!-- 투어 정보 -->
 <div class="sec">
-  <div class="sec-title"><span class="icon">🤿</span> 야비지(八重干瀬) 투어</div>
-  <div class="yabiji-box">
-    <div class="yabiji-title">일본 최대 탁상 산호 군락 — 미야코지마 최고 액티비티</div>
-    <div class="yabiji-body">
-      위치: 미야코지마 북쪽 약 15km · 남북 17km × 동서 6.5km<br>
-      집합: 오후 12:00 이후 / HOTEL LOCUS 뒤 항구 (전날 저녁 카톡으로 정확한 시간 안내)<br>
-      소요: 보트 편도 1시간 → 스노클링 1시간 → 복귀 1시간 = <strong>총 4~4.5시간</strong><br>
-      예약: 마이리얼트립 · 투어비스 · 와그 (한국어 대응) · 2인 약 13~18만원<br>
-      주의: <strong>멀미약 필수</strong> · 날씨·파도에 따라 당일 취소 가능 · 바다거북 조우율 낮음 (산호 전문)
+  <div class="sec-title"><span class="icon">🤿</span> 투어 정보</div>
+
+  <!-- 야비지 투어 -->
+  <div class="tour-card">
+    <div class="tour-card-header">
+      <div class="tour-card-title">야비지(八重干瀬) 투어</div>
+      <div class="tour-card-sub">일본 최대 탁상 산호 군락 — 미야코지마 최고 액티비티</div>
+    </div>
+    <div class="tour-card-body">
+      <div class="tour-row"><span class="tour-key">위치</span><span class="tour-val">미야코지마 북쪽 약 15km · 남북 17km × 동서 6.5km</span></div>
+      <div class="tour-row"><span class="tour-key">집합</span><span class="tour-val">오후 12:00 이후 / HOTEL LOCUS 뒤 항구 (전날 저녁 카톡으로 정확한 시간 안내)</span></div>
+      <div class="tour-row"><span class="tour-key">소요</span><span class="tour-val">보트 편도 1시간 → 스노클링 1시간 → 복귀 1시간 = <strong>총 4~4.5시간</strong></span></div>
+      <div class="tour-row"><span class="tour-key">예약</span><span class="tour-val">마이리얼트립 · 투어비스 · 와그 (한국어 대응) · 2인 약 13~18만원</span></div>
+      <div class="tour-row"><span class="tour-key">주의</span><span class="tour-val"><strong>멀미약 필수</strong> · 날씨·파도에 따라 당일 취소 가능 · 바다거북 조우율 낮음 (산호 전문)</span></div>
     </div>
   </div>
 </div>
@@ -683,8 +839,23 @@ footer {
 <div class="sec">
   <div class="sec-title"><span class="icon">📅</span> 3박 4일 전체 일정</div>
 
+  <!-- 뷰 토글 -->
+  <div class="schedule-view-toggle">
+    <button class="view-btn active" id="btn-all" onclick="setScheduleView('all')">📋 전체보기</button>
+    <button class="view-btn" id="btn-tab" onclick="setScheduleView('tab')">탭으로 보기</button>
+  </div>
+
+  <!-- 일차 탭 (탭 뷰에서만 표시) -->
+  <div class="day-tabs" id="day-tabs">
+    <button class="day-tab active" onclick="switchDay(1)">1일차 · 6/16</button>
+    <button class="day-tab" onclick="switchDay(2)">2일차 · 6/17</button>
+    <button class="day-tab" onclick="switchDay(3)">3일차 · 6/18</button>
+    <button class="day-tab" onclick="switchDay(4)">4일차 · 6/19</button>
+  </div>
+
+  <div id="schedule-body">
   <!-- 1일차 -->
-  <div class="day-block">
+  <div class="day-block tab-active" data-day="1">
     <div class="day-header">
       <span class="day-pill">1일차 · 6/16(화)</span>
       <span class="day-title">도착 &amp; 이라부 대교 드라이브</span>
@@ -734,7 +905,7 @@ footer {
   </div>
 
   <!-- 2일차 -->
-  <div class="day-block">
+  <div class="day-block" data-day="2">
     <div class="day-header">
       <span class="day-pill">2일차 · 6/17(수)</span>
       <span class="day-title">야비지 투어 메인</span>
@@ -774,7 +945,7 @@ footer {
   </div>
 
   <!-- 3일차 -->
-  <div class="day-block">
+  <div class="day-block" data-day="3">
     <div class="day-header">
       <span class="day-pill">3일차 · 6/18(목)</span>
       <span class="day-title">섬 동쪽 탐방 &amp; 온천</span>
@@ -820,7 +991,7 @@ footer {
   </div>
 
   <!-- 4일차 -->
-  <div class="day-block">
+  <div class="day-block" data-day="4">
     <div class="day-header">
       <span class="day-pill">4일차 · 6/19(금)</span>
       <span class="day-title">귀국</span>
@@ -850,8 +1021,9 @@ footer {
         <div class="tl-name">시모지시마 출발 → 14:30 인천 도착 <span class="badge-info">직항 확정</span></div>
       </div>
     </div>
-  </div>
-</div>
+  </div><!-- /day-block 4일차 -->
+  </div><!-- /schedule-body -->
+</div><!-- /sec -->
 
 <!-- 맛집 카페 표 -->
 <div class="sec">
@@ -1423,6 +1595,70 @@ document.querySelectorAll('.todo-item').forEach(el => {
 loadPackState();
 loadTodoState();
 updateTodoProgress();
+
+// ── D-Day 카운터 ──
+(function() {
+  const target = new Date('2026-06-16T00:00:00+09:00');
+  const now = new Date();
+  const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+  const numEl = document.getElementById('dday-num');
+  const sufEl = document.getElementById('dday-suffix');
+  if (!numEl) return;
+  if (diff > 0) {
+    numEl.textContent = 'D-' + diff;
+    sufEl.textContent = '일 남음';
+  } else if (diff === 0) {
+    numEl.textContent = 'D-DAY';
+    sufEl.textContent = '오늘 출발 ✈️';
+  } else {
+    numEl.textContent = 'D+' + Math.abs(diff);
+    sufEl.textContent = '일째 여행중 🌊';
+  }
+})();
+
+// ── 일정 탭/전체보기 토글 ──
+let currentView = 'all';
+let currentDay = 1;
+
+function setScheduleView(view) {
+  currentView = view;
+  const body = document.getElementById('schedule-body');
+  const tabs = document.getElementById('day-tabs');
+  const btnAll = document.getElementById('btn-all');
+  const btnTab = document.getElementById('btn-tab');
+
+  if (view === 'tab') {
+    body.classList.add('tab-mode');
+    tabs.classList.add('visible');
+    btnTab.classList.add('active');
+    btnAll.classList.remove('active');
+    switchDay(currentDay);
+  } else {
+    body.classList.remove('tab-mode');
+    tabs.classList.remove('visible');
+    btnAll.classList.add('active');
+    btnTab.classList.remove('active');
+  }
+  try { localStorage.setItem('miyako_view', view); } catch(e) {}
+}
+
+function switchDay(day) {
+  currentDay = day;
+  document.querySelectorAll('.day-block').forEach(el => {
+    el.classList.toggle('tab-active', parseInt(el.dataset.day) === day);
+  });
+  document.querySelectorAll('.day-tab').forEach((el, i) => {
+    el.classList.toggle('active', i + 1 === day);
+  });
+}
+
+// 저장된 뷰 복원
+(function() {
+  try {
+    const saved = localStorage.getItem('miyako_view');
+    if (saved === 'tab') setScheduleView('tab');
+  } catch(e) {}
+})();
 </script>
 
 </body>
