@@ -1,469 +1,1185 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미야코지마 여행 계획 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-size:12px;color:var(--color-text-primary)}
-.wrap{padding:1rem 0}
+:root {
+  --ocean: #1a6b8a;
+  --ocean-light: #2a8baa;
+  --ocean-pale: #e8f4f8;
+  --sand: #f5ede0;
+  --sand-dark: #e0c9a6;
+  --coral: #d4614e;
+  --coral-light: #f0877a;
+  --teal: #2d9b8a;
+  --teal-light: #e0f5f1;
+  --ink: #1a1f2e;
+  --ink-mid: #3d4455;
+  --ink-light: #6b7280;
+  --ink-pale: #9ca3af;
+  --white: #ffffff;
+  --cream: #faf8f5;
+  --success: #2d8a5e;
+  --success-bg: #e8f5ee;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --danger: #c0392b;
+  --info: #1a6b8a;
+  --info-bg: #e8f4f8;
+  --border: #e5e0d8;
+  --border-dark: #c8c0b4;
+}
 
-/* section headers */
-.sec-title{font-size:15px;font-weight:500;color:var(--color-text-primary);padding:.6rem 0 .5rem;border-bottom:1.5px solid var(--color-border-secondary);margin:2.2rem 0 1rem}
-.sec-title:first-of-type{margin-top:0}
-.sub-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin:1.2rem 0 .6rem;padding-bottom:.35rem;border-bottom:.5px solid var(--color-border-tertiary)}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* info cards */
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.8rem}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:.8rem}
-.icard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.65rem .9rem}
-.il{font-size:10px;color:var(--color-text-tertiary);margin-bottom:.2rem}
-.iv{font-size:13px;font-weight:500;color:var(--color-text-primary);line-height:1.4}
-.is{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-top:.2rem}
-.conf{font-size:10px;color:var(--color-text-success);margin-top:.2rem}
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 14px;
+}
 
-/* yabiji box */
-.yabiji{background:var(--color-background-info);border:.5px solid var(--color-border-info);border-radius:var(--border-radius-md);padding:.75rem 1rem;margin-bottom:.8rem}
-.yabiji-title{font-size:12px;font-weight:500;color:var(--color-text-info);margin-bottom:.35rem}
-.yabiji-body{font-size:11px;color:var(--color-text-info);line-height:1.8}
+/* ── 헤더 ── */
+header {
+  background: var(--ink);
+  color: var(--white);
+  padding: 3.5rem 2rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 40px,
+    rgba(255,255,255,0.02) 40px,
+    rgba(255,255,255,0.02) 80px
+  );
+}
+header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  height: 40px;
+  background: var(--cream);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+.header-inner { max-width: 860px; margin: 0 auto; position: relative; }
+.header-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sand-dark);
+  margin-bottom: .6rem;
+}
+header h1 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 2.6rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: .5rem;
+}
+.header-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: .8rem;
+}
+.header-sub span { display: flex; align-items: center; gap: .4rem; }
 
-/* timeline */
-.day-label{font-size:11px;font-weight:500;background:var(--color-text-primary);color:var(--color-background-primary);display:inline-block;padding:3px 11px;border-radius:12px;margin-bottom:.75rem}
-.tl{position:relative;padding-left:20px;margin-bottom:1.5rem}
-.tl::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:.5px;background:var(--color-border-secondary)}
-.ti{position:relative;margin-bottom:.85rem}
-.dot{position:absolute;left:-17px;top:4px;width:8px;height:8px;border-radius:50%}
-.dg{background:var(--color-border-secondary)}
-.db{background:var(--color-text-info)}
-.dv{background:var(--color-text-success)}
-.da{background:var(--color-text-warning)}
-.tt{font-size:10px;color:var(--color-text-tertiary);margin-bottom:1px}
-.tn{font-size:12px;font-weight:500;color:var(--color-text-primary);line-height:1.4}
-.td{font-size:11px;color:var(--color-text-secondary);line-height:1.6;margin-top:2px}
-.bx{display:inline-block;font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;vertical-align:middle;font-weight:500}
-.bi{background:var(--color-background-info);color:var(--color-text-info)}
-.bv{background:var(--color-background-success);color:var(--color-text-success)}
-.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+/* ── 레이아웃 ── */
+.container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-/* restaurant table */
-.rt{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:.5rem}
-.rt th{font-size:10px;font-weight:500;color:var(--color-text-tertiary);padding:.38rem .4rem;border-bottom:.5px solid var(--color-border-secondary);text-align:left;white-space:nowrap}
-.rt td{padding:.42rem .4rem;border-bottom:.5px solid var(--color-border-tertiary);vertical-align:top;line-height:1.5}
-.rt tr:last-child td{border-bottom:none}
-.rtsub{font-size:10px;color:var(--color-text-tertiary);display:block;margin-top:1px}
-.rtkr{font-size:10px;color:var(--color-text-secondary);display:block;margin-top:1px}
-.menu{font-size:10px;color:var(--color-text-secondary);line-height:1.6}
-.ok{color:var(--color-text-success);font-size:10px;font-weight:500}
-.ng{color:var(--color-text-danger);font-size:10px}
-.pick{font-size:9px;background:var(--color-background-success);color:var(--color-text-success);padding:1px 5px;border-radius:6px;display:block;margin-top:2px;width:fit-content}
-.new{font-size:9px;background:var(--color-background-info);color:var(--color-text-info);padding:1px 5px;border-radius:6px;display:inline-block;margin-left:3px;vertical-align:middle}
-.rt-sec{font-size:10px;font-weight:500;color:var(--color-text-tertiary);padding:.45rem .4rem .25rem;background:var(--color-background-secondary)}
+/* ── 섹션 타이틀 ── */
+.sec {
+  margin-bottom: 3rem;
+}
+.sec-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink);
+  padding-bottom: .6rem;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.sec-title .icon {
+  width: 24px; height: 24px;
+  background: var(--ink);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  color: var(--white);
+  flex-shrink: 0;
+}
 
-/* pack */
-.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.pc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.7rem .9rem}
-.pt{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:.4rem}
-.pi{font-size:11px;color:var(--color-text-secondary);line-height:1.9}
-.pn{font-size:10px;color:var(--color-text-tertiary);margin-top:.3rem;line-height:1.5}
+/* ── 카드 그리드 ── */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+@media(max-width:640px) {
+  .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+}
 
-/* budget */
-.bg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.bc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.65rem .9rem}
-.bl{font-size:10px;color:var(--color-text-tertiary);margin-bottom:.15rem}
-.bval{font-size:14px;font-weight:500;color:var(--color-text-primary)}
-.bs{font-size:10px;color:var(--color-text-secondary);margin-top:.1rem;line-height:1.4}
-.bconf{color:var(--color-text-success);font-size:10px;margin-top:.1rem}
-.total-row{margin-top:.85rem;padding:.75rem .9rem;border:.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);display:flex;justify-content:space-between;align-items:center}
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+.card-label {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-pale);
+  margin-bottom: .3rem;
+}
+.card-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.card-sub {
+  font-size: 11px;
+  color: var(--ink-light);
+  margin-top: .3rem;
+  line-height: 1.6;
+}
+.badge-ok {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  background: var(--success-bg);
+  color: var(--success);
+  border-radius: 20px;
+  margin-top: .4rem;
+  font-weight: 500;
+}
+.badge-pending {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  border-radius: 20px;
+  margin-top: .4rem;
+  font-weight: 500;
+}
+.badge-info {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  background: var(--info-bg);
+  color: var(--info);
+  border-radius: 20px;
+  margin-left: 6px;
+  font-weight: 500;
+}
 
-/* note */
-.note{font-size:10px;color:var(--color-text-tertiary);margin-top:.5rem;line-height:1.7;padding:.6rem .8rem;background:var(--color-background-secondary);border-radius:var(--border-radius-md)}
-.warn{background:var(--color-background-warning);border:.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:.6rem .9rem;margin-bottom:.8rem;font-size:11px;color:var(--color-text-warning);line-height:1.7}
+/* ── 야비지 박스 ── */
+.yabiji-box {
+  background: var(--ocean);
+  color: var(--white);
+  border-radius: 12px;
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+  overflow: hidden;
+}
+.yabiji-box::before {
+  content: '八重干瀬';
+  position: absolute;
+  right: -10px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Noto Serif KR', serif;
+  font-size: 5rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.06);
+  line-height: 1;
+  white-space: nowrap;
+}
+.yabiji-title {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: .85;
+  margin-bottom: .6rem;
+}
+.yabiji-body {
+  font-size: 12px;
+  line-height: 2;
+  opacity: .9;
+}
+.yabiji-body strong { opacity: 1; font-weight: 500; }
+
+/* ── 타임라인 ── */
+.day-block { margin-bottom: 2.2rem; }
+.day-header {
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1rem;
+}
+.day-pill {
+  background: var(--ink);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+.day-title {
+  font-size: 13px;
+  color: var(--ink-mid);
+  font-weight: 500;
+}
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px; top: 8px; bottom: 8px;
+  width: 1px;
+  background: var(--border-dark);
+}
+.tl-item { position: relative; margin-bottom: 1.1rem; }
+.tl-dot {
+  position: absolute;
+  left: -20px; top: 5px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--border-dark);
+}
+.tl-dot.blue { background: var(--ocean); }
+.tl-dot.green { background: var(--teal); }
+.tl-dot.amber { background: var(--warn); }
+.tl-time { font-size: 10px; color: var(--ink-pale); margin-bottom: 1px; }
+.tl-name { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+.tl-desc { font-size: 11px; color: var(--ink-light); margin-top: 3px; line-height: 1.6; }
+
+/* ── 맛집 표 ── */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+thead tr { border-bottom: 2px solid var(--ink); }
+th {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ink-light);
+  text-align: left;
+  padding: .5rem .5rem;
+  white-space: nowrap;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+td {
+  padding: .55rem .5rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+tr:last-child td { border-bottom: none; }
+.t-name { font-weight: 500; color: var(--ink); display: block; }
+.t-kr { font-size: 10px; color: var(--ink-light); }
+.t-loc { font-size: 10px; color: var(--ink-pale); display: block; margin-top: 1px; border-top: 1px solid var(--border); padding-top: 2px; }
+.t-menu { font-size: 11px; color: var(--ink-light); line-height: 1.6; }
+.ok { color: var(--success); font-size: 11px; font-weight: 500; }
+.ng { color: var(--danger); font-size: 11px; }
+.pick-badge {
+  display: block;
+  font-size: 9px;
+  background: var(--success-bg);
+  color: var(--success);
+  padding: 1px 5px;
+  border-radius: 6px;
+  margin-top: 2px;
+  width: fit-content;
+}
+.new-badge {
+  display: inline-block;
+  font-size: 9px;
+  background: var(--info-bg);
+  color: var(--info);
+  padding: 1px 5px;
+  border-radius: 6px;
+  margin-left: 3px;
+  vertical-align: middle;
+}
+.cat-row td {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ink-light);
+  padding: .5rem .5rem .25rem;
+  background: var(--cream);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-dark);
+}
+.t-center { text-align: center; }
+
+/* ── 준비물 ── */
+.pack-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media(max-width:500px){ .pack-grid { grid-template-columns: 1fr; } }
+.pack-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+.pack-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: .5rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--border);
+}
+.pack-item {
+  font-size: 11.5px;
+  color: var(--ink-mid);
+  line-height: 2;
+}
+.pack-note {
+  font-size: 10px;
+  color: var(--ink-pale);
+  margin-top: .4rem;
+  line-height: 1.5;
+}
+
+/* ── 예약 체크리스트 ── */
+.todo-list { display: flex; flex-direction: column; gap: 8px; }
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .75rem 1rem;
+}
+.todo-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.todo-num.done { background: var(--teal); }
+.todo-num.wip { background: var(--ocean-light); }
+.todo-content { flex: 1; }
+.todo-title { font-size: 13px; font-weight: 500; color: var(--ink); }
+.todo-desc { font-size: 11px; color: var(--ink-light); margin-top: 2px; line-height: 1.5; }
+.todo-status {
+  font-size: 10px;
+  padding: 2px 9px;
+  border-radius: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-top: 1px;
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+.st-done { background: var(--success-bg); color: var(--success); }
+.st-wip { background: var(--info-bg); color: var(--info); }
+.st-todo { background: var(--warn-bg); color: var(--warn); }
+
+/* ── 예산 ── */
+.budget-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+@media(max-width:500px){ .budget-grid { grid-template-columns: 1fr 1fr; } }
+.budget-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .75rem .9rem;
+}
+.budget-label { font-size: 10px; color: var(--ink-pale); margin-bottom: .2rem; }
+.budget-value { font-size: 15px; font-weight: 500; color: var(--ink); }
+.budget-sub { font-size: 10px; color: var(--ink-light); margin-top: .1rem; line-height: 1.4; }
+.total-box {
+  background: var(--ink);
+  color: var(--white);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.total-label { font-size: 12px; opacity: .65; }
+.total-value { font-size: 22px; font-weight: 500; }
+.total-note { font-size: 10px; opacity: .5; margin-top: 2px; }
+
+/* ── divider ── */
+.sdiv { height: 1px; background: var(--border); margin: 2rem 0; }
+
+/* ── footer ── */
+footer {
+  text-align: center;
+  font-size: 10px;
+  color: var(--ink-pale);
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ── print ── */
+@media print {
+  body { background: white; font-size: 11px; }
+  header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .card, .pack-card, .todo-item, .budget-card { break-inside: avoid; }
+  .day-block { break-inside: avoid; }
+}
 </style>
-<div class="wrap">
+</head>
+<body>
 
-<!-- ════════════════ 1. 기본 정보 ════════════════ -->
-<div class="sec-title">기본 정보</div>
-<div class="row3">
-  <div class="icard">
-    <div class="il">여행지</div>
-    <div class="iv">미야코지마 (宮古島)</div>
-    <div class="is">오키나와현. 오키나와 본섬에서 남서 280km. 아열대 기후. '일본의 몰디브'</div>
+<header>
+  <div class="header-inner">
+    <p class="header-eyebrow">Travel Plan · 2026</p>
+    <h1>미야코지마<br>여행 계획서</h1>
+    <div class="header-sub">
+      <span>📅 2026.06.16 ~ 06.19</span>
+      <span>🧳 3박 4일</span>
+      <span>👫 2인 커플</span>
+      <span>✈️ 진에어 직항</span>
+    </div>
   </div>
-  <div class="icard">
-    <div class="il">여행 기간</div>
-    <div class="iv">2026.06.16(화) ~ 06.19(금)</div>
-    <div class="is">3박 4일 · 2인 커플</div>
-  </div>
-  <div class="icard">
-    <div class="il">6월 날씨</div>
-    <div class="iv">평균 28°C / 수온 25°C↑</div>
-    <div class="is">장마 말기. 맑은 날 약 15~20일. 일조 6~7시간. 자외선 강함</div>
-  </div>
-</div>
+</header>
 
-<!-- ════════════════ 2. 항공권 ════════════════ -->
-<div class="sec-title">항공권</div>
-<div class="row2">
-  <div class="icard">
-    <div class="il">출발편 (구간 1)</div>
-    <div class="iv">6/16(화) 인천 08:25 → 시모지시마 11:00</div>
-    <div class="is">진에어 직항 / 약 2시간 30분<br>성인 2인 항공운임 ¥170,000×2 + 유류·세금</div>
-    <div class="conf">✓ 예약 확정 · 2인 왕복 총액 846,800원</div>
-  </div>
-  <div class="icard">
-    <div class="il">귀국편 (구간 2)</div>
-    <div class="iv">6/19(금) 시모지시마 12:00 → 인천 14:30</div>
-    <div class="is">진에어 직항 / 금요일 = 직항 운항일 확인<br>공항 최소 1시간 전 도착 권장</div>
-    <div class="conf">✓ 예약 확정</div>
-  </div>
-</div>
+<div class="container">
 
-<!-- ════════════════ 3. 숙박·렌터카 ════════════════ -->
-<div class="sec-title">숙박 & 렌터카</div>
-<div class="row2">
-  <div class="icard">
-    <div class="il">숙박 (3박)</div>
-    <div class="iv">Hotel & Villa Seahorse MIYAKOJIMA</div>
-    <div class="is">요나하 마에하마 비치 근처 / 오션뷰·빌라 타입 / 수영장 보유<br>1박 20~30만원 예상 (성수기 조기 예약 필수)</div>
-  </div>
-  <div class="icard">
-    <div class="il">렌터카 (4일) — 시모지시마 공항 픽업·반납</div>
-    <div class="iv">OTS렌터카 / 니혼렌터카 / 오릭스렌터카</div>
-    <div class="is">세 곳 모두 시모지시마 공항 카운터 운영<br>소형차 4일 약 15~22만원 / 사전 온라인 예약 필수<br>국제운전면허증 + 한국면허증 둘 다 지참</div>
+<!-- 기본 정보 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">i</span> 기본 정보</div>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-label">여행지</div>
+      <div class="card-value">미야코지마 (宮古島)</div>
+      <div class="card-sub">오키나와현. 오키나와 본섬에서 남서 280km. 아열대 기후. '일본의 몰디브'</div>
+    </div>
+    <div class="card">
+      <div class="card-label">6월 날씨</div>
+      <div class="card-value">평균 28°C / 수온 25°C↑</div>
+      <div class="card-sub">장마 말기. 맑은 날 약 15~20일. 일조 6~7시간. 자외선 강함</div>
+    </div>
+    <div class="card">
+      <div class="card-label">핵심 특징</div>
+      <div class="card-value">미야코 블루</div>
+      <div class="card-sub">야비지 산호 군락 · 바다거북 스노클링 · 이라부 대교 드라이브 · 요나하 마에하마 비치</div>
+    </div>
   </div>
 </div>
 
-<!-- ════════════════ 4. 야비지 투어 ════════════════ -->
-<div class="sec-title">야비지(八重干瀬) 투어</div>
-<div class="yabiji">
-  <div class="yabiji-title">일본 최대 탁상 산호 군락 — 미야코지마 최고 액티비티</div>
-  <div class="yabiji-body">
-    위치: 미야코지마 북쪽 약 15km 해역 · 남북 17km × 동서 6.5km 규모<br>
-    집합: 오후 12:00 이후 (전날 저녁 카톡으로 정확한 시간 안내)<br>
-    소요: 보트 편도 1시간 → 현장 스노클링 1시간 → 복귀 1시간 = 총 4~4.5시간<br>
-    집합장소: HOTEL LOCUS 뒤 항구<br>
-    예약: 마이리얼트립 · 투어비스 · 와그 (한국어 대응 업체) · 2인 약 13~18만원<br>
-    주의: 멀미약 필수 · 날씨·파도에 따라 당일 취소 가능 · 바다거북 조우율은 낮음 (산호 전문)
+<!-- 확정 예약 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">✓</span> 확정 예약 현황</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-label">항공권</div>
+      <div class="card-value">진에어 직항 왕복 846,800원</div>
+      <div class="card-sub">
+        출발: 6/16(화) 인천 08:25 → 시모지시마 11:00<br>
+        귀국: 6/19(금) 시모지시마 12:00 → 인천 14:30
+      </div>
+      <span class="badge-ok">✓ 예약 확정</span>
+    </div>
+    <div class="card">
+      <div class="card-label">숙박 3박</div>
+      <div class="card-value">Hotel & Villa Seahorse MIYAKOJIMA</div>
+      <div class="card-sub">
+        아고다 예약 · VAT 포함 374,127원<br>
+        1박 약 124,700원 · 요나하 마에하마 비치 근처 · 수영장 보유
+      </div>
+      <span class="badge-ok">✓ 예약 확정</span>
+    </div>
+    <div class="card">
+      <div class="card-label">렌터카 4일</div>
+      <div class="card-value">오릭스렌터카 SA클래스 (소형차)</div>
+      <div class="card-sub">
+        みやこ下地島空港ターミナル店 픽업·반납<br>
+        6/16 11:00 출발 → 6/19 11:00 반납<br>
+        피트·노트1.2·톨 등 / 금연 / 카내비·ETC 표준장착<br>
+        CDW 3,300엔 + RAP 1,980엔 포함<br>
+        <strong style="color:var(--ink);font-weight:500">합계 23,980엔 (약 22만원)</strong>
+      </div>
+      <span class="badge-pending">예약 진행 중</span>
+    </div>
+    <div class="card" style="background:var(--ocean-pale); border-color:var(--ocean-light);">
+      <div class="card-label" style="color:var(--ocean)">확정 지출 합계</div>
+      <div class="card-value" style="font-size:22px;color:var(--ocean)">약 144만원</div>
+      <div class="card-sub">
+        항공 846,800 + 숙박 374,127 + 렌터카 약 22만원<br>
+        렌터카 최종 확정 후 정확한 금액 업데이트 예정
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ════════════════ 5. 전체 일정 ════════════════ -->
-<div class="sec-title">3박 4일 전체 일정</div>
-
-<!-- 1일차 -->
-<div class="day-label">1일차 · 6/16(화) — 도착 & 이라부 대교 드라이브</div>
-<div class="tl">
-  <div class="ti"><div class="dot db"></div><div class="tt">08:25</div><div class="tn">인천 출발 <span class="bx bi">진에어 직항 확정</span></div></div>
-  <div class="ti"><div class="dot db"></div><div class="tt">11:00</div><div class="tn">시모지시마 공항 도착 → 렌터카 픽업</div><div class="td">사전 예약 업체 카운터로 바로 이동. 수속 약 30~40분</div></div>
-  <div class="ti"><div class="dot dg"></div><div class="tt">11:40~13:00</div><div class="tn">이라부 대교 드라이브</div><div class="td">공항 바로 앞. 일본 최장 무료 교량 3.54km. 갓길 정차 후 사진</div></div>
-  <div class="ti"><div class="dot dv"></div><div class="tt">12:30~13:30</div><div class="tn">점심 — Fish Lab 魚熟 (피시랩 우오쥬쿠)</div><div class="td">히라라 남쪽. 07:30~15:00 연중무휴. 신선 해산물 정식</div></div>
-  <div class="ti"><div class="dot dg"></div><div class="tt">14:00~16:30</div><div class="tn">요나하 마에하마 비치</div><div class="td">일본 최고 해변 평가. 7km 백사장. 첫 미야코 블루 감상. 수온 25°C↑</div></div>
-  <div class="ti"><div class="dot dg"></div><div class="tt">17:00~18:30</div><div class="tn">Seahorse 숙소 체크인</div></div>
-  <div class="ti"><div class="dot dv"></div><div class="tt">19:00~</div><div class="tn">저녁 — ツマンデ みやこパーラー (츠만데 미야코 파라)</div><div class="td">히라라 시내. 17:00~24:00 연중무휴. 화요일 가능한 몇 안 되는 이자카야. 아와모리·시마야채 안주</div></div>
-</div>
-
-<!-- 2일차 -->
-<div class="day-label">2일차 · 6/17(수) — 야비지 투어 메인</div>
-<div class="tl">
-  <div class="ti"><div class="dot dg"></div><div class="tt">09:00~11:00</div><div class="tn">오전 자유 — 사와다노하마 비치 산책 또는 숙소 휴식</div><div class="td">야비지 투어가 오후 집합이라 오전은 여유롭게</div></div>
-  <div class="ti"><div class="dot dv"></div><div class="tt">11:30~12:00</div><div class="tn">점심 — Nakayukui Shoten (나카유쿠이 쇼텐)</div><div class="td">이라부섬 구니나카. 09:30~12:00 / 13:30~16:00. 목 휴무 → 수요일 OK. 사타안다기. 투어 전 가볍게</div></div>
-  <div class="ti"><div class="dot da"></div><div class="tt">12:00~ (전날 카톡 안내)</div><div class="tn">야비지 보트 스노클링 투어 <span class="bx ba">사전 예약 필수</span></div><div class="td">HOTEL LOCUS 뒤 항구 집합. 보트 편도 1시간 → 스노클링 1시간 → 복귀 1시간. 멀미약 출발 전 복용</div></div>
-  <div class="ti"><div class="dot dv"></div><div class="tt">16:30~17:15</div><div class="tn">카페 — 1 LAB Hello VACAY (이라부섬)</div><div class="td">11:00~17:00 (L.O 16:30). 투어 복귀 후 피로 회복. 아이스 카페라떼·호지차라떼</div></div>
-  <div class="ti"><div class="dot dv"></div><div class="tt">19:00~</div><div class="tn">저녁 — 이자카야 훌라 HULAR</div><div class="td">히라라 시내. 17:00~23:00. 화 휴무 → 수요일 OK. 시마 오뎅·생선 안주</div></div>
-</div>
-
-<!-- 3일차 -->
-<div class="day-label">3일차 · 6/18(목) — 섬 동쪽 탐방 & 온천</div>
-<div class="tl">
-  <div class="ti"><div class="dot dg"></div><div class="tt">09:00~10:30</div><div class="tn">히가시헨나 곶 (東平安名崎)</div><div class="td">미야코지마 동쪽 끝 천연기념물 산책로. 등대에서 파노라마 뷰. 오전 햇빛 방향 최적</div></div>
-  <div class="ti"><div class="dot dg"></div><div class="tt">10:30~12:00</div><div class="tn">아라구스쿠 비치</div><div class="td">헨나 곶과 같은 동쪽 동선. 얕은 수심에도 바다거북 출현. 자유 스노클링 가능</div></div>
-  <div class="ti"><div class="dot dv"></div><div class="tt">12:30~13:30</div><div class="tn">점심 — みなと食堂 (미나토 쇼쿠도)</div><div class="td">니가와도리 어항. 11:00~16:00 (L.O 15:30). 수 휴무 → 목요일 OK. 어항 직영 생선 정식</div></div>
-  <div class="ti"><div class="dot dg"></div><div class="tt">14:30~16:30</div><div class="tn">스나야마 비치</div><div class="td">바위 터널 통과 후 숨은 해변. 오후 빛 들어와 사진 좋음. 인스타 포토존</div></div>
-  <div class="ti"><div class="dot dg"></div><div class="tt">17:00~19:00</div><div class="tn">시기라 온천 <span class="bx bi">커플 추천</span></div><div class="td">황금빛 미네랄 온천. 수영복 착용 노천 풀. 일몰 무렵 방문</div></div>
-  <div class="ti"><div class="dot dv"></div><div class="tt">20:00~</div><div class="tn">저녁 — でいりぐち 下里通り店 (데이리구치 시모자토도리텐)</div><div class="td">히라라 시내. 18:00~23:00. 화 휴무 → 목요일 OK. 오뎅 모리와세·테비치 조림</div></div>
-</div>
-
-<!-- 4일차 -->
-<div class="day-label">4일차 · 6/19(금) — 귀국</div>
-<div class="tl">
-  <div class="ti"><div class="dot dv"></div><div class="tt">09:00~09:45</div><div class="tn">모닝 — GOODMANS COFFEE</div><div class="td">히라라 시내. 6월 정상 영업. 마지막 날 여유로운 커피</div></div>
-  <div class="ti"><div class="dot dv"></div><div class="tt">09:45~10:30</div><div class="tn">バナナケーキ monte doll (바나나케이키 몬테 도루) 기념품 구매</div><div class="td">히라라 시내. 09:00~19:00 연중무휴. 미야코지마 바나나케이크. 공항보다 저렴</div></div>
-  <div class="ti"><div class="dot da"></div><div class="tt">10:30~11:00</div><div class="tn">렌터카 반납 → 공항 이동</div><div class="td">시모지시마 공항 반납. 체크인 마감 최소 1시간 전 도착</div></div>
-  <div class="ti"><div class="dot db"></div><div class="tt">12:00</div><div class="tn">시모지시마 출발 → 14:30 인천 도착 <span class="bx bi">직항 확정</span></div></div>
-</div>
-
-<!-- ════════════════ 6. 맛집·카페 ════════════════ -->
-<div class="sec-title">맛집 · 카페 영업시간 & 방문 가부</div>
-
-<table class="rt">
-  <tr>
-    <th style="min-width:115px">가게</th>
-    <th style="min-width:98px">대표 메뉴</th>
-    <th style="min-width:100px">영업시간</th>
-    <th style="min-width:55px">정기휴무</th>
-    <th style="text-align:center;min-width:26px">화<br>6/16</th>
-    <th style="text-align:center;min-width:26px">수<br>6/17</th>
-    <th style="text-align:center;min-width:26px">목<br>6/18</th>
-    <th style="text-align:center;min-width:26px">금<br>6/19</th>
-  </tr>
-
-  <tr><td colspan="8" class="rt-sec">식사</td></tr>
-
-  <tr>
-    <td>Fish Lab 魚熟<span class="rtkr">피시랩 우오쥬쿠</span><span class="rtsub">히라라 남쪽</span></td>
-    <td><span class="menu">신선 해산물 정식<br>해산물 덮밥</span></td>
-    <td>07:30~15:00</td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">1일차</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>Nakayukui Shoten<span class="rtkr">나카유쿠이 쇼텐</span><span class="rtsub">이라부섬 구니나카</span></td>
-    <td><span class="menu">사타안다기<br>(오키나와 튀김 도넛)</span></td>
-    <td>09:30~12:00<br>13:30~16:00</td><td>목(월OK)</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">2일차</span></td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>みなと食堂<span class="rtkr">미나토 쇼쿠도</span><span class="rtsub">니가와도리 어항</span></td>
-    <td><span class="menu">어항 직영 생선 정식<br>문어 야키소바</span></td>
-    <td>11:00~16:00<br>L.O 15:30</td><td>수 휴무</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">3일차</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>ソーキ亭 いりくんやぁ<span class="rtkr">소키테이 이리쿤야</span><span class="rtsub">이라부섬 나가하마</span></td>
-    <td><span class="menu">소키소바<br>(연골 돼지뼈 소바)</span></td>
-    <td>11:00~15:00</td><td>화·수 휴무</td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>にいまそば<span class="rtkr">니이마 소바</span><span class="rtsub">섬 북쪽 가리마타</span></td>
-    <td><span class="menu">미야코 소바<br>쥬시(영양밥) 세트</span></td>
-    <td>11:00~15:00</td><td>목 휴무</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>HARRY'S Shrimp Truck<span class="rtsub">서평안나자키</span></td>
-    <td><span class="menu">갈릭 버터 새우 플레이트<br>쉬림프 타코</span></td>
-    <td>11:00~17:00</td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>Utopia Farms Miyakojima<span class="rtsub">우에노(섬 남동쪽)</span></td>
-    <td><span class="menu">자사 농장 채소 플레이트<br>섬 채소 스무디</span></td>
-    <td>10:00~17:00</td><td>일 휴무</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>亀寿司 <span class="new">신규</span><span class="rtkr">카메 스시</span><span class="rtsub">히라라 쿠가이</span></td>
-    <td><span class="menu">텐푸라 정식<br>스시 모둠</span></td>
-    <td>11:30~13:30<br>17:00~20:00<span class="rtsub">점심·저녁 2부제</span></td><td>수 휴무</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>かわみつ食堂 <span class="new">신규</span><span class="rtkr">카와미츠 쇼쿠도</span><span class="rtsub">우에치(이라부 방면)</span></td>
-    <td><span class="menu">미야코 마제소바<br>(원조 비벼먹는 소바)</span></td>
-    <td>11:00~14:30</td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>沖縄そば まるかみ <span class="new">신규</span><span class="rtkr">오키나와소바 마루카미</span><span class="rtsub">구리마섬(시모지)</span></td>
-    <td><span class="menu">연골 소키소바<br>오키나와소바</span></td>
-    <td>11:00~15:00<br>L.O 14:00<span class="rtsub">매진 시 조기마감</span></td><td>일·2·4번째 월</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-
-  <tr><td colspan="8" class="rt-sec">이자카야</td></tr>
-
-  <tr>
-    <td>ツマンデ みやこパーラー<span class="rtkr">츠만데 미야코 파라</span><span class="rtsub">히라라 시내</span></td>
-    <td><span class="menu">아와모리 칵테일<br>시마야채 안주 모둠</span></td>
-    <td>17:00~24:00</td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">1일차</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>이자카야 훌라 HULAR<span class="rtsub">히라라 시내</span></td>
-    <td><span class="menu">시마 오뎅<br>생선 안주류</span></td>
-    <td>17:00~23:00</td><td>화 휴무</td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">2일차</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>でいりぐち 下里通り店<span class="rtkr">데이리구치 시모자토도리텐</span><span class="rtsub">히라라 시내</span></td>
-    <td><span class="menu">오뎅 모리와세<br>테비치(족발) 조림</span></td>
-    <td>18:00~23:00</td><td>화 휴무</td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">3일차</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>やんばるアグー嘉福<span class="rtkr">얀바루 아구 카후쿠</span><span class="rtsub">히라라 · 샤브샤브</span></td>
-    <td><span class="menu">오키나와 아구 돼지<br>샤브샤브 코스</span></td>
-    <td>17:00~24:00</td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>あったかや <span class="new">신규</span><span class="rtkr">앗타카야</span><span class="rtsub">시모지섬 스가마</span></td>
-    <td><span class="menu">미야코산 사시미 3종<br>히야시 고마소바<br>(냉 참깨 소바)</span></td>
-    <td>17:00~22:00</td><td>월·화 휴무</td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>島の鉄板 BOBURI <span class="new">신규</span><span class="rtkr">시마노 뎃판 보부리</span><span class="rtsub">히라라 쿠가이</span></td>
-    <td><span class="menu">오코노미야키<br>미야코규 햄버그스테이크<br>유두에비 꼬치</span></td>
-    <td>17:00~23:00</td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>北琉笑店 いころ <span class="new">신규</span><span class="rtkr">호쿠류쇼텐 이코로</span><span class="rtsub">히라라 니시자토</span></td>
-    <td><span class="menu">징기스칸<br>치즈 가리비구이<br>바다포도(우미부도)</span></td>
-    <td>18:00~24:00<span class="rtsub">수: 15:00~21:00<br>토·일·월: ~03:00</span></td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="rtsub" style="font-size:9px">~21시</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-
-  <tr><td colspan="8" class="rt-sec">카페 · 디저트</td></tr>
-
-  <tr>
-    <td>GOODMANS COFFEE<span class="rtsub">히라라 시내</span></td>
-    <td><span class="menu">드립 커피<br>라떼류</span></td>
-    <td>현장 확인</td><td>6월 정상영업</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">4일차</span></td>
-  </tr>
-  <tr>
-    <td>1 LAB Hello VACAY<span class="rtsub">이라부섬 나카지</span></td>
-    <td><span class="menu">아이스 카페라떼<br>호지차라떼</span></td>
-    <td>11:00~17:00<br>L.O 16:30</td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">2일차</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>リッコジェラート<span class="rtkr">릿코 젤라토</span><span class="rtsub">히라라 시내</span></td>
-    <td><span class="menu">망고 젤라토<br>지역 과일 계절 한정</span></td>
-    <td>11:00~16:45<span class="rtsub">금·토 야간 연장</span></td><td>화·수 휴무</td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ng">✗</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-  </tr>
-  <tr>
-    <td>バナナケーキ monte doll<span class="rtkr">바나나케이키 몬테 도루</span><span class="rtsub">히라라 시내</span></td>
-    <td><span class="menu">미야코지마 바나나케이크<br>(기념품·테이크아웃)</span></td>
-    <td>09:00~19:00</td><td>연중무휴</td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span></td>
-    <td style="text-align:center"><span class="ok">✓</span><span class="pick">4일차</span></td>
-  </tr>
-</table>
-
-<div class="note">
-  <span style="background:var(--color-background-info);color:var(--color-text-info);font-size:9px;padding:1px 5px;border-radius:6px;">신규</span> = 구글맵 리스트 추가 발굴. 영업시간 구글맵 현지 확인 (2026.03 기준), 방문 전 재확인 권장.<br>
-  亀寿司·あったかや·でいりぐち: 예약 권장. あったかや는 구글맵 채팅 예약 가능.<br>
-  沖縄そばまるかみ: 구리마섬 위치, 재료 소진 시 14:00 전 조기마감. 오픈런 권장.
-</div>
-
-<!-- ════════════════ 7. 준비물 ════════════════ -->
-<div class="sec-title">준비물 체크리스트</div>
-<div class="pack-grid">
-  <div class="pc">
-    <div class="pt">🚗 운전</div>
-    <div class="pi">국제운전면허증<br>한국 운전면허증<br>여권</div>
-    <div class="pn">국제+한국 면허 둘 다 지참 필수</div>
-  </div>
-  <div class="pc">
-    <div class="pt">🌊 바다 · 액티비티</div>
-    <div class="pi">래시가드<br>아쿠아슈즈<br>방수 파우치<br>스노클 세트 (현장 렌탈 가능)<br>멀미약 (야비지 보트 왕복 2시간)</div>
-  </div>
-  <div class="pc">
-    <div class="pt">☀️ 날씨 대비</div>
-    <div class="pi">접이식 우비<br>선크림 SPF50+<br>모자 / 선글라스<br>갈아입을 여유 옷</div>
-    <div class="pn">6월 자외선 강함 · 스콜 대비 우비 필수</div>
-  </div>
-  <div class="pc">
-    <div class="pt">💳 결제 · 통신</div>
-    <div class="pi">현금 (소규모 식당 대비)<br>IC카드 or 교통카드<br>일본 eSIM or 포켓 와이파이<br>충전기 · 보조배터리</div>
-    <div class="pn">렌터카 내비 앱에 데이터 필수</div>
+<!-- 야비지 투어 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">🤿</span> 야비지(八重干瀬) 투어</div>
+  <div class="yabiji-box">
+    <div class="yabiji-title">일본 최대 탁상 산호 군락 — 미야코지마 최고 액티비티</div>
+    <div class="yabiji-body">
+      위치: 미야코지마 북쪽 약 15km · 남북 17km × 동서 6.5km<br>
+      집합: 오후 12:00 이후 / HOTEL LOCUS 뒤 항구 (전날 저녁 카톡으로 정확한 시간 안내)<br>
+      소요: 보트 편도 1시간 → 스노클링 1시간 → 복귀 1시간 = <strong>총 4~4.5시간</strong><br>
+      예약: 마이리얼트립 · 투어비스 · 와그 (한국어 대응) · 2인 약 13~18만원<br>
+      주의: <strong>멀미약 필수</strong> · 날씨·파도에 따라 당일 취소 가능 · 바다거북 조우율 낮음 (산호 전문)
+    </div>
   </div>
 </div>
 
-<!-- ════════════════ 8. 예산 ════════════════ -->
-<div class="sec-title">예산 (2인 총액 · 인당 150만원 기준)</div>
-<div class="bg">
-  <div class="bc"><div class="bl">항공권 (2인 왕복)</div><div class="bval">846,800원</div><div class="bconf">✓ 확정 (인당 423,400원)</div></div>
-  <div class="bc"><div class="bl">숙박 3박 (Seahorse)</div><div class="bval">60~90만원</div><div class="bs">1박 20~30만원 오션뷰 기준</div></div>
-  <div class="bc"><div class="bl">렌터카 4일</div><div class="bval">15~22만원</div><div class="bs">소형차+보험 / 시모지공항 픽업</div></div>
-  <div class="bc"><div class="bl">식비 4일 (2인)</div><div class="bval">20~30만원</div><div class="bs">현금 지참 권장</div></div>
-  <div class="bc"><div class="bl">야비지 투어 (2인)</div><div class="bval">13~18만원</div><div class="bs">한국어 대응 업체 기준</div></div>
-  <div class="bc"><div class="bl">온천 · 기타 · 쇼핑</div><div class="bval">8~15만원</div><div class="bs">시기라 온천 + 기념품</div></div>
-</div>
-<div class="total-row">
-  <div>
-    <div style="font-size:12px;color:var(--color-text-secondary)">2인 합계 예상</div>
-    <div style="font-size:10px;color:var(--color-text-tertiary);margin-top:2px">항공 확정 + 나머지 중간값 기준</div>
+<!-- 전체 일정 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">📅</span> 3박 4일 전체 일정</div>
+
+  <!-- 1일차 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-pill">1일차 · 6/16(화)</span>
+      <span class="day-title">도착 &amp; 이라부 대교 드라이브</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot blue"></div>
+        <div class="tl-time">08:25</div>
+        <div class="tl-name">인천 출발 <span class="badge-info">진에어 직항 확정</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot blue"></div>
+        <div class="tl-time">11:00</div>
+        <div class="tl-name">시모지시마 공항 도착 → 오릭스렌터카 픽업</div>
+        <div class="tl-desc">공항 터미널점 카운터에서 수속. 약 30~40분 소요</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">11:40~13:00</div>
+        <div class="tl-name">이라부 대교 드라이브</div>
+        <div class="tl-desc">공항 바로 앞. 일본 최장 무료 교량 3.54km. 갓길 정차 후 사진</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">12:30~13:30</div>
+        <div class="tl-name">점심 — Fish Lab 魚熟 (피시랩 우오쥬쿠)</div>
+        <div class="tl-desc">히라라 남쪽. 07:30~15:00 연중무휴. 신선 해산물 정식·해산물 덮밥</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:00~16:30</div>
+        <div class="tl-name">요나하 마에하마 비치</div>
+        <div class="tl-desc">일본 최고 해변. 7km 백사장. 첫 미야코 블루 감상. 수온 25°C↑</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">17:00~18:30</div>
+        <div class="tl-name">Seahorse 숙소 체크인</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">19:00~</div>
+        <div class="tl-name">저녁 — ツマンデ みやこパーラー (츠만데 미야코 파라)</div>
+        <div class="tl-desc">히라라 시내. 17:00~24:00 연중무휴. 화요일 가능 이자카야. 아와모리·시마야채 안주</div>
+      </div>
+    </div>
   </div>
-  <div style="text-align:right">
-    <div style="font-size:16px;font-weight:500">215~270만원</div>
-    <div style="font-size:10px;color:var(--color-text-success);margin-top:2px">300만원 예산 내 충분</div>
+
+  <!-- 2일차 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-pill">2일차 · 6/17(수)</span>
+      <span class="day-title">야비지 투어 메인</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:00~11:30</div>
+        <div class="tl-name">오전 자유 — 사와다노하마 비치 산책 또는 숙소 휴식</div>
+        <div class="tl-desc">야비지 투어가 오후 집합이라 오전은 여유롭게</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">11:30~12:00</div>
+        <div class="tl-name">점심 — Nakayukui Shoten (나카유쿠이 쇼텐)</div>
+        <div class="tl-desc">이라부섬. 09:30~12:00 / 13:30~16:00. 목 휴무 → 수요일 OK. 사타안다기. 투어 전 가볍게</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot amber"></div>
+        <div class="tl-time">12:00~ (전날 카톡 안내)</div>
+        <div class="tl-name">야비지 보트 스노클링 투어 <span class="badge-info">사전 예약 필수</span></div>
+        <div class="tl-desc">HOTEL LOCUS 뒤 항구 집합. 총 4~4.5시간. 멀미약 출발 30분 전 복용</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">16:30~17:15</div>
+        <div class="tl-name">카페 — 1 LAB Hello VACAY (이라부섬)</div>
+        <div class="tl-desc">11:00~17:00 (L.O 16:30). 투어 복귀 후 피로 회복. 아이스 카페라떼·호지차라떼</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">19:00~</div>
+        <div class="tl-name">저녁 — 이자카야 훌라 HULAR</div>
+        <div class="tl-desc">히라라 시내. 17:00~23:00. 화 휴무 → 수요일 OK. 시마 오뎅·생선 안주</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3일차 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-pill">3일차 · 6/18(목)</span>
+      <span class="day-title">섬 동쪽 탐방 &amp; 온천</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">09:00~10:30</div>
+        <div class="tl-name">히가시헨나 곶 (東平安名崎)</div>
+        <div class="tl-desc">미야코지마 동쪽 끝 천연기념물 산책로. 등대 파노라마 뷰. 오전 햇빛 최적</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot amber"></div>
+        <div class="tl-time">10:30~12:00</div>
+        <div class="tl-name">아라구스쿠 비치 — 바다거북 스노클링 <span class="badge-info">바다거북 조우율 최고</span></div>
+        <div class="tl-desc">헨나 곶과 같은 동쪽 동선. 수심 1~2m. 개인 스노클링 무료 입장</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">12:30~13:30</div>
+        <div class="tl-name">점심 — みなと食堂 (미나토 쇼쿠도)</div>
+        <div class="tl-desc">니가와도리 어항. 11:00~16:00 (L.O 15:30). 수 휴무 → 목요일 OK. 어항 직영 생선 정식</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">14:30~16:30</div>
+        <div class="tl-name">스나야마 비치</div>
+        <div class="tl-desc">바위 터널 통과 후 숨은 해변. 오후 빛 좋음. 인스타 포토존</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-time">17:00~19:00</div>
+        <div class="tl-name">시기라 온천 <span class="badge-info">커플 추천</span></div>
+        <div class="tl-desc">황금빛 미네랄 온천. 수영복 착용 노천 풀. 일몰 무렵 방문</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">20:00~</div>
+        <div class="tl-name">저녁 — でいりぐち 下里通り店 (데이리구치 시모자토도리텐)</div>
+        <div class="tl-desc">히라라 시내. 18:00~23:00. 화 휴무 → 목요일 OK. 오뎅 모리와세·테비치 조림</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4일차 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-pill">4일차 · 6/19(금)</span>
+      <span class="day-title">귀국</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">09:00~09:45</div>
+        <div class="tl-name">모닝 — GOODMANS COFFEE</div>
+        <div class="tl-desc">히라라 시내. 6월 정상영업. 마지막 날 여유로운 커피</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-time">09:45~10:30</div>
+        <div class="tl-name">バナナケーキ monte doll (바나나케이키 몬테 도루) 기념품 구매</div>
+        <div class="tl-desc">09:00~19:00 연중무휴. 미야코지마 바나나케이크. 공항보다 저렴하고 종류 다양</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot amber"></div>
+        <div class="tl-time">10:30~11:00</div>
+        <div class="tl-name">렌터카 반납 → 공항 이동</div>
+        <div class="tl-desc">みやこ下地島空港ターミナル店 반납. 체크인 마감 최소 1시간 전 도착</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot blue"></div>
+        <div class="tl-time">12:00</div>
+        <div class="tl-name">시모지시마 출발 → 14:30 인천 도착 <span class="badge-info">직항 확정</span></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ════════════════ 9. 예약 순서 ════════════════ -->
-<div class="sec-title">예약 체크리스트 (우선순위 순)</div>
-<table class="rt" style="margin-bottom:0">
-  <tr><th style="min-width:22px">순</th><th style="min-width:120px">항목</th><th>내용</th><th style="min-width:60px">상태</th></tr>
-  <tr><td style="font-weight:500">1</td><td>항공권</td><td>진에어 직항 왕복 846,800원 (2인)</td><td style="color:var(--color-text-success);font-size:11px">✓ 완료</td></tr>
-  <tr><td style="font-weight:500">2</td><td>국제운전면허증</td><td>운전면허시험장·경찰서 당일 발급 가능</td><td style="color:var(--color-text-warning);font-size:11px">미완료</td></tr>
-  <tr><td style="font-weight:500">3</td><td>렌터카</td><td>OTS·니혼·오릭스 중 선택 / 온라인 사전 예약</td><td style="color:var(--color-text-warning);font-size:11px">미완료</td></tr>
-  <tr><td style="font-weight:500">4</td><td>숙박 (Seahorse)</td><td>성수기 조기 예약 권장 / 3박</td><td style="color:var(--color-text-warning);font-size:11px">미완료</td></tr>
-  <tr><td style="font-weight:500">5</td><td>야비지 투어</td><td>마이리얼트립·투어비스·와그 / 6월 성수기 조기 마감 주의</td><td style="color:var(--color-text-warning);font-size:11px">미완료</td></tr>
-  <tr><td style="font-weight:500">6</td><td>식당 예약</td><td>亀寿司·あったかや·でいりぐち 전화 또는 구글맵 채팅</td><td style="color:var(--color-text-warning);font-size:11px">미완료</td></tr>
-  <tr><td style="font-weight:500">7</td><td>eSIM / 포켓와이파이</td><td>일본 데이터 통신 / 렌터카 내비 앱 필수</td><td style="color:var(--color-text-warning);font-size:11px">미완료</td></tr>
-</table>
+<!-- 맛집 카페 표 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">🍽</span> 맛집 · 카페 영업시간 &amp; 방문 가부</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:120px">가게</th>
+          <th style="min-width:100px">대표 메뉴</th>
+          <th style="min-width:100px">영업시간</th>
+          <th style="min-width:55px">정기휴무</th>
+          <th class="t-center" style="min-width:30px">화<br>6/16</th>
+          <th class="t-center" style="min-width:30px">수<br>6/17</th>
+          <th class="t-center" style="min-width:30px">목<br>6/18</th>
+          <th class="t-center" style="min-width:30px">금<br>6/19</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cat-row"><td colspan="8">식사</td></tr>
+        <tr>
+          <td><span class="t-name">Fish Lab 魚熟</span><span class="t-kr">피시랩 우오쥬쿠</span><span class="t-loc">히라라 남쪽</span></td>
+          <td class="t-menu">신선 해산물 정식<br>해산물 덮밥</td>
+          <td>07:30~15:00</td><td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">1일차</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">Nakayukui Shoten</span><span class="t-kr">나카유쿠이 쇼텐</span><span class="t-loc">이라부섬 구니나카</span></td>
+          <td class="t-menu">사타안다기<br>(오키나와 튀김 도넛)</td>
+          <td>09:30~12:00<br>13:30~16:00</td><td>목(월OK)</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">2일차</span></td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">みなと食堂</span><span class="t-kr">미나토 쇼쿠도</span><span class="t-loc">니가와도리 어항</span></td>
+          <td class="t-menu">어항 직영 생선 정식<br>문어 야키소바</td>
+          <td>11:00~16:00<br>L.O 15:30</td><td>수 휴무</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">3일차</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">ソーキ亭 いりくんやぁ</span><span class="t-kr">소키테이 이리쿤야</span><span class="t-loc">이라부섬 나가하마</span></td>
+          <td class="t-menu">소키소바<br>(연골 돼지뼈 소바)</td>
+          <td>11:00~15:00</td><td>화·수 휴무</td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">にいまそば</span><span class="t-kr">니이마 소바</span><span class="t-loc">섬 북쪽 가리마타</span></td>
+          <td class="t-menu">미야코 소바<br>쥬시(영양밥) 세트</td>
+          <td>11:00~15:00</td><td>목 휴무</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">HARRY'S Shrimp Truck</span><span class="t-loc">서평안나자키</span></td>
+          <td class="t-menu">갈릭 버터 새우 플레이트<br>쉬림프 타코</td>
+          <td>11:00~17:00</td><td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">Utopia Farms</span><span class="t-loc">우에노(섬 남동쪽)</span></td>
+          <td class="t-menu">자사 농장 채소 플레이트<br>섬 채소 스무디</td>
+          <td>10:00~17:00</td><td>일 휴무</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">亀寿司 <span class="new-badge">신규</span></span><span class="t-kr">카메 스시</span><span class="t-loc">히라라 쿠가이</span></td>
+          <td class="t-menu">텐푸라 정식<br>스시 모둠</td>
+          <td>11:30~13:30<br>17:00~20:00<br><span style="font-size:10px;color:var(--ink-pale)">점심·저녁 2부제</span></td>
+          <td>수 휴무</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">かわみつ食堂 <span class="new-badge">신규</span></span><span class="t-kr">카와미츠 쇼쿠도</span><span class="t-loc">우에치(이라부 방면)</span></td>
+          <td class="t-menu">미야코 마제소바<br>(비벼먹는 소바)</td>
+          <td>11:00~14:30</td><td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">沖縄そば まるかみ <span class="new-badge">신규</span></span><span class="t-kr">오키나와소바 마루카미</span><span class="t-loc">구리마섬(시모지)</span></td>
+          <td class="t-menu">연골 소키소바<br>오키나와소바</td>
+          <td>11:00~15:00<br>L.O 14:00<br><span style="font-size:10px;color:var(--ink-pale)">매진 시 조기마감</span></td>
+          <td>일·2·4번째 월</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr class="cat-row"><td colspan="8">이자카야</td></tr>
+        <tr>
+          <td><span class="t-name">ツマンデ みやこパーラー</span><span class="t-kr">츠만데 미야코 파라</span><span class="t-loc">히라라 시내</span></td>
+          <td class="t-menu">아와모리 칵테일<br>시마야채 안주</td>
+          <td>17:00~24:00</td><td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">1일차</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">이자카야 훌라 HULAR</span><span class="t-loc">히라라 시내</span></td>
+          <td class="t-menu">시마 오뎅<br>생선 안주류</td>
+          <td>17:00~23:00</td><td>화 휴무</td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">2일차</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">でいりぐち 下里通り店</span><span class="t-kr">데이리구치 시모자토도리텐</span><span class="t-loc">히라라 시내</span></td>
+          <td class="t-menu">오뎅 모리와세<br>테비치(족발) 조림</td>
+          <td>18:00~23:00</td><td>화 휴무</td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">3일차</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">やんばるアグー嘉福</span><span class="t-kr">얀바루 아구 카후쿠</span><span class="t-loc">히라라 · 샤브샤브</span></td>
+          <td class="t-menu">오키나와 아구 돼지<br>샤브샤브 코스</td>
+          <td>17:00~24:00</td><td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">あったかや <span class="new-badge">신규</span></span><span class="t-kr">앗타카야</span><span class="t-loc">시모지섬 스가마</span></td>
+          <td class="t-menu">미야코산 사시미 3종<br>히야시 고마소바</td>
+          <td>17:00~22:00</td><td>월·화 휴무</td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">島の鉄板 BOBURI <span class="new-badge">신규</span></span><span class="t-kr">시마노 뎃판 보부리</span><span class="t-loc">히라라 쿠가이</span></td>
+          <td class="t-menu">오코노미야키<br>미야코규 햄버그</td>
+          <td>17:00~23:00</td><td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">北琉笑店 いころ <span class="new-badge">신규</span></span><span class="t-kr">호쿠류쇼텐 이코로</span><span class="t-loc">히라라 니시자토</span></td>
+          <td class="t-menu">징기스칸<br>치즈 가리비구이</td>
+          <td>18:00~24:00<br><span style="font-size:10px;color:var(--ink-pale)">수: 15:00~21:00</span></td>
+          <td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span><br><span style="font-size:9px;color:var(--ink-pale)">~21시</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr class="cat-row"><td colspan="8">카페 · 디저트</td></tr>
+        <tr>
+          <td><span class="t-name">GOODMANS COFFEE</span><span class="t-loc">히라라 시내</span></td>
+          <td class="t-menu">드립 커피 · 라떼류</td>
+          <td>현장 확인</td><td>6월 영업</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">4일차</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">1 LAB Hello VACAY</span><span class="t-loc">이라부섬 나카지</span></td>
+          <td class="t-menu">아이스 카페라떼<br>호지차라떼</td>
+          <td>11:00~17:00<br>L.O 16:30</td><td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">2일차</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">リッコジェラート</span><span class="t-kr">릿코 젤라토</span><span class="t-loc">히라라 시내</span></td>
+          <td class="t-menu">망고 젤라토<br>계절 과일 한정</td>
+          <td>11:00~16:45<br><span style="font-size:10px;color:var(--ink-pale)">금·토 야간 연장</span></td>
+          <td>화·수 휴무</td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ng">✗</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-name">バナナケーキ monte doll</span><span class="t-kr">바나나케이키 몬테 도루</span><span class="t-loc">히라라 시내</span></td>
+          <td class="t-menu">미야코지마 바나나케이크<br>(기념품·테이크아웃)</td>
+          <td>09:00~19:00</td><td>연중무휴</td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">4일차</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 준비물 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">🎒</span> 준비물 체크리스트</div>
+  <div class="pack-grid">
+    <div class="pack-card">
+      <div class="pack-title">운전</div>
+      <div class="pack-item">
+        ☐ 국제운전면허증<br>
+        ☐ 한국 운전면허증<br>
+        ☐ 여권
+      </div>
+      <div class="pack-note">국제+한국 면허 둘 다 지참 필수</div>
+    </div>
+    <div class="pack-card">
+      <div class="pack-title">바다 · 액티비티</div>
+      <div class="pack-item">
+        ☐ 래시가드 (자외선 차단·해파리 보호)<br>
+        ☐ 아쿠아슈즈<br>
+        ☐ 방수 파우치<br>
+        ☐ 스노클 세트 (현장 렌탈 가능)<br>
+        ☐ 멀미약 (야비지 보트 왕복 2시간)
+      </div>
+    </div>
+    <div class="pack-card">
+      <div class="pack-title">날씨 대비</div>
+      <div class="pack-item">
+        ☐ 접이식 우비 (스콜 대비)<br>
+        ☐ 선크림 SPF50+ 워터프루프 × 2개<br>
+        ☐ 선크림 스틱형 (부분 덧바름용)<br>
+        ☐ 챙 넓은 모자 (끈 있는 것)<br>
+        ☐ 선글라스<br>
+        ☐ 갈아입을 옷 (1일 2벌 기준)
+      </div>
+      <div class="pack-note">6월 자외선 강함 · 스콜 대비 필수</div>
+    </div>
+    <div class="pack-card">
+      <div class="pack-title">결제 · 통신</div>
+      <div class="pack-item">
+        ☐ 엔화 현금 50,000~70,000엔<br>
+        ☐ 해외결제 가능 카드 (보조 수단)<br>
+        ☐ 일본 eSIM 또는 포켓 와이파이<br>
+        ☐ 보조배터리<br>
+        ☐ C타입 케이블 + 멀티탭
+      </div>
+      <div class="pack-note">렌터카 내비 앱에 데이터 필수</div>
+    </div>
+    <div class="pack-card">
+      <div class="pack-title">의약품 · 위생</div>
+      <div class="pack-item">
+        ☐ 멀미약<br>
+        ☐ 소화제 · 지사제<br>
+        ☐ 모기기피제<br>
+        ☐ 해파리 쏘임 대비 (물파스)<br>
+        ☐ 밴드 · 소독약<br>
+        ☐ 두통약 · 종합감기약
+      </div>
+    </div>
+    <div class="pack-card">
+      <div class="pack-title">수중 촬영</div>
+      <div class="pack-item">
+        ☐ 방수 케이스 (스마트폰용)<br>
+        ☐ GoPro (선택 사항)<br>
+        ☐ 스포츠 타월 (속건성)
+      </div>
+      <div class="pack-note">야비지 · 바다거북 스노클링 투어 업체 대부분 사진 무료 제공</div>
+    </div>
+  </div>
+</div>
+
+<!-- 예약 체크리스트 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">📋</span> 예약 체크리스트</div>
+  <div class="todo-list">
+    <div class="todo-item">
+      <div class="todo-num done">1</div>
+      <div class="todo-content">
+        <div class="todo-title">항공권</div>
+        <div class="todo-desc">진에어 직항 왕복 846,800원 (2인)</div>
+      </div>
+      <div class="todo-status st-done">✓ 완료</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num done">2</div>
+      <div class="todo-content">
+        <div class="todo-title">숙박</div>
+        <div class="todo-desc">Seahorse 3박 374,127원 (아고다 확정)</div>
+      </div>
+      <div class="todo-status st-done">✓ 완료</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num wip">3</div>
+      <div class="todo-content">
+        <div class="todo-title">렌터카</div>
+        <div class="todo-desc">오릭스렌터카 SA클래스 23,980엔 — ご予約手続きにすすむ 단계 진행 중</div>
+      </div>
+      <div class="todo-status st-wip">진행 중</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num">4</div>
+      <div class="todo-content">
+        <div class="todo-title">국제운전면허증 발급</div>
+        <div class="todo-desc">운전면허시험장·경찰서 방문 발급 / 준비물: 면허증 + 사진 1매 + 8,500원</div>
+      </div>
+      <div class="todo-status st-todo">미완료</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num">5</div>
+      <div class="todo-content">
+        <div class="todo-title">야비지 투어 예약</div>
+        <div class="todo-desc">마이리얼트립 · 투어비스 · 와그 / 6월 성수기 조기 마감 주의 — 즉시 예약 권장</div>
+      </div>
+      <div class="todo-status st-todo">미완료</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num">6</div>
+      <div class="todo-content">
+        <div class="todo-title">바다거북 스노클링</div>
+        <div class="todo-desc">아라구스쿠 비치 개인 스노클링 (무료) 또는 투어 업체 선택</div>
+      </div>
+      <div class="todo-status st-todo">미완료</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num">7</div>
+      <div class="todo-content">
+        <div class="todo-title">식당 예약</div>
+        <div class="todo-desc">亀寿司 +81-980-73-4660 · あったかや 구글맵 채팅 · でいりぐち 전화 또는 구글맵</div>
+      </div>
+      <div class="todo-status st-todo">미완료</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num">8</div>
+      <div class="todo-content">
+        <div class="todo-title">eSIM / 포켓 와이파이</div>
+        <div class="todo-desc">쿠팡·네이버에서 일본 전용 eSIM 구매 후 도착 시 활성화</div>
+      </div>
+      <div class="todo-status st-todo">미완료</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num">9</div>
+      <div class="todo-content">
+        <div class="todo-title">여행자보험 가입</div>
+        <div class="todo-desc">해양 스포츠 특약 포함 필수 확인 / KB·삼성·현대해상 앱에서 당일 가입 가능</div>
+      </div>
+      <div class="todo-status st-todo">미완료</div>
+    </div>
+    <div class="todo-item">
+      <div class="todo-num">10</div>
+      <div class="todo-content">
+        <div class="todo-title">엔화 환전</div>
+        <div class="todo-desc">2인 기준 50,000~70,000엔 / 토스뱅크·카카오뱅크 앱 환전 후 공항 수령 추천</div>
+      </div>
+      <div class="todo-status st-todo">미완료</div>
+    </div>
+  </div>
+</div>
+
+<!-- 예산 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">💰</span> 예산 현황 (2인 기준 · 인당 150만원)</div>
+  <div class="budget-grid">
+    <div class="budget-card">
+      <div class="budget-label">항공권 (2인 왕복)</div>
+      <div class="budget-value">846,800원</div>
+      <div class="budget-sub" style="color:var(--success)">✓ 확정</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-label">숙박 3박 (Seahorse)</div>
+      <div class="budget-value">374,127원</div>
+      <div class="budget-sub" style="color:var(--success)">✓ 확정</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-label">렌터카 4일 (오릭스)</div>
+      <div class="budget-value">약 22만원</div>
+      <div class="budget-sub">23,980엔 · 진행 중</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-label">식비 4일 (2인)</div>
+      <div class="budget-value">20~30만원</div>
+      <div class="budget-sub">현금 지참 권장</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-label">야비지 투어 (2인)</div>
+      <div class="budget-value">13~18만원</div>
+      <div class="budget-sub">한국어 업체 기준</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-label">온천·기타·쇼핑</div>
+      <div class="budget-value">8~15만원</div>
+      <div class="budget-sub">시기라 온천 + 기념품</div>
+    </div>
+  </div>
+  <div class="total-box">
+    <div>
+      <div class="total-label">2인 총 예상 합계</div>
+      <div class="total-note">중간값 기준</div>
+    </div>
+    <div style="text-align:right">
+      <div class="total-value">215~265만원</div>
+      <div class="total-note">300만원 예산 내 여유 있음</div>
+    </div>
+  </div>
+</div>
+
+<!-- 참고 -->
+<div class="sec">
+  <div class="sec-title"><span class="icon">!</span> 긴급 연락처 &amp; 참고</div>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-label">현지 긴급</div>
+      <div class="card-value">110 (경찰) / 119 (구급)</div>
+    </div>
+    <div class="card">
+      <div class="card-label">한국 총영사관 (오키나와)</div>
+      <div class="card-value">+81-98-865-4683</div>
+    </div>
+    <div class="card">
+      <div class="card-label">야비지 투어 취소·변경</div>
+      <div class="card-value">예약 업체 카톡 채널</div>
+    </div>
+  </div>
+  <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:10px;padding:.9rem 1.1rem;margin-top:10px;font-size:12px;color:var(--warn);line-height:1.8">
+    <strong>태풍·악천후 대체 일정:</strong> 야비지 투어 당일 취소 시 — 이라부섬 드라이브 / 미야코 해중공원 (실내 수족관) / 히라라 시내 카페 투어<br>
+    <strong>운전 주의:</strong> 일본 좌측통행 (우리나라 반대). 내비는 구글맵 또는 야후카내비 (일어 설정). 반납 전 가득 주유 (레귤러/レギュラー).
+  </div>
+</div>
 
 </div>
+
+<footer>
+  미야코지마 여행 계획서 · 2026.06.16~19 · 최종 업데이트 2026.03.28
+</footer>
+
+</body>
+</html>
