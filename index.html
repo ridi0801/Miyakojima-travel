@@ -448,6 +448,129 @@ footer {
   border-top: 1px solid var(--border);
 }
 
+/* ── 인터랙티브 체크리스트 ── */
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 3px 0;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity .15s;
+  border-radius: 4px;
+}
+.check-item:hover { opacity: .75; }
+.check-box {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border-dark);
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, border-color .15s;
+  font-size: 9px;
+  color: transparent;
+}
+.check-item.checked .check-box {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+}
+.check-item.checked .check-label {
+  text-decoration: line-through;
+  color: var(--ink-pale);
+}
+.check-label {
+  font-size: 11.5px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  transition: color .15s;
+}
+
+/* 준비물 진행률 바 */
+.pack-progress {
+  margin-top: .6rem;
+  padding-top: .5rem;
+  border-top: 1px solid var(--border);
+}
+.pack-progress-bar-bg {
+  background: var(--border);
+  border-radius: 4px;
+  height: 4px;
+  overflow: hidden;
+  margin-top: 3px;
+}
+.pack-progress-bar {
+  background: var(--teal);
+  height: 100%;
+  border-radius: 4px;
+  transition: width .3s ease;
+}
+.pack-progress-label {
+  font-size: 9px;
+  color: var(--ink-pale);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* 예약 체크리스트 클릭 가능 */
+.todo-item {
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.todo-item:hover { border-color: var(--border-dark); }
+.todo-item.completed {
+  background: var(--success-bg);
+  border-color: var(--teal);
+}
+.todo-item.completed .todo-title { color: var(--ink-light); text-decoration: line-through; }
+.todo-item.completed .todo-num { background: var(--teal) !important; }
+.todo-item.completed .todo-status {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+}
+
+/* 전체 진행률 배너 */
+.progress-banner {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: .9rem 1.2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.progress-banner-label {
+  font-size: 12px;
+  color: var(--ink-mid);
+  white-space: nowrap;
+}
+.progress-banner-bar-bg {
+  flex: 1;
+  min-width: 100px;
+  background: var(--border);
+  border-radius: 6px;
+  height: 6px;
+  overflow: hidden;
+}
+.progress-banner-bar {
+  background: var(--teal);
+  height: 100%;
+  border-radius: 6px;
+  transition: width .4s ease;
+}
+.progress-banner-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--teal);
+  white-space: nowrap;
+}
+
 /* ── print ── */
 @media print {
   body { background: white; font-size: 11px; }
@@ -955,65 +1078,71 @@ footer {
   <div class="pack-grid">
     <div class="pack-card">
       <div class="pack-title">운전</div>
-      <div class="pack-item">
-        ☐ 국제운전면허증<br>
-        ☐ 한국 운전면허증<br>
-        ☐ 여권
+      <div class="pack-item" id="pack-drive">
+        <div class="check-item" data-group="pack-drive"><div class="check-box">✓</div><span class="check-label">국제운전면허증</span></div>
+        <div class="check-item" data-group="pack-drive"><div class="check-box">✓</div><span class="check-label">한국 운전면허증</span></div>
+        <div class="check-item" data-group="pack-drive"><div class="check-box">✓</div><span class="check-label">여권</span></div>
       </div>
       <div class="pack-note">국제+한국 면허 둘 다 지참 필수</div>
+      <div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-drive">0 / 3</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-drive" style="width:0%"></div></div></div>
     </div>
     <div class="pack-card">
       <div class="pack-title">바다 · 액티비티</div>
-      <div class="pack-item">
-        ☐ 래시가드 (자외선 차단·해파리 보호)<br>
-        ☐ 아쿠아슈즈<br>
-        ☐ 방수 파우치<br>
-        ☐ 스노클 세트 (현장 렌탈 가능)<br>
-        ☐ 멀미약 (야비지 보트 왕복 2시간)
+      <div class="pack-item" id="pack-sea">
+        <div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">래시가드 (자외선 차단·해파리 보호)</span></div>
+        <div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">아쿠아슈즈</span></div>
+        <div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">방수 파우치</span></div>
+        <div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">스노클 세트 (현장 렌탈 가능)</span></div>
+        <div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">멀미약 (야비지 보트 왕복 2시간)</span></div>
       </div>
+      <div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-sea">0 / 5</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-sea" style="width:0%"></div></div></div>
     </div>
     <div class="pack-card">
       <div class="pack-title">날씨 대비</div>
-      <div class="pack-item">
-        ☐ 접이식 우비 (스콜 대비)<br>
-        ☐ 선크림 SPF50+ 워터프루프 × 2개<br>
-        ☐ 선크림 스틱형 (부분 덧바름용)<br>
-        ☐ 챙 넓은 모자 (끈 있는 것)<br>
-        ☐ 선글라스<br>
-        ☐ 갈아입을 옷 (1일 2벌 기준)
+      <div class="pack-item" id="pack-weather">
+        <div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">접이식 우비 (스콜 대비)</span></div>
+        <div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">선크림 SPF50+ 워터프루프 × 2개</span></div>
+        <div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">선크림 스틱형 (부분 덧바름용)</span></div>
+        <div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">챙 넓은 모자 (끈 있는 것)</span></div>
+        <div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">선글라스</span></div>
+        <div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">갈아입을 옷 (1일 2벌 기준)</span></div>
       </div>
       <div class="pack-note">6월 자외선 강함 · 스콜 대비 필수</div>
+      <div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-weather">0 / 6</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-weather" style="width:0%"></div></div></div>
     </div>
     <div class="pack-card">
       <div class="pack-title">결제 · 통신</div>
-      <div class="pack-item">
-        ☐ 엔화 현금 50,000~70,000엔<br>
-        ☐ 해외결제 가능 카드 (보조 수단)<br>
-        ☐ 일본 eSIM 또는 포켓 와이파이<br>
-        ☐ 보조배터리<br>
-        ☐ C타입 케이블 + 멀티탭
+      <div class="pack-item" id="pack-money">
+        <div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">엔화 현금 50,000~70,000엔</span></div>
+        <div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">해외결제 가능 카드 (보조 수단)</span></div>
+        <div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">일본 eSIM 또는 포켓 와이파이</span></div>
+        <div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">보조배터리</span></div>
+        <div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">C타입 케이블 + 멀티탭</span></div>
       </div>
       <div class="pack-note">렌터카 내비 앱에 데이터 필수</div>
+      <div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-money">0 / 5</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-money" style="width:0%"></div></div></div>
     </div>
     <div class="pack-card">
       <div class="pack-title">의약품 · 위생</div>
-      <div class="pack-item">
-        ☐ 멀미약<br>
-        ☐ 소화제 · 지사제<br>
-        ☐ 모기기피제<br>
-        ☐ 해파리 쏘임 대비 (물파스)<br>
-        ☐ 밴드 · 소독약<br>
-        ☐ 두통약 · 종합감기약
+      <div class="pack-item" id="pack-med">
+        <div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">멀미약</span></div>
+        <div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">소화제 · 지사제</span></div>
+        <div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">모기기피제</span></div>
+        <div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">해파리 쏘임 대비 (물파스)</span></div>
+        <div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">밴드 · 소독약</span></div>
+        <div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">두통약 · 종합감기약</span></div>
       </div>
+      <div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-med">0 / 6</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-med" style="width:0%"></div></div></div>
     </div>
     <div class="pack-card">
       <div class="pack-title">수중 촬영</div>
-      <div class="pack-item">
-        ☐ 방수 케이스 (스마트폰용)<br>
-        ☐ GoPro (선택 사항)<br>
-        ☐ 스포츠 타월 (속건성)
+      <div class="pack-item" id="pack-cam">
+        <div class="check-item" data-group="pack-cam"><div class="check-box">✓</div><span class="check-label">방수 케이스 (스마트폰용)</span></div>
+        <div class="check-item" data-group="pack-cam"><div class="check-box">✓</div><span class="check-label">GoPro (선택 사항)</span></div>
+        <div class="check-item" data-group="pack-cam"><div class="check-box">✓</div><span class="check-label">스포츠 타월 (속건성)</span></div>
       </div>
       <div class="pack-note">야비지 · 바다거북 스노클링 투어 업체 대부분 사진 무료 제공</div>
+      <div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-cam">0 / 3</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-cam" style="width:0%"></div></div></div>
     </div>
   </div>
 </div>
@@ -1021,8 +1150,13 @@ footer {
 <!-- 예약 체크리스트 -->
 <div class="sec">
   <div class="sec-title"><span class="icon">📋</span> 예약 체크리스트</div>
+  <div class="progress-banner">
+    <span class="progress-banner-label">예약 진행률</span>
+    <div class="progress-banner-bar-bg"><div class="progress-banner-bar" id="todo-bar" style="width:20%"></div></div>
+    <span class="progress-banner-count" id="todo-count">2 / 10</span>
+  </div>
   <div class="todo-list">
-    <div class="todo-item">
+    <div class="todo-item completed" data-todo="1">
       <div class="todo-num done">1</div>
       <div class="todo-content">
         <div class="todo-title">항공권</div>
@@ -1030,7 +1164,7 @@ footer {
       </div>
       <div class="todo-status st-done">✓ 완료</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item completed" data-todo="2">
       <div class="todo-num done">2</div>
       <div class="todo-content">
         <div class="todo-title">숙박</div>
@@ -1038,7 +1172,7 @@ footer {
       </div>
       <div class="todo-status st-done">✓ 완료</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item" data-todo="3">
       <div class="todo-num wip">3</div>
       <div class="todo-content">
         <div class="todo-title">렌터카</div>
@@ -1046,7 +1180,7 @@ footer {
       </div>
       <div class="todo-status st-wip">진행 중</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item" data-todo="4">
       <div class="todo-num">4</div>
       <div class="todo-content">
         <div class="todo-title">국제운전면허증 발급</div>
@@ -1054,7 +1188,7 @@ footer {
       </div>
       <div class="todo-status st-todo">미완료</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item" data-todo="5">
       <div class="todo-num">5</div>
       <div class="todo-content">
         <div class="todo-title">야비지 투어 예약</div>
@@ -1062,7 +1196,7 @@ footer {
       </div>
       <div class="todo-status st-todo">미완료</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item" data-todo="6">
       <div class="todo-num">6</div>
       <div class="todo-content">
         <div class="todo-title">바다거북 스노클링</div>
@@ -1070,7 +1204,7 @@ footer {
       </div>
       <div class="todo-status st-todo">미완료</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item" data-todo="7">
       <div class="todo-num">7</div>
       <div class="todo-content">
         <div class="todo-title">식당 예약</div>
@@ -1078,7 +1212,7 @@ footer {
       </div>
       <div class="todo-status st-todo">미완료</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item" data-todo="8">
       <div class="todo-num">8</div>
       <div class="todo-content">
         <div class="todo-title">eSIM / 포켓 와이파이</div>
@@ -1086,7 +1220,7 @@ footer {
       </div>
       <div class="todo-status st-todo">미완료</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item" data-todo="9">
       <div class="todo-num">9</div>
       <div class="todo-content">
         <div class="todo-title">여행자보험 가입</div>
@@ -1094,7 +1228,7 @@ footer {
       </div>
       <div class="todo-status st-todo">미완료</div>
     </div>
-    <div class="todo-item">
+    <div class="todo-item" data-todo="10">
       <div class="todo-num">10</div>
       <div class="todo-content">
         <div class="todo-title">엔화 환전</div>
@@ -1180,6 +1314,116 @@ footer {
 <footer>
   미야코지마 여행 계획서 · 2026.06.16~19 · 최종 업데이트 2026.03.28
 </footer>
+
+<script>
+// ── 준비물 체크리스트 ──
+const packGroups = {
+  'pack-drive':   { total: 3,  bar: 'bar-drive',   text: 'prog-text-drive' },
+  'pack-sea':     { total: 5,  bar: 'bar-sea',      text: 'prog-text-sea' },
+  'pack-weather': { total: 6,  bar: 'bar-weather',  text: 'prog-text-weather' },
+  'pack-money':   { total: 5,  bar: 'bar-money',    text: 'prog-text-money' },
+  'pack-med':     { total: 6,  bar: 'bar-med',      text: 'prog-text-med' },
+  'pack-cam':     { total: 3,  bar: 'bar-cam',      text: 'prog-text-cam' },
+};
+
+function updatePackProgress(groupId) {
+  const g = packGroups[groupId];
+  if (!g) return;
+  const items = document.querySelectorAll('[data-group="' + groupId + '"]');
+  const done = [...items].filter(el => el.classList.contains('checked')).length;
+  const pct = g.total > 0 ? Math.round(done / g.total * 100) : 0;
+  const bar = document.getElementById(g.bar);
+  const txt = document.querySelector('.' + g.text);
+  if (bar) bar.style.width = pct + '%';
+  if (txt) txt.textContent = done + ' / ' + g.total;
+}
+
+function savePackState() {
+  const state = {};
+  document.querySelectorAll('.check-item').forEach((el, i) => {
+    state['pack_' + i] = el.classList.contains('checked');
+  });
+  try { localStorage.setItem('miyako_pack', JSON.stringify(state)); } catch(e) {}
+}
+
+function loadPackState() {
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem('miyako_pack') || '{}'); } catch(e) {}
+  document.querySelectorAll('.check-item').forEach((el, i) => {
+    if (state['pack_' + i]) el.classList.add('checked');
+  });
+  Object.keys(packGroups).forEach(updatePackProgress);
+}
+
+document.querySelectorAll('.check-item').forEach(el => {
+  el.addEventListener('click', () => {
+    el.classList.toggle('checked');
+    const group = el.dataset.group;
+    updatePackProgress(group);
+    savePackState();
+  });
+});
+
+// ── 예약 체크리스트 ──
+function updateTodoProgress() {
+  const items = document.querySelectorAll('.todo-item');
+  const done = [...items].filter(el => el.classList.contains('completed')).length;
+  const total = items.length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  const bar = document.getElementById('todo-bar');
+  const cnt = document.getElementById('todo-count');
+  if (bar) bar.style.width = pct + '%';
+  if (cnt) cnt.textContent = done + ' / ' + total;
+}
+
+function saveTodoState() {
+  const state = {};
+  document.querySelectorAll('.todo-item').forEach(el => {
+    state['todo_' + el.dataset.todo] = el.classList.contains('completed');
+  });
+  try { localStorage.setItem('miyako_todo', JSON.stringify(state)); } catch(e) {}
+}
+
+function loadTodoState() {
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem('miyako_todo') || '{}'); } catch(e) {}
+  document.querySelectorAll('.todo-item').forEach(el => {
+    const key = 'todo_' + el.dataset.todo;
+    if (state[key] !== undefined) {
+      if (state[key]) {
+        el.classList.add('completed');
+        el.querySelector('.todo-status').textContent = '✓ 완료';
+        el.querySelector('.todo-status').className = 'todo-status st-done';
+      } else {
+        el.classList.remove('completed');
+      }
+    }
+  });
+  updateTodoProgress();
+}
+
+document.querySelectorAll('.todo-item').forEach(el => {
+  el.addEventListener('click', () => {
+    const isNowDone = !el.classList.contains('completed');
+    el.classList.toggle('completed', isNowDone);
+    const statusEl = el.querySelector('.todo-status');
+    if (isNowDone) {
+      statusEl.textContent = '✓ 완료';
+      statusEl.className = 'todo-status st-done';
+    } else {
+      statusEl.textContent = '미완료';
+      statusEl.className = 'todo-status st-todo';
+    }
+    updateTodoProgress();
+    saveTodoState();
+  });
+});
+
+// ── 초기 로드 ──
+loadPackState();
+loadTodoState();
+updateTodoProgress();
+</script>
 
 </body>
 </html>
