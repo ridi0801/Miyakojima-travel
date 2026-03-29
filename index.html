@@ -5,6 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>미야코지마 여행 계획 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCt3XYh0ot3J2oncUSUjiz8Uo2RLcsmciE",
+  authDomain: "miyakojima-travel.firebaseapp.com",
+  databaseURL: "https://miyakojima-travel-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "miyakojima-travel",
+  storageBucket: "miyakojima-travel.firebasestorage.app",
+  messagingSenderId: "931624323855",
+  appId: "1:931624323855:web:6a035c3da794a1c3f04c7a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ── Firebase 동기화 유틸 ──
+window._fbDb = db;
+window._fbRef = ref;
+window._fbSet = set;
+window._fbOnValue = onValue;
+window._fbReady = true;
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
 <style>
 :root {
   --ocean: #1a6b8a;
@@ -1509,7 +1536,7 @@ footer {
 </footer>
 
 <script>
-// ── 준비물 체크리스트 ──
+// ── 준비물 진행률 ──
 const packGroups = {
   'pack-drive':   { total: 3,  bar: 'bar-drive',   text: 'prog-text-drive' },
   'pack-sea':     { total: 5,  bar: 'bar-sea',      text: 'prog-text-sea' },
@@ -1531,33 +1558,7 @@ function updatePackProgress(groupId) {
   if (txt) txt.textContent = done + ' / ' + g.total;
 }
 
-function savePackState() {
-  const state = {};
-  document.querySelectorAll('.check-item').forEach((el, i) => {
-    state['pack_' + i] = el.classList.contains('checked');
-  });
-  try { localStorage.setItem('miyako_pack', JSON.stringify(state)); } catch(e) {}
-}
-
-function loadPackState() {
-  let state = {};
-  try { state = JSON.parse(localStorage.getItem('miyako_pack') || '{}'); } catch(e) {}
-  document.querySelectorAll('.check-item').forEach((el, i) => {
-    if (state['pack_' + i]) el.classList.add('checked');
-  });
-  Object.keys(packGroups).forEach(updatePackProgress);
-}
-
-document.querySelectorAll('.check-item').forEach(el => {
-  el.addEventListener('click', () => {
-    el.classList.toggle('checked');
-    const group = el.dataset.group;
-    updatePackProgress(group);
-    savePackState();
-  });
-});
-
-// ── 예약 체크리스트 ──
+// ── 예약 진행률 ──
 function updateTodoProgress() {
   const items = document.querySelectorAll('.todo-item');
   const done = [...items].filter(el => el.classList.contains('completed')).length;
@@ -1568,54 +1569,6 @@ function updateTodoProgress() {
   if (bar) bar.style.width = pct + '%';
   if (cnt) cnt.textContent = done + ' / ' + total;
 }
-
-function saveTodoState() {
-  const state = {};
-  document.querySelectorAll('.todo-item').forEach(el => {
-    state['todo_' + el.dataset.todo] = el.classList.contains('completed');
-  });
-  try { localStorage.setItem('miyako_todo', JSON.stringify(state)); } catch(e) {}
-}
-
-function loadTodoState() {
-  let state = {};
-  try { state = JSON.parse(localStorage.getItem('miyako_todo') || '{}'); } catch(e) {}
-  document.querySelectorAll('.todo-item').forEach(el => {
-    const key = 'todo_' + el.dataset.todo;
-    if (state[key] !== undefined) {
-      if (state[key]) {
-        el.classList.add('completed');
-        el.querySelector('.todo-status').textContent = '✓ 완료';
-        el.querySelector('.todo-status').className = 'todo-status st-done';
-      } else {
-        el.classList.remove('completed');
-      }
-    }
-  });
-  updateTodoProgress();
-}
-
-document.querySelectorAll('.todo-item').forEach(el => {
-  el.addEventListener('click', () => {
-    const isNowDone = !el.classList.contains('completed');
-    el.classList.toggle('completed', isNowDone);
-    const statusEl = el.querySelector('.todo-status');
-    if (isNowDone) {
-      statusEl.textContent = '✓ 완료';
-      statusEl.className = 'todo-status st-done';
-    } else {
-      statusEl.textContent = '미완료';
-      statusEl.className = 'todo-status st-todo';
-    }
-    updateTodoProgress();
-    saveTodoState();
-  });
-});
-
-// ── 초기 로드 ──
-loadPackState();
-loadTodoState();
-updateTodoProgress();
 
 // ── D-Day 카운터 ──
 (function() {
@@ -1647,7 +1600,6 @@ function setScheduleView(view) {
   const tabs = document.getElementById('day-tabs');
   const btnAll = document.getElementById('btn-all');
   const btnTab = document.getElementById('btn-tab');
-
   if (view === 'tab') {
     body.classList.add('tab-mode');
     tabs.classList.add('visible');
@@ -1660,7 +1612,7 @@ function setScheduleView(view) {
     btnAll.classList.add('active');
     btnTab.classList.remove('active');
   }
-  try { localStorage.setItem('miyako_view', view); } catch(e) {}
+  if (window._fbSaveView) window._fbSaveView(view);
 }
 
 function switchDay(day) {
@@ -1673,64 +1625,138 @@ function switchDay(day) {
   });
 }
 
-// ── 맛집 날짜 칸 클릭 — 일차 표시 토글 ──
+// ── 맛집 날짜 칸 ──
 const DAY_LABELS = { 1: '1일차', 2: '2일차', 3: '3일차', 4: '4일차' };
 
-function saveDateMarks() {
-  const marks = {};
-  document.querySelectorAll('td.date-cell').forEach((td, i) => {
-    marks[i] = td.classList.contains('day-marked');
-  });
-  try { localStorage.setItem('miyako_dates', JSON.stringify(marks)); } catch(e) {}
-}
-
-function loadDateMarks() {
-  let marks = {};
-  try { marks = JSON.parse(localStorage.getItem('miyako_dates') || '{}'); } catch(e) {}
-  document.querySelectorAll('td.date-cell').forEach((td, i) => {
-    if (marks[i]) {
-      td.classList.add('day-marked');
-      const day = parseInt(td.dataset.day);
-      if (!td.querySelector('.pick-badge')) {
-        const badge = document.createElement('span');
-        badge.className = 'pick-badge';
-        badge.textContent = DAY_LABELS[day];
-        td.appendChild(badge);
-      }
+function applyDateMark(td, isMarked) {
+  const day = parseInt(td.dataset.day);
+  let badge = td.querySelector('.pick-badge');
+  if (isMarked) {
+    td.classList.add('day-marked');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'pick-badge';
+      td.appendChild(badge);
     }
-  });
+    badge.textContent = DAY_LABELS[day];
+  } else {
+    td.classList.remove('day-marked');
+    if (badge) badge.remove();
+  }
 }
 
 document.querySelectorAll('td.date-cell').forEach(td => {
-  // ok 칸만 클릭 가능
   if (!td.querySelector('.ok')) return;
   td.addEventListener('click', () => {
-    const isMarked = td.classList.toggle('day-marked');
-    const day = parseInt(td.dataset.day);
-    let badge = td.querySelector('.pick-badge');
-    if (isMarked) {
-      if (!badge) {
-        badge = document.createElement('span');
-        badge.className = 'pick-badge';
-        td.appendChild(badge);
-      }
-      badge.textContent = DAY_LABELS[day];
-    } else {
-      if (badge) badge.remove();
-    }
-    saveDateMarks();
+    const isMarked = !td.classList.contains('day-marked');
+    applyDateMark(td, isMarked);
+    if (window._fbSaveDates) window._fbSaveDates();
   });
 });
 
-loadDateMarks();
+// ── Firebase 연동 ──
+function initFirebase() {
+  const db = window._fbDb;
+  const fbRef = window._fbRef;
+  const fbSet = window._fbSet;
+  const fbOnValue = window._fbOnValue;
 
-// 저장된 뷰 복원
-(function() {
-  try {
-    const saved = localStorage.getItem('miyako_view');
-    if (saved === 'tab') setScheduleView('tab');
-  } catch(e) {}
-})();
+  // 준비물
+  window._fbSavePack = function() {
+    const state = {};
+    document.querySelectorAll('.check-item').forEach((el, i) => {
+      state['p' + i] = el.classList.contains('checked') ? 1 : 0;
+    });
+    fbSet(fbRef(db, 'miyako/pack'), state);
+  };
+
+  fbOnValue(fbRef(db, 'miyako/pack'), (snap) => {
+    const state = snap.val() || {};
+    document.querySelectorAll('.check-item').forEach((el, i) => {
+      el.classList.toggle('checked', !!state['p' + i]);
+    });
+    Object.keys(packGroups).forEach(updatePackProgress);
+  });
+
+  document.querySelectorAll('.check-item').forEach(el => {
+    el.addEventListener('click', () => {
+      el.classList.toggle('checked');
+      updatePackProgress(el.dataset.group);
+      window._fbSavePack();
+    });
+  });
+
+  // 예약
+  window._fbSaveTodo = function() {
+    const state = {};
+    document.querySelectorAll('.todo-item').forEach(el => {
+      state['t' + el.dataset.todo] = el.classList.contains('completed') ? 1 : 0;
+    });
+    fbSet(fbRef(db, 'miyako/todo'), state);
+  };
+
+  fbOnValue(fbRef(db, 'miyako/todo'), (snap) => {
+    const state = snap.val() || {};
+    document.querySelectorAll('.todo-item').forEach(el => {
+      const done = !!state['t' + el.dataset.todo];
+      el.classList.toggle('completed', done);
+      const statusEl = el.querySelector('.todo-status');
+      if (done) {
+        statusEl.textContent = '✓ 완료';
+        statusEl.className = 'todo-status st-done';
+      } else if (!statusEl.classList.contains('st-wip')) {
+        statusEl.textContent = '미완료';
+        statusEl.className = 'todo-status st-todo';
+      }
+    });
+    updateTodoProgress();
+  });
+
+  document.querySelectorAll('.todo-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const isNowDone = !el.classList.contains('completed');
+      el.classList.toggle('completed', isNowDone);
+      const statusEl = el.querySelector('.todo-status');
+      statusEl.textContent = isNowDone ? '✓ 완료' : '미완료';
+      statusEl.className = isNowDone ? 'todo-status st-done' : 'todo-status st-todo';
+      updateTodoProgress();
+      window._fbSaveTodo();
+    });
+  });
+
+  // 날짜 칸
+  window._fbSaveDates = function() {
+    const marks = {};
+    document.querySelectorAll('td.date-cell').forEach((td, i) => {
+      marks['d' + i] = td.classList.contains('day-marked') ? 1 : 0;
+    });
+    fbSet(fbRef(db, 'miyako/dates'), marks);
+  };
+
+  fbOnValue(fbRef(db, 'miyako/dates'), (snap) => {
+    const marks = snap.val() || {};
+    document.querySelectorAll('td.date-cell').forEach((td, i) => {
+      applyDateMark(td, !!marks['d' + i]);
+    });
+  });
+
+  // 뷰 상태
+  window._fbSaveView = function(view) {
+    fbSet(fbRef(db, 'miyako/view'), view);
+  };
+
+  fbOnValue(fbRef(db, 'miyako/view'), (snap) => {
+    const val = snap.val();
+    if (val === 'tab' && currentView !== 'tab') setScheduleView('tab');
+    else if (val === 'all' && currentView !== 'all') setScheduleView('all');
+  });
+}
+
+if (window._fbReady) {
+  initFirebase();
+} else {
+  window.addEventListener('firebase-ready', initFirebase);
+}
 </script>
 
 </body>
