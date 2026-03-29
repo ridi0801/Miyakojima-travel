@@ -322,13 +322,13 @@ th {
   font-weight: 500;
   color: var(--ink-light);
   text-align: left;
-  padding: .5rem .5rem;
+  padding: .5rem .3rem;
   white-space: nowrap;
   letter-spacing: .05em;
   text-transform: uppercase;
 }
 td {
-  padding: .55rem .5rem;
+  padding: .55rem .3rem;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
   line-height: 1.5;
@@ -338,17 +338,19 @@ tr:last-child td { border-bottom: none; }
 .t-kr { font-size: 10px; color: var(--ink-light); }
 .t-loc { font-size: 10px; color: var(--ink-pale); display: block; margin-top: 1px; border-top: 1px solid var(--border); padding-top: 2px; }
 .t-menu { font-size: 11px; color: var(--ink-light); line-height: 1.6; }
-.ok { color: var(--success); font-size: 11px; font-weight: 500; }
-.ng { color: var(--danger); font-size: 11px; }
+.ok { color: var(--success); font-size: 12px; font-weight: 500; }
+.ng { color: var(--danger); font-size: 12px; }
 .pick-badge {
   display: block;
   font-size: 9px;
   background: var(--success-bg);
   color: var(--success);
-  padding: 1px 5px;
+  padding: 1px 4px;
   border-radius: 6px;
   margin-top: 2px;
   width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 .new-badge {
   display: inline-block;
@@ -364,13 +366,26 @@ tr:last-child td { border-bottom: none; }
   font-size: 10px;
   font-weight: 500;
   color: var(--ink-light);
-  padding: .5rem .5rem .25rem;
+  padding: .5rem .3rem .25rem;
   background: var(--cream);
   letter-spacing: .08em;
   text-transform: uppercase;
   border-bottom: 1px solid var(--border-dark);
 }
 .t-center { text-align: center; }
+
+/* 날짜 칸 클릭 인터랙션 */
+td.date-cell {
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s;
+}
+td.date-cell:hover { background: var(--cream); }
+td.date-cell.day-marked { background: var(--success-bg); }
+
+/* ── 맛집 표 모바일 카드 변환 ── */
+/* 데스크탑: 테이블 표시, 카드 숨김 */
+.mobile-card-list { display: none; }
 
 /* ── 준비물 ── */
 .pack-grid {
@@ -1032,212 +1047,185 @@ footer {
     <table>
       <thead>
         <tr>
-          <th style="min-width:120px">가게</th>
-          <th style="min-width:100px">대표 메뉴</th>
-          <th style="min-width:100px">영업시간</th>
-          <th style="min-width:55px">정기휴무</th>
-          <th class="t-center" style="min-width:30px">화<br>6/16</th>
-          <th class="t-center" style="min-width:30px">수<br>6/17</th>
-          <th class="t-center" style="min-width:30px">목<br>6/18</th>
-          <th class="t-center" style="min-width:30px">금<br>6/19</th>
+          <th style="min-width:140px">가게</th>
+          <th style="min-width:90px">영업시간</th>
+          <th class="t-center" style="min-width:22px">화<br>6/16</th>
+          <th class="t-center" style="min-width:22px">수<br>6/17</th>
+          <th class="t-center" style="min-width:22px">목<br>6/18</th>
+          <th class="t-center" style="min-width:22px">금<br>6/19</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="cat-row"><td colspan="8">식사</td></tr>
+        <tr class="cat-row"><td colspan="6">식사</td></tr>
         <tr>
-          <td><span class="t-name">Fish Lab 魚熟</span><span class="t-kr">피시랩 우오쥬쿠</span><span class="t-loc">히라라 남쪽</span></td>
-          <td class="t-menu">신선 해산물 정식<br>해산물 덮밥</td>
-          <td>07:30~15:00</td><td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">1일차</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">Fish Lab 魚熟</span><span class="t-kr">피시랩 우오쥬쿠 · 히라라 남쪽</span><span class="t-loc">해산물 정식 · 해산물 덮밥</span></td>
+          <td>07:30~15:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">Nakayukui Shoten</span><span class="t-kr">나카유쿠이 쇼텐</span><span class="t-loc">이라부섬 구니나카</span></td>
-          <td class="t-menu">사타안다기<br>(오키나와 튀김 도넛)</td>
-          <td>09:30~12:00<br>13:30~16:00</td><td>목(월OK)</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">2일차</span></td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">Nakayukui Shoten</span><span class="t-kr">나카유쿠이 쇼텐 · 이라부섬</span><span class="t-loc">사타안다기 (오키나와 튀김 도넛)</span></td>
+          <td>09:30~12:00<br>13:30~16:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">みなと食堂</span><span class="t-kr">미나토 쇼쿠도</span><span class="t-loc">니가와도리 어항</span></td>
-          <td class="t-menu">어항 직영 생선 정식<br>문어 야키소바</td>
-          <td>11:00~16:00<br>L.O 15:30</td><td>수 휴무</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">3일차</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">みなと食堂</span><span class="t-kr">미나토 쇼쿠도 · 니가와도리 어항</span><span class="t-loc">생선 정식 · 문어 야키소바</span></td>
+          <td>11:00~16:00<br>L.O 15:30</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">ソーキ亭 いりくんやぁ</span><span class="t-kr">소키테이 이리쿤야</span><span class="t-loc">이라부섬 나가하마</span></td>
-          <td class="t-menu">소키소바<br>(연골 돼지뼈 소바)</td>
-          <td>11:00~15:00</td><td>화·수 휴무</td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">ソーキ亭 いりくんやぁ</span><span class="t-kr">소키테이 이리쿤야 · 이라부섬</span><span class="t-loc">소키소바 (연골 돼지뼈 소바)</span></td>
+          <td>11:00~15:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">にいまそば</span><span class="t-kr">니이마 소바</span><span class="t-loc">섬 북쪽 가리마타</span></td>
-          <td class="t-menu">미야코 소바<br>쥬시(영양밥) 세트</td>
-          <td>11:00~15:00</td><td>목 휴무</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">にいまそば</span><span class="t-kr">니이마 소바 · 섬 북쪽 가리마타</span><span class="t-loc">미야코 소바 · 쥬시 세트</span></td>
+          <td>11:00~15:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">HARRY'S Shrimp Truck</span><span class="t-loc">서평안나자키</span></td>
-          <td class="t-menu">갈릭 버터 새우 플레이트<br>쉬림프 타코</td>
-          <td>11:00~17:00</td><td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">HARRY'S Shrimp Truck</span><span class="t-kr">서평안나자키</span><span class="t-loc">갈릭 버터 새우 플레이트 · 타코</span></td>
+          <td>11:00~17:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">Utopia Farms</span><span class="t-loc">우에노(섬 남동쪽)</span></td>
-          <td class="t-menu">자사 농장 채소 플레이트<br>섬 채소 스무디</td>
-          <td>10:00~17:00</td><td>일 휴무</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">Utopia Farms</span><span class="t-kr">우에노 (섬 남동쪽)</span><span class="t-loc">농장 채소 플레이트 · 스무디</span></td>
+          <td>10:00~17:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">亀寿司 <span class="new-badge">신규</span></span><span class="t-kr">카메 스시</span><span class="t-loc">히라라 쿠가이</span></td>
-          <td class="t-menu">텐푸라 정식<br>스시 모둠</td>
-          <td>11:30~13:30<br>17:00~20:00<br><span style="font-size:10px;color:var(--ink-pale)">점심·저녁 2부제</span></td>
-          <td>수 휴무</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">亀寿司 <span class="new-badge">신규</span></span><span class="t-kr">카메 스시 · 히라라 쿠가이</span><span class="t-loc">텐푸라 정식 · 스시 모둠</span></td>
+          <td>11:30~13:30<br>17:00~20:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">かわみつ食堂 <span class="new-badge">신규</span></span><span class="t-kr">카와미츠 쇼쿠도</span><span class="t-loc">우에치(이라부 방면)</span></td>
-          <td class="t-menu">미야코 마제소바<br>(비벼먹는 소바)</td>
-          <td>11:00~14:30</td><td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">かわみつ食堂 <span class="new-badge">신규</span></span><span class="t-kr">카와미츠 쇼쿠도 · 이라부 방면</span><span class="t-loc">미야코 마제소바</span></td>
+          <td>11:00~14:30</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">沖縄そば まるかみ <span class="new-badge">신규</span></span><span class="t-kr">오키나와소바 마루카미</span><span class="t-loc">구리마섬(시모지)</span></td>
-          <td class="t-menu">연골 소키소바<br>오키나와소바</td>
-          <td>11:00~15:00<br>L.O 14:00<br><span style="font-size:10px;color:var(--ink-pale)">매진 시 조기마감</span></td>
-          <td>일·2·4번째 월</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">沖縄そば まるかみ <span class="new-badge">신규</span></span><span class="t-kr">오키나와소바 마루카미 · 구리마섬</span><span class="t-loc">연골 소키소바 · 오키나와소바</span></td>
+          <td>11:00~15:00<br>L.O 14:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
-        <tr class="cat-row"><td colspan="8">이자카야</td></tr>
+        <tr class="cat-row"><td colspan="6">이자카야</td></tr>
         <tr>
-          <td><span class="t-name">ツマンデ みやこパーラー</span><span class="t-kr">츠만데 미야코 파라</span><span class="t-loc">히라라 시내</span></td>
-          <td class="t-menu">아와모리 칵테일<br>시마야채 안주</td>
-          <td>17:00~24:00</td><td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">1일차</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">ツマンデ みやこパーラー</span><span class="t-kr">츠만데 미야코 파라 · 히라라</span><span class="t-loc">아와모리 칵테일 · 시마야채 안주</span></td>
+          <td>17:00~24:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">이자카야 훌라 HULAR</span><span class="t-loc">히라라 시내</span></td>
-          <td class="t-menu">시마 오뎅<br>생선 안주류</td>
-          <td>17:00~23:00</td><td>화 휴무</td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">2일차</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">이자카야 훌라 HULAR</span><span class="t-kr">히라라 시내</span><span class="t-loc">시마 오뎅 · 생선 안주류</span></td>
+          <td>17:00~23:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">でいりぐち 下里通り店</span><span class="t-kr">데이리구치 시모자토도리텐</span><span class="t-loc">히라라 시내</span></td>
-          <td class="t-menu">오뎅 모리와세<br>테비치(족발) 조림</td>
-          <td>18:00~23:00</td><td>화 휴무</td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">3일차</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">でいりぐち 下里通り店</span><span class="t-kr">데이리구치 · 히라라 시내</span><span class="t-loc">오뎅 모리와세 · 테비치 조림</span></td>
+          <td>18:00~23:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">やんばるアグー嘉福</span><span class="t-kr">얀바루 아구 카후쿠</span><span class="t-loc">히라라 · 샤브샤브</span></td>
-          <td class="t-menu">오키나와 아구 돼지<br>샤브샤브 코스</td>
-          <td>17:00~24:00</td><td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">やんばるアグー嘉福</span><span class="t-kr">얀바루 아구 카후쿠 · 히라라</span><span class="t-loc">아구 돼지 샤브샤브 코스</span></td>
+          <td>17:00~24:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">あったかや <span class="new-badge">신규</span></span><span class="t-kr">앗타카야</span><span class="t-loc">시모지섬 스가마</span></td>
-          <td class="t-menu">미야코산 사시미 3종<br>히야시 고마소바</td>
-          <td>17:00~22:00</td><td>월·화 휴무</td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">あったかや <span class="new-badge">신규</span></span><span class="t-kr">앗타카야 · 시모지섬 스가마</span><span class="t-loc">미야코산 사시미 · 히야시 고마소바</span></td>
+          <td>17:00~22:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">島の鉄板 BOBURI <span class="new-badge">신규</span></span><span class="t-kr">시마노 뎃판 보부리</span><span class="t-loc">히라라 쿠가이</span></td>
-          <td class="t-menu">오코노미야키<br>미야코규 햄버그</td>
-          <td>17:00~23:00</td><td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">島の鉄板 BOBURI <span class="new-badge">신규</span></span><span class="t-kr">시마노 뎃판 보부리 · 히라라</span><span class="t-loc">오코노미야키 · 미야코규 햄버그</span></td>
+          <td>17:00~23:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">北琉笑店 いころ <span class="new-badge">신규</span></span><span class="t-kr">호쿠류쇼텐 이코로</span><span class="t-loc">히라라 니시자토</span></td>
-          <td class="t-menu">징기스칸<br>치즈 가리비구이</td>
+          <td><span class="t-name">北琉笑店 いころ <span class="new-badge">신규</span></span><span class="t-kr">호쿠류쇼텐 이코로 · 히라라</span><span class="t-loc">징기스칸 · 치즈 가리비구이</span></td>
           <td>18:00~24:00<br><span style="font-size:10px;color:var(--ink-pale)">수: 15:00~21:00</span></td>
-          <td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span><br><span style="font-size:9px;color:var(--ink-pale)">~21시</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
-        <tr class="cat-row"><td colspan="8">카페 · 디저트</td></tr>
+        <tr class="cat-row"><td colspan="6">카페 · 디저트</td></tr>
         <tr>
-          <td><span class="t-name">GOODMANS COFFEE</span><span class="t-loc">히라라 시내</span></td>
-          <td class="t-menu">드립 커피 · 라떼류</td>
-          <td>현장 확인</td><td>6월 영업</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">4일차</span></td>
+          <td><span class="t-name">GOODMANS COFFEE</span><span class="t-kr">히라라 시내</span><span class="t-loc">드립 커피 · 라떼류</span></td>
+          <td>현장 확인</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">1 LAB Hello VACAY</span><span class="t-loc">이라부섬 나카지</span></td>
-          <td class="t-menu">아이스 카페라떼<br>호지차라떼</td>
-          <td>11:00~17:00<br>L.O 16:30</td><td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">2일차</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">1 LAB Hello VACAY</span><span class="t-kr">이라부섬 나카지</span><span class="t-loc">아이스 카페라떼 · 호지차라떼</span></td>
+          <td>11:00~17:00<br>L.O 16:30</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">リッコジェラート</span><span class="t-kr">릿코 젤라토</span><span class="t-loc">히라라 시내</span></td>
-          <td class="t-menu">망고 젤라토<br>계절 과일 한정</td>
-          <td>11:00~16:45<br><span style="font-size:10px;color:var(--ink-pale)">금·토 야간 연장</span></td>
-          <td>화·수 휴무</td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ng">✗</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
+          <td><span class="t-name">リッコジェラート</span><span class="t-kr">릿코 젤라토 · 히라라</span><span class="t-loc">망고 젤라토 · 계절 과일</span></td>
+          <td>11:00~16:45</td>
+          <td class="t-center date-cell" data-day="1"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ng">✗</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
         <tr>
-          <td><span class="t-name">バナナケーキ monte doll</span><span class="t-kr">바나나케이키 몬테 도루</span><span class="t-loc">히라라 시내</span></td>
-          <td class="t-menu">미야코지마 바나나케이크<br>(기념품·테이크아웃)</td>
-          <td>09:00~19:00</td><td>연중무휴</td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span></td>
-          <td class="t-center"><span class="ok">✓</span><span class="pick-badge">4일차</span></td>
+          <td><span class="t-name">バナナケーキ monte doll</span><span class="t-kr">바나나케이키 몬테 도루 · 히라라</span><span class="t-loc">미야코지마 바나나케이크 (기념품)</span></td>
+          <td>09:00~19:00</td>
+          <td class="t-center date-cell" data-day="1"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="2"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="3"><span class="ok">✓</span></td>
+          <td class="t-center date-cell" data-day="4"><span class="ok">✓</span></td>
         </tr>
       </tbody>
     </table>
@@ -1652,8 +1640,58 @@ function switchDay(day) {
   });
 }
 
-// 저장된 뷰 복원
-(function() {
+// ── 맛집 날짜 칸 클릭 — 일차 표시 토글 ──
+const DAY_LABELS = { 1: '1일차', 2: '2일차', 3: '3일차', 4: '4일차' };
+
+function saveDateMarks() {
+  const marks = {};
+  document.querySelectorAll('td.date-cell').forEach((td, i) => {
+    marks[i] = td.classList.contains('day-marked');
+  });
+  try { localStorage.setItem('miyako_dates', JSON.stringify(marks)); } catch(e) {}
+}
+
+function loadDateMarks() {
+  let marks = {};
+  try { marks = JSON.parse(localStorage.getItem('miyako_dates') || '{}'); } catch(e) {}
+  document.querySelectorAll('td.date-cell').forEach((td, i) => {
+    if (marks[i]) {
+      td.classList.add('day-marked');
+      const day = parseInt(td.dataset.day);
+      if (!td.querySelector('.pick-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'pick-badge';
+        badge.textContent = DAY_LABELS[day];
+        td.appendChild(badge);
+      }
+    }
+  });
+}
+
+document.querySelectorAll('td.date-cell').forEach(td => {
+  // ok 칸만 클릭 가능
+  if (!td.querySelector('.ok')) return;
+  td.addEventListener('click', () => {
+    const isMarked = td.classList.toggle('day-marked');
+    const day = parseInt(td.dataset.day);
+    let badge = td.querySelector('.pick-badge');
+    if (isMarked) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'pick-badge';
+        td.appendChild(badge);
+      }
+      badge.textContent = DAY_LABELS[day];
+    } else {
+      if (badge) badge.remove();
+    }
+    saveDateMarks();
+  });
+});
+
+loadDateMarks();
+
+// 저장된 뷰 복원(function() {
   try {
     const saved = localStorage.getItem('miyako_view');
     if (saved === 'tab') setScheduleView('tab');
