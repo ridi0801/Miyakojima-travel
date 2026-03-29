@@ -1691,7 +1691,8 @@ document.querySelectorAll('td.date-cell').forEach(td => {
 
 loadDateMarks();
 
-// 저장된 뷰 복원(function() {
+// 저장된 뷰 복원
+(function() {
   try {
     const saved = localStorage.getItem('miyako_view');
     if (saved === 'tab') setScheduleView('tab');
