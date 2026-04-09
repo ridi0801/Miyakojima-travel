@@ -719,25 +719,49 @@ function applyDateMark(td,isMarked){
 }
 
 function bindDateCells(){
-  // 저장된 마크 복원
   const marks = window._dateMarks || {};
+  const toSave = {};
+
   document.querySelectorAll('td.date-cell').forEach(td => {
-    const key = (td.dataset.rid||'x')+'_'+td.dataset.day;
-    if(marks[key]) applyDateMark(td, true);
-  });
-  document.querySelectorAll('td.date-cell').forEach(td => {
-    if(!td.querySelector('.ok')) return;
+    const key    = (td.dataset.rid||'x')+'_'+td.dataset.day;
+    const isOpen = !!td.querySelector('.ok');
+
+    if(isOpen && marks[key]) {
+      // ✓이고 저장된 마크 있음 → 마크 복원
+      applyDateMark(td, true);
+    } else if(!isOpen && marks[key]) {
+      // ✓→✗ 로 바뀐 경우 → 마크 해제 + Firebase 저장 목록에서도 제거
+      applyDateMark(td, false);
+      toSave[key] = 0;
+    }
+
+    // ✗ 칸: 클릭 비활성화
+    if(!isOpen){
+      td.onclick = null;
+      td.style.cursor = 'default';
+      td.style.opacity = '1';
+      return;
+    }
+
+    // ✓ 칸: 클릭 활성화
+    td.style.cursor = '';
     td.onclick = () => {
       const isMarked = !td.classList.contains('day-marked');
       applyDateMark(td, isMarked);
-      const marks={};
+      const all={};
       document.querySelectorAll('td.date-cell').forEach(c=>{
         const k=(c.dataset.rid||'x')+'_'+c.dataset.day;
-        marks[k]=c.classList.contains('day-marked')?1:0;
+        all[k]=c.classList.contains('day-marked')?1:0;
       });
-      window._fbSet('miyako/dates', marks);
+      window._fbSet('miyako/dates', all);
     };
   });
+
+  // ✓→✗ 전환으로 해제된 마크가 있으면 Firebase 업데이트
+  if(Object.keys(toSave).length > 0){
+    const all={...marks, ...toSave};
+    window._fbSet('miyako/dates', all);
+  }
 }
 
 // ════════════════════════════════════════════════════════
