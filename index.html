@@ -361,6 +361,8 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 //  전역 상태
 // ════════════════════════════════════════════════════════
 const EDIT_MODE  = location.search.includes('edit');
+// Places API 키 — Google Cloud Console에서 HTTP Referer 제한 설정 권장
+const PLACES_API_KEY = 'AIzaSyBMqbPd__0eCjyuimMwJXAudxxWuuRylp8';
 const TRIP_DAYS  = [
   { jsDay:2, label:'화<br/>6/16', dayNum:1 },
   { jsDay:3, label:'수<br/>6/17', dayNum:2 },
@@ -588,7 +590,8 @@ function renderRestoTable(data){
   cats.forEach(cat => {
     html += `<tr class="cat-row"><td colspan="${6+(EDIT_MODE?1:0)}">${cat}</td></tr>`;
     items.filter(r=>r.category===cat).forEach(r => {
-      const nb = (r.is_new===true||r.is_new==='TRUE') ? '<span class="new-badge">신규</span>' : '';
+      const isNew = r.created_at && (Date.now()-new Date(r.created_at).getTime() < 7*24*60*60*1000);
+      const nb = isNew ? '<span class="new-badge">신규</span>' : '';
       html += `<tr><td>
         <span class="t-name">${esc(r.name_jp)}${nb}</span>
         <span class="t-kr">${esc(r.name_kr)} · ${esc(r.location)}</span>
@@ -918,16 +921,29 @@ function openModal(type, ...args){
   if(type==='restaurant-add'){
     title.textContent='맛집 추가';
     body.innerHTML=`
-      <label>카테고리</label><select id="m-rc"><option>식사</option><option>이자카야</option><option>카페·디저트</option></select>
-      <label>일본어 이름</label><input id="m-rn" placeholder="Fish Lab 魚熟">
-      <label>한국어 이름</label><input id="m-rk" placeholder="피시랩 우오쥬쿠">
-      <label>위치</label><input id="m-rl" placeholder="히라라 남쪽">
-      <label>대표 메뉴</label><input id="m-rm" placeholder="해산물 정식 · 덮밥">
-      <label>영업시간</label><input id="m-rh" placeholder="11:00~15:00">
-      <label>정기휴무 (JS 요일, 쉼표구분)</label><input id="m-rd" placeholder="예: 3,4 (수,목 휴무)">
-      <label>Google Place ID</label><input id="m-rp" placeholder="ChIJ...">`;
+      <label>구글맵 링크</label>
+      <div style="display:flex;gap:6px">
+        <input id="m-gurl" placeholder="https://maps.app.goo.gl/..." style="flex:1">
+        <button onclick="autoFillRestaurant()" style="padding:.45rem .9rem;border:1px solid var(--border-dark);border-radius:7px;background:var(--ink);color:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap">자동 입력</button>
+      </div>
+      <div id="m-autofill-status" style="font-size:11px;color:var(--ink-light);margin-top:4px;min-height:16px"></div>
+      <div id="m-resto-fields" style="display:none">
+        <label>카테고리</label><select id="m-rc"><option>식사</option><option>이자카야</option><option>카페·디저트</option></select>
+        <label>일본어 이름</label><input id="m-rn">
+        <label>한국어 이름</label><input id="m-rk">
+        <label>위치</label><input id="m-rl">
+        <label>대표 메뉴</label><input id="m-rm">
+        <label>영업시간</label><input id="m-rh">
+        <label>정기휴무 <span style="font-weight:400;color:var(--ink-pale)">(자동 계산됨)</span></label><input id="m-rd" placeholder="자동 입력">
+        <label>Google Place ID <span style="font-weight:400;color:var(--ink-pale)">(자동 입력됨)</span></label><input id="m-rp">
+      </div>`;
     _modalSaveFn=()=>{
-      const {db,ref,get,set}=window._fb;
+      const fields = document.getElementById('m-resto-fields');
+      if(!fields || fields.style.display==='none'){
+        alert('구글맵 링크를 입력하고 자동 입력 버튼을 눌러주세요.');
+        return;
+      }
+      const {db,ref,set}=window._fb;
       const newId='r'+(Date.now());
       const item={
         id:newId, category:document.getElementById('m-rc').value,
@@ -1136,6 +1152,144 @@ function saveRestaurant(rid){
     });
     closeModal();
   });
+}
+
+// ── 맛집 자동 입력 ──────────────────────────────────────────
+async function autoFillRestaurant(){
+  const urlInput = document.getElementById('m-gurl');
+  const status   = document.getElementById('m-autofill-status');
+  const fields   = document.getElementById('m-resto-fields');
+  const url      = urlInput.value.trim();
+
+  if(!url){ status.textContent='구글맵 링크를 입력해 주세요.'; return; }
+
+  status.textContent = '⏳ 구글맵에서 정보를 가져오는 중...';
+
+  try {
+    // 1. 단축 URL 풀기 + place_id 추출
+    let placeId = extractPlaceIdFromUrl(url);
+
+    // place_id 직접 못 찾으면 Find Place API로 검색
+    if(!placeId){
+      // URL에서 가게 이름 힌트 추출 시도
+      const nameHint = decodeURIComponent(url).match(/place\/([^/@]+)/)?.[1]?.replace(/\+/g,' ') || '';
+      if(!nameHint){ status.textContent='유효한 구글맵 링크가 아닙니다.'; return; }
+
+      const findUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json`
+        +`?input=${encodeURIComponent(nameHint+' 宮古島')}`
+        +`&inputtype=textquery&fields=place_id&language=ja&key=${PLACES_API_KEY}`;
+      const findRes  = await fetch(findUrl);
+      const findJson = await findRes.json();
+      if(findJson.status!=='OK'||!findJson.candidates?.length){
+        status.textContent='가게를 찾을 수 없습니다. URL을 확인해 주세요.';
+        return;
+      }
+      placeId = findJson.candidates[0].place_id;
+    }
+
+    // 2. Place Details API — 이름·영업시간 가져오기
+    status.textContent = '⏳ 영업시간 정보를 가져오는 중...';
+    const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json`
+      +`?place_id=${encodeURIComponent(placeId)}`
+      +`&fields=name,opening_hours`
+      +`&language=ja&key=${PLACES_API_KEY}`;
+    const detailRes  = await fetch(detailUrl);
+    const detailJson = await detailRes.json();
+
+    if(detailJson.status!=='OK'){ status.textContent='상세 정보를 가져오지 못했습니다.'; return; }
+
+    const result   = detailJson.result;
+    const nameJp   = result.name || '';
+    const oh       = result.opening_hours;
+    const hoursRaw = oh ? formatHoursFromPeriods(oh) : '';
+    const closedDays = oh ? extractClosedDaysFromPeriods(oh) : '';
+
+    // 3. Claude API — 한국어 이름·위치·메뉴·카테고리 추론
+    status.textContent = '⏳ 한국어 정보를 생성하는 중...';
+    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:300,
+        messages:[{
+          role:'user',
+          content:`미야코지마의 식당/카페 정보입니다. JSON으로만 응답하세요. 마크다운 없이 순수 JSON만.
+
+가게 이름(일본어): ${nameJp}
+구글맵 링크: ${url}
+
+다음 JSON 형식으로 응답:
+{
+  "name_kr": "한국어 발음 또는 번역 이름",
+  "location": "미야코지마 내 위치 (예: 히라라 시내, 이라부섬, 섬 북쪽 등 간결하게)",
+  "menu": "대표 메뉴 2~3개 (· 로 구분)",
+  "category": "식사 또는 이자카야 또는 카페·디저트"
+}`
+        }]
+      })
+    });
+    const claudeJson = await claudeRes.json();
+    const text = claudeJson.content?.[0]?.text || '{}';
+    let info = {};
+    try { info = JSON.parse(text.replace(/```json|```/g,'').trim()); } catch(e){}
+
+    // 4. 필드 채우기
+    document.getElementById('m-rn').value = nameJp;
+    document.getElementById('m-rk').value = info.name_kr || '';
+    document.getElementById('m-rl').value = info.location || '';
+    document.getElementById('m-rm').value = info.menu || '';
+    document.getElementById('m-rh').value = hoursRaw;
+    document.getElementById('m-rd').value = closedDays;
+    document.getElementById('m-rp').value = placeId;
+    // 카테고리 select
+    const catSel = document.getElementById('m-rc');
+    const catMap = {'식사':0,'이자카야':1,'카페·디저트':2};
+    if(info.category && catMap[info.category]!==undefined) catSel.selectedIndex = catMap[info.category];
+
+    fields.style.display = 'block';
+    status.textContent = '✓ 자동 입력 완료 — 내용을 확인 후 저장해 주세요.';
+    status.style.color = 'var(--success)';
+
+  } catch(e){
+    status.textContent = '오류가 발생했습니다: '+e.message;
+    status.style.color = 'var(--danger)';
+  }
+}
+
+function extractPlaceIdFromUrl(url){
+  // 다양한 구글맵 URL 패턴에서 place_id 추출
+  const m1 = url.match(/[?&]q=place_id:([^&]+)/);
+  if(m1) return m1[1];
+  const m2 = url.match(/maps\/place\/[^/]+\/[^/]*data=.*?1s([^!]+)!/);
+  if(m2) return m2[1];
+  return null;
+}
+
+function formatHoursFromPeriods(oh){
+  if(!oh.periods||!oh.periods.length) return (oh.weekday_text||[])[0]||'';
+  const slots = new Map();
+  oh.periods.forEach(p=>{
+    if(!p.open||!p.close) return;
+    const open  = p.open.time.slice(0,2)+':'+p.open.time.slice(2);
+    const close = p.close.time.slice(0,2)+':'+p.close.time.slice(2);
+    const key   = open+'~'+close;
+    slots.set(key,(slots.get(key)||0)+1);
+  });
+  return [...slots.entries()].sort((a,b)=>b[1]-a[1]).slice(0,2).map(e=>e[0]).join(' / ');
+}
+
+function extractClosedDaysFromPeriods(oh){
+  if(!oh.periods||!oh.periods.length){
+    const closed=[];
+    (oh.weekday_text||[]).forEach((t,i)=>{
+      if(t.toLowerCase().includes('closed')||t.includes('定休')||t.includes('休'))
+        closed.push([1,2,3,4,5,6,0][i]);
+    });
+    return closed.sort().join(',');
+  }
+  const openDays=new Set(oh.periods.map(p=>p.open.day)); // 0=일,1=월,...
+  return [0,1,2,3,4,5,6].filter(d=>!openDays.has(d)).sort().join(',');
 }
 
 // ── XSS 방지 ──
