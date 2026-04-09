@@ -197,6 +197,64 @@ td.date-cell.day-marked{background:var(--success-bg);}
 .edit-mode .item-add-btn{display:block;}
 
 footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;border-top:1px solid var(--border);}
+
+/* ── 목차 사이드바 ── */
+.toc-sidebar{
+  position:fixed;
+  right:16px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  align-items:flex-end;
+}
+.toc-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  padding:3px 0;
+}
+.toc-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--border-dark);
+  transition:all .25s;
+  flex-shrink:0;
+}
+.toc-label{
+  font-size:10px;
+  color:var(--ink-pale);
+  white-space:nowrap;
+  opacity:0;
+  transform:translateX(6px);
+  transition:all .2s;
+  pointer-events:none;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.toc-item:hover .toc-label,
+.toc-item.active .toc-label{
+  opacity:1;
+  transform:translateX(0);
+}
+.toc-item.active .toc-dot{
+  background:var(--ocean);
+  width:8px;
+  height:8px;
+}
+.toc-item:hover .toc-dot{
+  background:var(--ink-mid);
+}
+@media(max-width:900px){
+  .toc-sidebar{ right:8px; }
+  .toc-label{ display:none; }
+}
+@media(max-width:640px){
+  .toc-sidebar{ display:none; }
+}
 @media print{
   body{background:white;font-size:11px;}
   header{print-color-adjust:exact;-webkit-print-color-adjust:exact;}
@@ -231,7 +289,7 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 
 <div class="container">
 
-<!-- 기본 정보 (정적) -->
+<div class="sec" id="sec-info">
 <div class="sec">
 <div class="sec-title"><span class="icon">i</span> 기본 정보</div>
 <div class="grid3">
@@ -242,13 +300,13 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 </div>
 
 <!-- 확정 예약 -->
-<div class="sec">
+<div class="sec" id="sec-bookings">
 <div class="sec-title"><span class="icon">✓</span> 확정 예약 현황 <button class="edit-btn" onclick="openModal('bookings')">✏️ 편집</button></div>
 <div class="grid2" id="bookings-grid"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 </div>
 
 <!-- 투어 -->
-<div class="sec">
+<div class="sec" id="sec-tour">
 <div class="sec-title"><span class="icon">🤿</span> 투어 정보 — 야비지(八重干瀬) 보트 스노클링 <button class="edit-btn" onclick="openModal('tour')">✏️ 편집</button></div>
 <div style="background:var(--ocean-pale);border:1px solid var(--ocean-light);border-radius:10px;padding:.8rem 1.1rem;margin-bottom:1.1rem;font-size:12px;color:var(--ocean);line-height:1.9">
   <strong style="display:block;margin-bottom:.2rem;font-size:13px">야비지(八重干瀬)란?</strong>
@@ -275,7 +333,7 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 </div>
 
 <!-- 일정 -->
-<div class="sec">
+<div class="sec" id="sec-schedule">
 <div class="sec-title"><span class="icon">📅</span> 3박 4일 전체 일정</div>
 <div class="schedule-view-toggle">
   <button class="view-btn active" id="btn-all" onclick="setScheduleView('all')">📋 전체보기</button>
@@ -291,7 +349,7 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 </div>
 
 <!-- 맛집 -->
-<div class="sec">
+<div class="sec" id="sec-resto">
 <div class="sec-title">
   <span class="icon">🍽</span> 맛집 · 카페 영업시간 &amp; 방문 가부
   <button class="edit-btn" onclick="openModal('restaurant-add')">+ 추가</button>
@@ -301,13 +359,13 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 </div>
 
 <!-- 준비물 -->
-<div class="sec">
+<div class="sec" id="sec-pack">
 <div class="sec-title"><span class="icon">🎒</span> 준비물 체크리스트 <button class="edit-btn" onclick="openModal('pack-edit')">✏️ 편집</button></div>
 <div class="pack-grid" id="pack-grid"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 </div>
 
 <!-- 예약 체크리스트 -->
-<div class="sec">
+<div class="sec" id="sec-todo">
 <div class="sec-title"><span class="icon">📋</span> 예약 체크리스트 <button class="edit-btn" onclick="openModal('todo-add')">+ 항목 추가</button></div>
 <div class="progress-banner">
   <span class="progress-banner-label">예약 진행률</span>
@@ -318,7 +376,7 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 </div>
 
 <!-- 예산 -->
-<div class="sec">
+<div class="sec" id="sec-budget">
 <div class="sec-title"><span class="icon">💰</span> 예산 현황 (2인 기준) <button class="edit-btn" onclick="openModal('budget-edit')">✏️ 편집</button></div>
 <div class="budget-grid" id="budget-grid"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 <div class="total-box" id="budget-total" style="display:none">
@@ -328,7 +386,7 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 </div>
 
 <!-- 긴급연락처 (정적) -->
-<div class="sec">
+<div class="sec" id="sec-emergency">
 <div class="sec-title"><span class="icon">!</span> 긴급 연락처 &amp; 참고</div>
 <div class="grid3">
   <div class="card"><div class="card-label">현지 긴급</div><div class="card-value">110 (경찰) / 119 (구급)</div></div>
@@ -353,6 +411,46 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
   </div>
 </div>
 </div>
+
+<!-- 목차 사이드바 -->
+<nav class="toc-sidebar" id="toc-sidebar">
+  <div class="toc-item" data-target="sec-info">
+    <span class="toc-label">기본 정보</span>
+    <span class="toc-dot"></span>
+  </div>
+  <div class="toc-item" data-target="sec-bookings">
+    <span class="toc-label">확정 예약</span>
+    <span class="toc-dot"></span>
+  </div>
+  <div class="toc-item" data-target="sec-tour">
+    <span class="toc-label">투어 정보</span>
+    <span class="toc-dot"></span>
+  </div>
+  <div class="toc-item" data-target="sec-schedule">
+    <span class="toc-label">전체 일정</span>
+    <span class="toc-dot"></span>
+  </div>
+  <div class="toc-item" data-target="sec-resto">
+    <span class="toc-label">맛집 · 카페</span>
+    <span class="toc-dot"></span>
+  </div>
+  <div class="toc-item" data-target="sec-pack">
+    <span class="toc-label">준비물</span>
+    <span class="toc-dot"></span>
+  </div>
+  <div class="toc-item" data-target="sec-todo">
+    <span class="toc-label">예약 체크리스트</span>
+    <span class="toc-dot"></span>
+  </div>
+  <div class="toc-item" data-target="sec-budget">
+    <span class="toc-label">예산</span>
+    <span class="toc-dot"></span>
+  </div>
+  <div class="toc-item" data-target="sec-emergency">
+    <span class="toc-label">긴급 연락처</span>
+    <span class="toc-dot"></span>
+  </div>
+</nav>
 
 <footer>미야코지마 여행 계획서 · 2026.06.16~19</footer>
 
@@ -598,7 +696,10 @@ function renderRestoTable(data){
         const open = isOpen(r,d.jsDay);
         html += `<td class="t-center date-cell" data-rid="${r.id}" data-day="${d.dayNum}"><span class="${open?'ok':'ng'}">${open?'✓':'✗'}</span></td>`;
       });
-      if(EDIT_MODE) html+=`<td><button style="font-size:9px;padding:2px 5px;border:1px solid var(--border-dark);border-radius:4px;cursor:pointer;background:var(--white)" onclick="openModal('restaurant-edit','${r.id}')">✏️</button></td>`;
+      if(EDIT_MODE) html+=`<td style="white-space:nowrap">
+        <button style="font-size:9px;padding:2px 5px;border:1px solid var(--border-dark);border-radius:4px;cursor:pointer;background:var(--white);margin-right:2px" onclick="openModal('restaurant-edit','${r.id}')">✏️</button>
+        <button style="font-size:9px;padding:2px 5px;border:1px solid var(--danger);border-radius:4px;cursor:pointer;background:var(--white);color:var(--danger)" onclick="deleteRestaurant('${r.id}')">🗑</button>
+      </td>`;
       html += '</tr>';
     });
   });
@@ -1113,6 +1214,16 @@ function deleteTodoItem(id){
   });
 }
 
+// ── 맛집 삭제 (active:false 처리) ──
+function deleteRestaurant(rid){
+  if(!confirm('이 맛집을 목록에서 숨길까요?\n(완전 삭제가 아닙니다)')) return;
+  const {db,ref,get,set}=window._fb;
+  get(ref(db,'miyako/restaurants/'+rid)).then(snap=>{
+    const r=snap.val()||{};
+    set(ref(db,'miyako/restaurants/'+rid),{...r, active:false});
+  });
+}
+
 // ── 맛집 저장 ──
 function saveRestaurant(rid){
   const {db,ref,get,set}=window._fb;
@@ -1138,6 +1249,45 @@ function saveRestaurant(rid){
 // Places API 키 없이 동작 — 구글맵 링크를 Firebase에 저장하면
 // GAS가 Places API를 호출해서 영업시간 등을 자동으로 채움
 // Claude API로 한국어 정보는 즉시 생성
+
+// ── 목차 사이드바 ──────────────────────────────────────────
+(function(){
+  const items = document.querySelectorAll('.toc-item');
+
+  // 클릭 → 해당 섹션으로 스크롤
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      const target = document.getElementById(item.dataset.target);
+      if(target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
+
+  // IntersectionObserver로 현재 섹션 감지
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const id = entry.target.id;
+        items.forEach(item => {
+          item.classList.toggle('active', item.dataset.target === id);
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
+
+  // 섹션 로드 후 관찰 시작 (Firebase 렌더 후 섹션이 생기므로 지연)
+  function observeSections(){
+    const ids = ['sec-info','sec-bookings','sec-tour','sec-schedule',
+                 'sec-resto','sec-pack','sec-todo','sec-budget','sec-emergency'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) observer.observe(el);
+    });
+  }
+
+  // DOM 준비 후 + 렌더 후 두 번 실행
+  observeSections();
+  setTimeout(observeSections, 2000);
+})();
 
 // ── XSS 방지 ──
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
