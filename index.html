@@ -413,7 +413,6 @@ function initApp(){
   onValue(r('miyako/schedule'), snap => {
     const d = snap.val() || {};
     renderSchedule(d);
-    restoreScheduleView();
   });
 
   // ── 맛집 ──────────────────────────────────────────────
@@ -606,9 +605,6 @@ function renderRestoTable(data){
   html += '</tbody></table>';
   document.getElementById('resto-table-wrap').innerHTML = html;
   bindDateCells();
-  // hours_updated 표시
-  const latest = items.filter(r=>r.hours_updated).sort((a,b)=>b.hours_updated>a.hours_updated?1:-1)[0];
-  if(latest) document.getElementById('resto-sync-label').textContent = '최근 갱신: '+latest.hours_updated.slice(0,10);
 }
 
 function isOpen(item,jsDay){
@@ -925,22 +921,23 @@ function openModal(type, ...args){
         <button onclick="autoFillRestaurant()" style="padding:.45rem .9rem;border:1px solid var(--border-dark);border-radius:7px;background:var(--ink);color:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap">자동 입력</button>
       </div>
       <div id="m-autofill-status" style="font-size:11px;color:var(--ink-light);margin-top:4px;min-height:16px"></div>
-      <div id="m-resto-fields" style="display:none">
+      <div id="m-resto-fields">
+        <label>일본어 이름 <span style="font-weight:400;color:var(--ink-pale)">— 구글맵 이름 그대로 입력 후 아래 버튼 클릭</span></label>
+        <div style="display:flex;gap:6px">
+          <input id="m-rn" placeholder="예: Fish Lab 魚熟" style="flex:1">
+          <button onclick="fillWithClaude(document.getElementById('m-gurl').value)" style="padding:.45rem .9rem;border:1px solid var(--ocean);border-radius:7px;background:var(--ocean);color:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap">Claude로 채우기</button>
+        </div>
         <label>카테고리</label><select id="m-rc"><option>식사</option><option>이자카야</option><option>카페·디저트</option></select>
-        <label>일본어 이름</label><input id="m-rn">
         <label>한국어 이름</label><input id="m-rk">
         <label>위치</label><input id="m-rl">
         <label>대표 메뉴</label><input id="m-rm">
-        <label>영업시간</label><input id="m-rh">
-        <label>정기휴무 <span style="font-weight:400;color:var(--ink-pale)">(자동 계산됨)</span></label><input id="m-rd" placeholder="자동 입력">
-        <label>Google Place ID <span style="font-weight:400;color:var(--ink-pale)">(자동 입력됨)</span></label><input id="m-rp">
+        <label>영업시간 <span style="font-weight:400;color:var(--ink-pale)">(저장 후 GAS 자동 완성)</span></label><input id="m-rh" placeholder="저장 후 자동 입력">
+        <label>정기휴무 <span style="font-weight:400;color:var(--ink-pale)">(저장 후 GAS 자동 계산)</span></label><input id="m-rd" placeholder="저장 후 자동 입력">
+        <label>Google Place ID <span style="font-weight:400;color:var(--ink-pale)">(저장 후 GAS 자동 입력)</span></label><input id="m-rp" placeholder="저장 후 자동 입력">
       </div>`;
     _modalSaveFn=()=>{
-      const fields = document.getElementById('m-resto-fields');
-      if(!fields || fields.style.display==='none'){
-        alert('구글맵 링크를 입력하고 자동 입력 버튼을 눌러주세요.');
-        return;
-      }
+      const nameJp = (document.getElementById('m-rn').value||'').trim();
+      if(!nameJp){ alert('일본어 이름을 입력해 주세요.'); return; }
       const {db,ref,set}=window._fb;
       const newId='r'+(Date.now());
       const item={
@@ -1158,43 +1155,19 @@ function saveRestaurant(rid){
 // Claude API로 한국어 정보는 즉시 생성
 
 async function autoFillRestaurant(){
-  const urlInput = document.getElementById('m-gurl');
-  const status   = document.getElementById('m-autofill-status');
-  const fields   = document.getElementById('m-resto-fields');
-  const url      = (urlInput.value||'').trim();
-
+  const url    = (document.getElementById('m-gurl').value||'').trim();
+  const status = document.getElementById('m-autofill-status');
   if(!url){ status.textContent='구글맵 링크를 입력해 주세요.'; status.style.color='var(--danger)'; return; }
 
-  status.style.color = 'var(--ink-light)';
-  status.textContent = '⏳ 구글맵에서 가게 이름을 가져오는 중...';
-
-  try {
-    // 1. URL에서 가게 이름 추출 (단축 URL은 리다이렉트 따라가기 불가 → URL 파라미터에서 추출)
-    let nameJp = extractNameFromUrl(url);
-
-    // URL에서 이름 못 찾으면 사용자에게 직접 입력 요청
-    if(!nameJp){
-      fields.style.display = 'block';
-      document.getElementById('m-rn').focus();
-      status.textContent = '가게 이름을 직접 입력 후 아래 "Claude로 채우기" 버튼을 눌러주세요.';
-      // 수동 입력용 버튼 추가
-      const manualBtn = document.getElementById('m-manual-btn');
-      if(!manualBtn){
-        const btn = document.createElement('button');
-        btn.id = 'm-manual-btn';
-        btn.textContent = 'Claude로 채우기';
-        btn.style.cssText = 'margin-top:8px;padding:.45rem .9rem;border:1px solid var(--ocean);border-radius:7px;background:var(--ocean);color:var(--white);font-size:11px;font-family:"Noto Sans KR",sans-serif;cursor:pointer;width:100%';
-        btn.onclick = ()=>fillWithClaude(url);
-        document.getElementById('m-autofill-status').after(btn);
-      }
-      return;
-    }
-
+  // URL에서 이름 추출 가능하면 바로 Claude 호출, 아니면 이름 입력 안내
+  const nameJp = extractNameFromUrl(url);
+  if(nameJp){
+    document.getElementById('m-rn').value = nameJp;
     await fillWithClaude(url, nameJp);
-
-  } catch(e){
-    status.textContent = '오류: '+e.message;
-    status.style.color = 'var(--danger)';
+  } else {
+    status.style.color = 'var(--ink-light)';
+    status.textContent = '링크 확인 완료. 일본어 이름을 입력한 뒤 "Claude로 채우기"를 눌러주세요.';
+    document.getElementById('m-rn').focus();
   }
 }
 
@@ -1222,7 +1195,7 @@ async function fillWithClaude(mapUrl, nameJp){
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({
-      model:'claude-sonnet-4-20250514',
+      model:'claude-sonnet-4-6',
       max_tokens:300,
       messages:[{
         role:'user',
@@ -1251,8 +1224,8 @@ async function fillWithClaude(mapUrl, nameJp){
   document.getElementById('m-rk').value = info.name_kr || '';
   document.getElementById('m-rl').value = info.location || '';
   document.getElementById('m-rm').value = info.menu || '';
-  // 영업시간·closed_days·place_id는 GAS가 나중에 채움 — 일단 비워둠
-  document.getElementById('m-rh').value = '(GAS 자동 갱신 예정)';
+  // 영업시간·closed_days·place_id는 GAS가 나중에 채움 — 빈 문자열로
+  document.getElementById('m-rh').value = '';
   document.getElementById('m-rd').value = '';
   document.getElementById('m-rp').value = '';
 
@@ -1260,8 +1233,7 @@ async function fillWithClaude(mapUrl, nameJp){
   const catMap = {'식사':0,'이자카야':1,'카페·디저트':2};
   if(info.category && catMap[info.category]!==undefined) catSel.selectedIndex = catMap[info.category];
 
-  fields.style.display = 'block';
-  status.textContent = '✓ 완료 — 영업시간은 GAS가 자동으로 채웁니다. 내용 확인 후 저장해 주세요.';
+  status.textContent = '✓ 완료 — 영업시간은 GAS가 최대 1시간 내 자동으로 채웁니다. 내용 확인 후 저장해 주세요.';
   status.style.color = 'var(--success)';
 }
 
