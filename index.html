@@ -456,6 +456,22 @@ function initApp(){
     const v = snap.val();
     if(v && v!==scheduleView) setScheduleView(v, false);
   });
+
+  // ── Places API 마지막 동기화 시각 ────────────────────
+  onValue(r('miyako/state/lastPlacesSync'), snap => {
+    const v = snap.val();
+    const el = document.getElementById('resto-sync-label');
+    if(!el) return;
+    if(v) {
+      const d = new Date(v);
+      const pad = n => String(n).padStart(2,'0');
+      const str = d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate())
+        +' '+pad(d.getHours())+':'+pad(d.getMinutes());
+      el.textContent = 'Google Maps 기준 · 최근 갱신: '+str;
+    } else {
+      el.textContent = '(Places API 미연동)';
+    }
+  });
 }
 
 if(window._fb) initApp();
