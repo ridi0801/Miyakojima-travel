@@ -916,28 +916,19 @@ function openModal(type, ...args){
     title.textContent='맛집 추가';
     body.innerHTML=`
       <label>가게 이름 <span style="font-weight:400;color:var(--ink-pale)">— 구글맵에서 가게 이름 복사 후 붙여넣기</span></label>
-      <div style="display:flex;gap:6px">
-        <input id="m-rn" placeholder="예: Fish Lab 魚熟" style="flex:1">
-        <button onclick="fillWithClaude()" style="padding:.45rem .9rem;border:1px solid var(--ocean);border-radius:7px;background:var(--ocean);color:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap">자동 채우기</button>
-      </div>
-      <div id="m-autofill-status" style="font-size:11px;color:var(--ink-light);margin-top:4px;min-height:16px"></div>
-      <div id="m-resto-fields" style="display:none">
-        <label>카테고리</label><select id="m-rc"><option>식사</option><option>이자카야</option><option>카페·디저트</option></select>
-        <label>한국어 이름</label><input id="m-rk">
-        <label>위치</label><input id="m-rl">
-        <label>대표 메뉴</label><input id="m-rm">
+      <input id="m-rn" placeholder="예: Fish Lab 魚熟">
+      <div style="margin-top:.6rem;padding:.7rem;background:var(--info-bg);border-radius:8px;font-size:11px;color:var(--info);line-height:1.7">
+        저장 후 최대 1시간 내 자동으로 채워집니다<br/>
+        <span style="opacity:.8">한국어 이름 · 위치 · 메뉴 · 영업시간 · 정기휴무</span>
       </div>`;
     _modalSaveFn=()=>{
       const nameJp = (document.getElementById('m-rn').value||'').trim();
       if(!nameJp){ alert('가게 이름을 입력해 주세요.'); return; }
-      const fields = document.getElementById('m-resto-fields');
-      if(fields.style.display==='none'){ alert('자동 채우기를 먼저 실행해 주세요.'); return; }
       const {db,ref,set}=window._fb;
       const newId='r'+(Date.now());
       const item={
-        id:newId, category:document.getElementById('m-rc').value,
-        name_jp:nameJp, name_kr:document.getElementById('m-rk').value,
-        location:document.getElementById('m-rl').value, menu:document.getElementById('m-rm').value,
+        id:newId, category:'식사',
+        name_jp:nameJp, name_kr:'', location:'', menu:'',
         hours_raw:'', closed_days:'', place_id:'',
         is_new:true, active:true, created_at:new Date().toISOString()
       };
@@ -1147,61 +1138,6 @@ function saveRestaurant(rid){
 // Places API 키 없이 동작 — 구글맵 링크를 Firebase에 저장하면
 // GAS가 Places API를 호출해서 영업시간 등을 자동으로 채움
 // Claude API로 한국어 정보는 즉시 생성
-
-async function fillWithClaude(){
-  const status  = document.getElementById('m-autofill-status');
-  const fields  = document.getElementById('m-resto-fields');
-  const nameJp  = (document.getElementById('m-rn').value||'').trim();
-
-  if(!nameJp){ status.textContent='가게 이름을 먼저 입력해 주세요.'; status.style.color='var(--danger)'; return; }
-
-  status.style.color = 'var(--ink-light)';
-  status.textContent = '⏳ 정보를 가져오는 중...';
-
-  try {
-    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:300,
-        messages:[{
-          role:'user',
-          content:`미야코지마의 식당/카페입니다. JSON으로만 응답하세요. 마크다운 없이 순수 JSON만.
-
-가게 이름(일본어): ${nameJp}
-
-{
-  "name_kr": "한국어 발음 또는 번역 이름",
-  "location": "미야코지마 내 위치 (예: 히라라 시내, 이라부섬 등 간결하게)",
-  "menu": "대표 메뉴 2~3개 (· 로 구분)",
-  "category": "식사 또는 이자카야 또는 카페·디저트"
-}`
-        }]
-      })
-    });
-
-    const claudeJson = await claudeRes.json();
-    const text = (claudeJson.content?.[0]?.text||'{}');
-    let info = {};
-    try { info = JSON.parse(text.replace(/```json|```/g,'').trim()); } catch(e){}
-
-    document.getElementById('m-rk').value = info.name_kr || '';
-    document.getElementById('m-rl').value = info.location || '';
-    document.getElementById('m-rm').value = info.menu || '';
-    const catSel = document.getElementById('m-rc');
-    const catMap = {'식사':0,'이자카야':1,'카페·디저트':2};
-    if(info.category && catMap[info.category]!==undefined) catSel.selectedIndex = catMap[info.category];
-
-    fields.style.display = 'block';
-    status.textContent = '✓ 완료 — 내용 확인 후 저장. 영업시간은 최대 1시간 내 자동으로 채워집니다.';
-    status.style.color = 'var(--success)';
-
-  } catch(e){
-    status.textContent = '오류: '+e.message;
-    status.style.color = 'var(--danger)';
-  }
-}
 
 // ── XSS 방지 ──
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
