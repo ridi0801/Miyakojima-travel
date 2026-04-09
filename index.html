@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="ko">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>미야코지마 여행 계획 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&amp;family=Noto+Sans+KR:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
-<!-- Firebase SDK -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet"/>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-
+import { getDatabase, ref, set, get, onValue, update } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 const firebaseConfig = {
   apiKey: "AIzaSyCt3XYh0ot3J2oncUSUjiz8Uo2RLcsmciE",
   authDomain: "miyakojima-travel.firebaseapp.com",
@@ -20,1661 +17,1089 @@ const firebaseConfig = {
   messagingSenderId: "931624323855",
   appId: "1:931624323855:web:6a035c3da794a1c3f04c7a"
 };
-
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// ── Firebase 동기화 유틸 ──
-window._fbDb = db;
-window._fbRef = ref;
-window._fbSet = set;
-window._fbOnValue = onValue;
-window._fbReady = true;
+const db  = getDatabase(app);
+window._fb = { db, ref, set, get, onValue, update };
 window.dispatchEvent(new Event('firebase-ready'));
 </script>
 <style>
 :root {
-  --ocean: #1a6b8a;
-  --ocean-light: #2a8baa;
-  --ocean-pale: #e8f4f8;
-  --sand: #f5ede0;
-  --sand-dark: #e0c9a6;
-  --coral: #d4614e;
-  --coral-light: #f0877a;
-  --teal: #2d9b8a;
-  --teal-light: #e0f5f1;
-  --ink: #1a1f2e;
-  --ink-mid: #3d4455;
-  --ink-light: #6b7280;
-  --ink-pale: #9ca3af;
-  --white: #ffffff;
-  --cream: #faf8f5;
-  --success: #2d8a5e;
-  --success-bg: #e8f5ee;
-  --warn: #b45309;
-  --warn-bg: #fef3c7;
-  --danger: #c0392b;
-  --info: #1a6b8a;
-  --info-bg: #e8f4f8;
-  --border: #e5e0d8;
-  --border-dark: #c8c0b4;
+  --ocean:#1a6b8a; --ocean-light:#2a8baa; --ocean-pale:#e8f4f8;
+  --sand:#f5ede0; --sand-dark:#e0c9a6;
+  --coral:#d4614e; --teal:#2d9b8a; --teal-light:#e0f5f1;
+  --ink:#1a1f2e; --ink-mid:#3d4455; --ink-light:#6b7280; --ink-pale:#9ca3af;
+  --white:#ffffff; --cream:#faf8f5;
+  --success:#2d8a5e; --success-bg:#e8f5ee;
+  --warn:#b45309; --warn-bg:#fef3c7;
+  --danger:#c0392b; --info:#1a6b8a; --info-bg:#e8f4f8;
+  --border:#e5e0d8; --border-dark:#c8c0b4;
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-weight: 400;
-  background: var(--cream);
-  color: var(--ink);
-  line-height: 1.7;
-  font-size: 14px;
-}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;font-weight:400;background:var(--cream);color:var(--ink);line-height:1.7;font-size:14px;}
 
 /* ── 헤더 ── */
-header {
-  background: var(--ink);
-  color: var(--white);
-  padding: 3.5rem 2rem 2.5rem;
-  position: relative;
-  overflow: hidden;
-}
-header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 40px,
-    rgba(255,255,255,0.02) 40px,
-    rgba(255,255,255,0.02) 80px
-  );
-}
-header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0; right: 0;
-  height: 40px;
-  background: var(--cream);
-  clip-path: ellipse(55% 100% at 50% 100%);
-}
-.header-inner { max-width: 860px; margin: 0 auto; position: relative; }
-.header-eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--sand-dark);
-  margin-bottom: .6rem;
-}
-.header-title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.4rem;
-}
-header h1 {
-  font-family: 'Noto Serif KR', serif;
-  font-size: 2.6rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  margin-bottom: 0;
-}
-.header-sub {
-  font-size: 13px;
-  color: rgba(255,255,255,0.55);
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  margin-top: .8rem;
-}
-.header-sub span { display: flex; align-items: center; gap: .4rem; }
-.dday-badge {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 10px;
-  padding: .6rem 1.3rem;
-  min-width: 96px;
-  flex-shrink: 0;
-}
-.dday-badge .dday-top {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 10px;
-  font-weight: 300;
-  color: rgba(255,255,255,0.5);
-  letter-spacing: .1em;
-  margin-bottom: 3px;
-}
-.dday-badge .dday-num {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: var(--white);
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-.dday-badge .dday-suffix {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 10px;
-  font-weight: 300;
-  color: rgba(255,255,255,0.5);
-  margin-top: 3px;
-  letter-spacing: .04em;
-}
+header{background:var(--ink);color:var(--white);padding:3.5rem 2rem 2.5rem;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 80px);}
+header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;background:var(--cream);clip-path:ellipse(55% 100% at 50% 100%);}
+.header-inner{max-width:860px;margin:0 auto;position:relative;}
+.header-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand-dark);margin-bottom:.6rem;}
+.header-title-row{display:flex;align-items:center;justify-content:space-between;gap:1.4rem;}
+header h1{font-family:'Noto Serif KR',serif;font-size:2.6rem;font-weight:600;letter-spacing:-.02em;line-height:1.2;}
+.header-sub{font-size:13px;color:rgba(255,255,255,.55);display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.8rem;}
+.header-sub span{display:flex;align-items:center;gap:.4rem;}
+.dday-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:.6rem 1.3rem;min-width:96px;flex-shrink:0;}
+.dday-badge .dday-top{font-size:10px;font-weight:300;color:rgba(255,255,255,.5);letter-spacing:.1em;margin-bottom:3px;}
+.dday-badge .dday-num{font-size:1.6rem;font-weight:500;color:var(--white);letter-spacing:-.03em;line-height:1;}
+.dday-badge .dday-suffix{font-size:10px;font-weight:300;color:rgba(255,255,255,.5);margin-top:3px;letter-spacing:.04em;}
 
 /* ── 레이아웃 ── */
-.container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-
-/* ── 섹션 타이틀 ── */
-.sec {
-  margin-bottom: 3rem;
-}
-.sec-title {
-  font-family: 'Noto Serif KR', serif;
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--ink);
-  padding-bottom: .6rem;
-  border-bottom: 2px solid var(--ink);
-  margin-bottom: 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-}
-.sec-title .icon {
-  width: 24px; height: 24px;
-  background: var(--ink);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px;
-  color: var(--white);
-  flex-shrink: 0;
-}
-
-/* ── 카드 그리드 ── */
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
-@media(max-width:640px) {
-  .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
-}
-
-.card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem 1.1rem;
-}
-.card-label {
-  font-size: 10px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--ink-pale);
-  margin-bottom: .3rem;
-}
-.card-value {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
-  line-height: 1.4;
-}
-.card-sub {
-  font-size: 11px;
-  color: var(--ink-light);
-  margin-top: .3rem;
-  line-height: 1.6;
-}
-.badge-ok {
-  display: inline-block;
-  font-size: 10px;
-  padding: 2px 8px;
-  background: var(--success-bg);
-  color: var(--success);
-  border-radius: 20px;
-  margin-top: .4rem;
-  font-weight: 500;
-}
-.badge-pending {
-  display: inline-block;
-  font-size: 10px;
-  padding: 2px 8px;
-  background: var(--warn-bg);
-  color: var(--warn);
-  border-radius: 20px;
-  margin-top: .4rem;
-  font-weight: 500;
-}
-.badge-info {
-  display: inline-block;
-  font-size: 10px;
-  padding: 2px 8px;
-  background: var(--info-bg);
-  color: var(--info);
-  border-radius: 20px;
-  margin-left: 6px;
-  font-weight: 500;
-}
-
-/* ── 야비지 박스 ── */
-.yabiji-box {
-  background: var(--ocean);
-  color: var(--white);
-  border-radius: 12px;
-  padding: 1.3rem 1.5rem;
-  margin-bottom: 1.2rem;
-  position: relative;
-  overflow: hidden;
-}
-.yabiji-box::before {
-  content: '八重干瀬';
-  position: absolute;
-  right: -10px; top: 50%;
-  transform: translateY(-50%);
-  font-family: 'Noto Serif KR', serif;
-  font-size: 5rem;
-  font-weight: 600;
-  color: rgba(255,255,255,0.06);
-  line-height: 1;
-  white-space: nowrap;
-}
-.yabiji-title {
-  font-size: 13px;
-  font-weight: 500;
-  opacity: .85;
-  margin-bottom: .6rem;
-}
-.yabiji-body {
-  font-size: 12px;
-  line-height: 2;
-  opacity: .9;
-}
-.yabiji-body strong { opacity: 1; font-weight: 500; }
+.container{max-width:860px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+.sec{margin-bottom:3rem;}
+.sec-title{font-family:'Noto Serif KR',serif;font-size:1.15rem;font-weight:600;color:var(--ink);padding-bottom:.6rem;border-bottom:2px solid var(--ink);margin-bottom:1.2rem;display:flex;align-items:center;gap:.6rem;}
+.sec-title .icon{width:24px;height:24px;background:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--white);flex-shrink:0;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+@media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr;}}
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;}
+.card-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-pale);margin-bottom:.3rem;}
+.card-value{font-size:15px;font-weight:500;color:var(--ink);line-height:1.4;}
+.card-sub{font-size:11px;color:var(--ink-light);margin-top:.3rem;line-height:1.6;}
+.badge-ok{display:inline-block;font-size:10px;padding:2px 8px;background:var(--success-bg);color:var(--success);border-radius:20px;margin-top:.4rem;font-weight:500;}
+.badge-info{display:inline-block;font-size:10px;padding:2px 8px;background:var(--info-bg);color:var(--info);border-radius:20px;margin-left:6px;font-weight:500;}
+.badge-warn{display:inline-block;font-size:10px;padding:2px 8px;background:var(--warn-bg);color:var(--warn);border-radius:20px;margin-left:6px;font-weight:500;}
 
 /* ── 타임라인 ── */
-.day-block { margin-bottom: 2.2rem; }
-.day-header {
-  display: inline-flex;
-  align-items: center;
-  gap: .8rem;
-  margin-bottom: 1rem;
-}
-.day-pill {
-  background: var(--ink);
-  color: var(--white);
-  font-size: 11px;
-  font-weight: 500;
-  padding: 4px 14px;
-  border-radius: 20px;
-}
-.day-title {
-  font-size: 13px;
-  color: var(--ink-mid);
-  font-weight: 500;
-}
-.timeline { position: relative; padding-left: 24px; }
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 7px; top: 8px; bottom: 8px;
-  width: 1px;
-  background: var(--border-dark);
-}
-.tl-item { position: relative; margin-bottom: 1.1rem; }
-.tl-dot {
-  position: absolute;
-  left: -20px; top: 5px;
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: var(--border-dark);
-}
-.tl-dot.blue { background: var(--ocean); }
-.tl-dot.green { background: var(--teal); }
-.tl-dot.amber { background: var(--warn); }
-.tl-time { font-size: 10px; color: var(--ink-pale); margin-bottom: 1px; }
-.tl-name { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
-.tl-desc { font-size: 11px; color: var(--ink-light); margin-top: 3px; line-height: 1.6; }
-
-/* ── 맛집 표 ── */
-.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
-thead tr { border-bottom: 2px solid var(--ink); }
-th {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--ink-light);
-  text-align: left;
-  padding: .5rem .2rem;
-  white-space: nowrap;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
-td {
-  padding: .55rem .2rem;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-  line-height: 1.5;
-  font-size: 11px;
-}
-tr:last-child td { border-bottom: none; }
-.t-name { font-weight: 500; color: var(--ink); display: block; }
-.t-kr { font-size: 10px; color: var(--ink-light); }
-.t-loc { font-size: 10px; color: var(--ink-pale); display: block; margin-top: 1px; border-top: 1px solid var(--border); padding-top: 2px; }
-.t-menu { font-size: 11px; color: var(--ink-light); line-height: 1.6; }
-.ok { color: var(--success); font-size: 12px; font-weight: 500; }
-.ng { color: var(--danger); font-size: 12px; }
-.pick-badge {
-  display: block;
-  font-size: 9px;
-  background: var(--success-bg);
-  color: var(--success);
-  padding: 1px 4px;
-  border-radius: 6px;
-  margin-top: 2px;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-.new-badge {
-  display: inline-block;
-  font-size: 9px;
-  background: var(--info-bg);
-  color: var(--info);
-  padding: 1px 5px;
-  border-radius: 6px;
-  margin-left: 3px;
-  vertical-align: middle;
-}
-.cat-row td {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--ink-light);
-  padding: .5rem .3rem .25rem;
-  background: var(--cream);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border-dark);
-}
-.t-center { text-align: center; }
-
-/* 날짜 칸 클릭 인터랙션 */
-td.date-cell {
-  cursor: pointer;
-  user-select: none;
-  transition: background .12s;
-}
-td.date-cell:hover { background: var(--cream); }
-td.date-cell.day-marked { background: var(--success-bg); }
-
-/* ── 맛집 표 모바일 카드 변환 ── */
-/* 데스크탑: 테이블 표시, 카드 숨김 */
-.mobile-card-list { display: none; }
-
-/* ── 준비물 ── */
-.pack-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-@media(max-width:500px){ .pack-grid { grid-template-columns: 1fr; } }
-.pack-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem 1.1rem;
-}
-.pack-title {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink);
-  margin-bottom: .5rem;
-  padding-bottom: .4rem;
-  border-bottom: 1px solid var(--border);
-}
-.pack-item {
-  font-size: 11.5px;
-  color: var(--ink-mid);
-  line-height: 2;
-}
-.pack-note {
-  font-size: 10px;
-  color: var(--ink-pale);
-  margin-top: .4rem;
-  line-height: 1.5;
-}
-
-/* ── 예약 체크리스트 ── */
-.todo-list { display: flex; flex-direction: column; gap: 8px; }
-.todo-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: .75rem 1rem;
-}
-.todo-num {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--white);
-  font-size: 10px;
-  font-weight: 500;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-.todo-num.done { background: var(--teal); }
-.todo-num.wip { background: var(--ocean-light); }
-.todo-content { flex: 1; }
-.todo-title { font-size: 13px; font-weight: 500; color: var(--ink); }
-.todo-desc { font-size: 11px; color: var(--ink-light); margin-top: 2px; line-height: 1.5; }
-.todo-status {
-  font-size: 10px;
-  padding: 2px 9px;
-  border-radius: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  margin-top: 1px;
-  align-self: flex-start;
-  flex-shrink: 0;
-}
-.st-done { background: var(--success-bg); color: var(--success); }
-.st-wip { background: var(--info-bg); color: var(--info); }
-.st-todo { background: var(--warn-bg); color: var(--warn); }
-
-/* ── 예산 ── */
-.budget-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 10px;
-}
-@media(max-width:500px){ .budget-grid { grid-template-columns: 1fr 1fr; } }
-.budget-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: .75rem .9rem;
-}
-.budget-label { font-size: 10px; color: var(--ink-pale); margin-bottom: .2rem; }
-.budget-value { font-size: 15px; font-weight: 500; color: var(--ink); }
-.budget-sub { font-size: 10px; color: var(--ink-light); margin-top: .1rem; line-height: 1.4; }
-.total-box {
-  background: var(--ink);
-  color: var(--white);
-  border-radius: 10px;
-  padding: 1rem 1.2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-.total-label { font-size: 12px; opacity: .65; }
-.total-value { font-size: 22px; font-weight: 500; }
-.total-note { font-size: 10px; opacity: .5; margin-top: 2px; }
-
-/* ── divider ── */
-.sdiv { height: 1px; background: var(--border); margin: 2rem 0; }
-
-/* ── footer ── */
-footer {
-  text-align: center;
-  font-size: 10px;
-  color: var(--ink-pale);
-  padding: 1.5rem;
-  border-top: 1px solid var(--border);
-}
-
-/* ── 인터랙티브 체크리스트 ── */
-.check-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 3px 0;
-  cursor: pointer;
-  user-select: none;
-  transition: opacity .15s;
-  border-radius: 4px;
-}
-.check-item:hover { opacity: .75; }
-.check-box {
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid var(--border-dark);
-  border-radius: 3px;
-  flex-shrink: 0;
-  margin-top: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .15s, border-color .15s;
-  font-size: 9px;
-  color: transparent;
-}
-.check-item.checked .check-box {
-  background: var(--teal);
-  border-color: var(--teal);
-  color: white;
-}
-.check-item.checked .check-label {
-  text-decoration: line-through;
-  color: var(--ink-pale);
-}
-.check-label {
-  font-size: 11.5px;
-  color: var(--ink-mid);
-  line-height: 1.6;
-  transition: color .15s;
-}
-
-/* 준비물 진행률 바 */
-.pack-progress {
-  margin-top: .6rem;
-  padding-top: .5rem;
-  border-top: 1px solid var(--border);
-}
-.pack-progress-bar-bg {
-  background: var(--border);
-  border-radius: 4px;
-  height: 4px;
-  overflow: hidden;
-  margin-top: 3px;
-}
-.pack-progress-bar {
-  background: var(--teal);
-  height: 100%;
-  border-radius: 4px;
-  transition: width .3s ease;
-}
-.pack-progress-label {
-  font-size: 9px;
-  color: var(--ink-pale);
-  display: flex;
-  justify-content: space-between;
-}
-
-/* 예약 체크리스트 클릭 가능 */
-.todo-item {
-  cursor: pointer;
-  transition: border-color .15s, background .15s;
-}
-.todo-item:hover { border-color: var(--border-dark); }
-.todo-item.completed {
-  background: var(--success-bg);
-  border-color: var(--teal);
-}
-.todo-item.completed .todo-title { color: var(--ink-light); text-decoration: line-through; }
-.todo-item.completed .todo-num { background: var(--teal) !important; }
-.todo-item.completed .todo-status {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-}
-
-/* 전체 진행률 배너 */
-.progress-banner {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: .9rem 1.2rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-.progress-banner-label {
-  font-size: 12px;
-  color: var(--ink-mid);
-  white-space: nowrap;
-}
-.progress-banner-bar-bg {
-  flex: 1;
-  min-width: 100px;
-  background: var(--border);
-  border-radius: 6px;
-  height: 6px;
-  overflow: hidden;
-}
-.progress-banner-bar {
-  background: var(--teal);
-  height: 100%;
-  border-radius: 6px;
-  transition: width .4s ease;
-}
-.progress-banner-count {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--teal);
-  white-space: nowrap;
-}
+.day-block{margin-bottom:2.2rem;}
+.day-header{display:inline-flex;align-items:center;gap:.8rem;margin-bottom:1rem;}
+.day-pill{background:var(--ink);color:var(--white);font-size:11px;font-weight:500;padding:4px 14px;border-radius:20px;}
+.day-title{font-size:13px;color:var(--ink-mid);font-weight:500;}
+.timeline{position:relative;padding-left:24px;}
+.timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--border-dark);}
+.tl-item{position:relative;margin-bottom:1.1rem;}
+.tl-dot{position:absolute;left:-20px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--border-dark);}
+.tl-dot.blue{background:var(--ocean);}
+.tl-dot.green{background:var(--teal);}
+.tl-dot.amber{background:var(--warn);}
+.tl-time{font-size:10px;color:var(--ink-pale);margin-bottom:1px;}
+.tl-name{font-size:13px;font-weight:500;color:var(--ink);line-height:1.4;}
+.tl-desc{font-size:11px;color:var(--ink-light);margin-top:3px;line-height:1.6;}
+.schedule-view-toggle{display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;}
+.view-btn{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;border:1px solid var(--border-dark);background:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;color:var(--ink-light);cursor:pointer;transition:all .15s;}
+.view-btn.active{background:var(--ink);border-color:var(--ink);color:var(--white);}
+.view-btn:hover:not(.active){border-color:var(--ink-mid);color:var(--ink-mid);}
+.day-tabs{display:none;gap:4px;margin-bottom:1rem;flex-wrap:wrap;}
+.day-tabs.visible{display:flex;}
+.day-tab{padding:5px 14px;border-radius:20px;border:1px solid var(--border-dark);background:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;color:var(--ink-light);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.day-tab.active{background:var(--ink);border-color:var(--ink);color:var(--white);}
+.tab-mode .day-block{display:none;}
+.tab-mode .day-block.tab-active{display:block;}
 
 /* ── 투어 카드 ── */
-.tour-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.tour-card-header {
-  padding: 1rem 1.3rem .8rem;
-  border-bottom: 1px solid var(--border);
-}
-.tour-card-title {
-  font-family: 'Noto Serif KR', serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: .2rem;
-}
-.tour-card-sub {
-  font-size: 11px;
-  color: var(--ink-light);
-}
-.tour-card-body { padding: .8rem 1.3rem 1rem; }
-.tour-row {
-  display: flex;
-  gap: .8rem;
-  padding: .35rem 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 12px;
-  line-height: 1.6;
-}
-.tour-row:last-child { border-bottom: none; }
-.tour-key {
-  font-weight: 500;
-  color: var(--ink-light);
-  min-width: 36px;
-  flex-shrink: 0;
-}
-.tour-val { color: var(--ink-mid); }
+.tour-card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.tour-card-header{padding:1rem 1.3rem .8rem;border-bottom:1px solid var(--border);}
+.tour-card-title{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:.2rem;}
+.tour-card-sub{font-size:11px;color:var(--ink-light);}
+.tour-card-body{padding:.8rem 1.3rem 1rem;}
+.tour-row{display:flex;gap:.8rem;padding:.35rem 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;}
+.tour-row:last-child{border-bottom:none;}
+.tour-key{font-weight:500;color:var(--ink-light);min-width:36px;flex-shrink:0;}
+.tour-val{color:var(--ink-mid);}
 
-/* ── 일정 뷰 토글 ── */
-.schedule-view-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 1.2rem;
-}
-.view-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border-dark);
-  background: var(--white);
-  font-size: 11px;
-  font-family: 'Noto Sans KR', sans-serif;
-  color: var(--ink-light);
-  cursor: pointer;
-  transition: all .15s;
-}
-.view-btn.active {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--white);
-}
-.view-btn:hover:not(.active) {
-  border-color: var(--ink-mid);
-  color: var(--ink-mid);
-}
+/* ── 맛집 표 ── */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+thead tr{border-bottom:2px solid var(--ink);}
+th{font-size:10px;font-weight:500;color:var(--ink-light);text-align:left;padding:.5rem .2rem;white-space:nowrap;letter-spacing:.05em;text-transform:uppercase;}
+td{padding:.55rem .2rem;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5;font-size:11px;}
+tr:last-child td{border-bottom:none;}
+.t-name{font-weight:500;color:var(--ink);display:block;}
+.t-kr{font-size:10px;color:var(--ink-light);}
+.t-loc{font-size:10px;color:var(--ink-pale);display:block;margin-top:1px;border-top:1px solid var(--border);padding-top:2px;}
+.ok{color:var(--success);font-size:12px;font-weight:500;}
+.ng{color:var(--danger);font-size:12px;}
+.pick-badge{display:block;font-size:9px;background:var(--success-bg);color:var(--success);padding:1px 4px;border-radius:6px;margin-top:2px;width:fit-content;margin-left:auto;margin-right:auto;}
+.new-badge{display:inline-block;font-size:9px;background:var(--info-bg);color:var(--info);padding:1px 5px;border-radius:6px;margin-left:3px;vertical-align:middle;}
+.cat-row td{font-size:10px;font-weight:500;color:var(--ink-light);padding:.5rem .3rem .25rem;background:var(--cream);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--border-dark);}
+.t-center{text-align:center;}
+td.date-cell{cursor:pointer;user-select:none;transition:background .12s;}
+td.date-cell:hover{background:var(--cream);}
+td.date-cell.day-marked{background:var(--success-bg);}
 
-/* 탭 뷰 */
-.day-tabs {
-  display: none;
-  gap: 4px;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-.day-tabs.visible { display: flex; }
-.day-tab {
-  padding: 5px 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border-dark);
-  background: var(--white);
-  font-size: 11px;
-  font-family: 'Noto Sans KR', sans-serif;
-  color: var(--ink-light);
-  cursor: pointer;
-  transition: all .15s;
-  white-space: nowrap;
-}
-.day-tab.active {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--white);
-}
+/* ── 준비물 ── */
+.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:500px){.pack-grid{grid-template-columns:1fr;}}
+.pack-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;}
+.pack-title{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:.5rem;padding-bottom:.4rem;border-bottom:1px solid var(--border);}
+.pack-note{font-size:10px;color:var(--ink-pale);margin-top:.4rem;line-height:1.5;}
+.pack-progress{margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--border);}
+.pack-progress-bar-bg{background:var(--border);border-radius:4px;height:4px;overflow:hidden;margin-top:3px;}
+.pack-progress-bar{background:var(--teal);height:100%;border-radius:4px;transition:width .3s ease;}
+.pack-progress-label{font-size:9px;color:var(--ink-pale);display:flex;justify-content:space-between;}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;cursor:pointer;user-select:none;transition:opacity .15s;border-radius:4px;}
+.check-item:hover{opacity:.75;}
+.check-box{width:14px;height:14px;border:1.5px solid var(--border-dark);border-radius:3px;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;font-size:9px;color:transparent;}
+.check-item.checked .check-box{background:var(--teal);border-color:var(--teal);color:white;}
+.check-item.checked .check-label{text-decoration:line-through;color:var(--ink-pale);}
+.check-label{font-size:11.5px;color:var(--ink-mid);line-height:1.6;transition:color .15s;}
 
-/* 탭 모드에서 비활성 day-block 숨기기 */
-.tab-mode .day-block { display: none; }
-.tab-mode .day-block.tab-active { display: block; }
+/* ── 예약 체크리스트 ── */
+.todo-list{display:flex;flex-direction:column;gap:8px;}
+.todo-item{display:flex;align-items:flex-start;gap:12px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;cursor:pointer;transition:border-color .15s,background .15s;}
+.todo-item:hover{border-color:var(--border-dark);}
+.todo-item.completed{background:var(--success-bg);border-color:var(--teal);}
+.todo-item.completed .todo-title{color:var(--ink-light);text-decoration:line-through;}
+.todo-item.completed .todo-num{background:var(--teal) !important;}
+.todo-num{width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--white);font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.todo-content{flex:1;}
+.todo-title{font-size:13px;font-weight:500;color:var(--ink);}
+.todo-desc{font-size:11px;color:var(--ink-light);margin-top:2px;line-height:1.5;}
+.todo-status{font-size:10px;padding:2px 9px;border-radius:12px;font-weight:500;white-space:nowrap;margin-top:1px;align-self:flex-start;flex-shrink:0;}
+.st-done{background:var(--success-bg);color:var(--success);}
+.st-todo{background:var(--warn-bg);color:var(--warn);}
+.progress-banner{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.2rem;margin-bottom:1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.progress-banner-label{font-size:12px;color:var(--ink-mid);white-space:nowrap;}
+.progress-banner-bar-bg{flex:1;min-width:100px;background:var(--border);border-radius:6px;height:6px;overflow:hidden;}
+.progress-banner-bar{background:var(--teal);height:100%;border-radius:6px;transition:width .4s ease;}
+.progress-banner-count{font-size:12px;font-weight:500;color:var(--teal);white-space:nowrap;}
 
-/* ── print ── */
-@media print {
-  body { background: white; font-size: 11px; }
-  header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .card, .pack-card, .todo-item, .budget-card { break-inside: avoid; }
-  .day-block { break-inside: avoid; }
-  .schedule-view-toggle, .day-tabs { display: none; }
+/* ── 예산 ── */
+.budget-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+@media(max-width:500px){.budget-grid{grid-template-columns:1fr 1fr;}}
+.budget-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:.75rem .9rem;}
+.budget-label{font-size:10px;color:var(--ink-pale);margin-bottom:.2rem;}
+.budget-value{font-size:15px;font-weight:500;color:var(--ink);}
+.budget-sub{font-size:10px;color:var(--ink-light);margin-top:.1rem;line-height:1.4;}
+.total-box{background:var(--ink);color:var(--white);border-radius:10px;padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
+.total-label{font-size:12px;opacity:.65;}
+.total-value{font-size:22px;font-weight:500;}
+.total-note{font-size:10px;opacity:.5;margin-top:2px;}
+
+/* ── 편집 모드 ── */
+.edit-btn{display:none;font-size:10px;padding:3px 10px;border-radius:12px;border:1px solid var(--border-dark);background:var(--white);color:var(--ink-light);cursor:pointer;margin-left:auto;font-family:'Noto Sans KR',sans-serif;transition:all .15s;white-space:nowrap;}
+.edit-btn:hover{border-color:var(--ocean);color:var(--ocean);}
+.edit-mode .edit-btn{display:inline-flex;align-items:center;gap:4px;}
+.edit-mode-banner{display:none;background:var(--ocean);color:var(--white);font-size:11px;padding:.5rem 1.5rem;text-align:center;position:sticky;top:0;z-index:100;}
+.edit-mode .edit-mode-banner{display:block;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:14px;padding:1.4rem 1.6rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:600;margin-bottom:1rem;}
+.modal label{display:block;font-size:11px;color:var(--ink-light);margin-bottom:3px;margin-top:.7rem;}
+.modal input,.modal textarea,.modal select{width:100%;border:1px solid var(--border-dark);border-radius:7px;padding:.45rem .7rem;font-size:12px;font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--ink);outline:none;}
+.modal input:focus,.modal textarea:focus{border-color:var(--ocean);}
+.modal textarea{resize:vertical;min-height:60px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.1rem;}
+.btn-save{background:var(--ink);color:var(--white);border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:12px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;}
+.btn-cancel{background:var(--white);color:var(--ink-light);border:1px solid var(--border-dark);border-radius:8px;padding:.5rem 1.2rem;font-size:12px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;}
+.btn-danger{background:var(--danger);color:var(--white);border:none;border-radius:8px;padding:.5rem 1rem;font-size:12px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;margin-right:auto;}
+.item-add-btn{display:none;width:100%;margin-top:8px;padding:.5rem;border:1px dashed var(--border-dark);border-radius:8px;background:transparent;font-size:11px;color:var(--ink-pale);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .15s;}
+.item-add-btn:hover{border-color:var(--ocean);color:var(--ocean);}
+.edit-mode .item-add-btn{display:block;}
+
+footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;border-top:1px solid var(--border);}
+@media print{
+  body{background:white;font-size:11px;}
+  header{print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .card,.pack-card,.todo-item,.budget-card{break-inside:avoid;}
+  .schedule-view-toggle,.day-tabs,.edit-btn,.edit-mode-banner,.item-add-btn{display:none !important;}
 }
 </style>
 </head>
 <body>
+
+<div class="edit-mode-banner">✏️ 편집 모드 — 변경사항이 즉시 저장됩니다</div>
+
 <header>
 <div class="header-inner">
 <p class="header-eyebrow">Travel Plan · 2026</p>
 <div class="header-title-row">
-<h1>미야코지마<br/>여행 계획서</h1>
-<div class="dday-badge">
-<span class="dday-top">출발까지</span>
-<span class="dday-num" id="dday-num">-</span>
-<span class="dday-suffix" id="dday-suffix">일 남음</span>
-</div>
+  <h1>미야코지마<br/>여행 계획서</h1>
+  <div class="dday-badge">
+    <span class="dday-top">출발까지</span>
+    <span class="dday-num" id="dday-num">-</span>
+    <span class="dday-suffix" id="dday-suffix">일 남음</span>
+  </div>
 </div>
 <div class="header-sub">
-<span>📅 2026.06.16 ~ 06.19</span>
-<span>🧳 3박 4일</span>
-<span>👫 2인 커플</span>
-<span>✈️ 진에어 직항</span>
+  <span>📅 2026.06.16 ~ 06.19</span>
+  <span>🧳 3박 4일</span>
+  <span>👫 2인 커플</span>
+  <span>✈️ 진에어 직항</span>
 </div>
 </div>
 </header>
+
 <div class="container">
-<!-- 기본 정보 -->
+
+<!-- 기본 정보 (정적) -->
 <div class="sec">
 <div class="sec-title"><span class="icon">i</span> 기본 정보</div>
 <div class="grid3">
-<div class="card">
-<div class="card-label">여행지</div>
-<div class="card-value">미야코지마 (宮古島)</div>
-<div class="card-sub">오키나와현. 오키나와 본섬에서 남서 280km. 아열대 기후. '일본의 몰디브'</div>
-</div>
-<div class="card">
-<div class="card-label">6월 날씨</div>
-<div class="card-value">평균 28°C / 수온 25°C↑</div>
-<div class="card-sub">장마 말기. 맑은 날 약 15~20일. 일조 6~7시간. 자외선 강함</div>
-</div>
-<div class="card">
-<div class="card-label">핵심 특징</div>
-<div class="card-value">미야코 블루</div>
-<div class="card-sub">야비지 산호 군락 · 바다거북 스노클링 · 이라부 대교 드라이브 · 요나하 마에하마 비치</div>
+  <div class="card"><div class="card-label">여행지</div><div class="card-value">미야코지마 (宮古島)</div><div class="card-sub">오키나와현. 오키나와 본섬에서 남서 280km. 아열대 기후. '일본의 몰디브'</div></div>
+  <div class="card"><div class="card-label">6월 날씨</div><div class="card-value">평균 28°C / 수온 25°C↑</div><div class="card-sub">장마 말기. 맑은 날 약 15~20일. 자외선 강함</div></div>
+  <div class="card"><div class="card-label">핵심 특징</div><div class="card-value">미야코 블루</div><div class="card-sub">야비지 산호 군락 · 바다거북 스노클링 · 이라부 대교 드라이브</div></div>
 </div>
 </div>
-</div>
+
 <!-- 확정 예약 -->
 <div class="sec">
-<div class="sec-title"><span class="icon">✓</span> 확정 예약 현황</div>
-<div class="grid2">
-<div class="card">
-<div class="card-label">항공권</div>
-<div class="card-value">진에어 직항 왕복 846,800원</div>
-<div class="card-sub">
-        출발: 6/16(화) 인천 08:25 → 시모지시마 11:00<br/>
-        귀국: 6/19(금) 시모지시마 12:00 → 인천 14:30
-      </div>
-<span class="badge-ok">✓ 예약 확정</span>
+<div class="sec-title"><span class="icon">✓</span> 확정 예약 현황 <button class="edit-btn" onclick="openModal('bookings')">✏️ 편집</button></div>
+<div class="grid2" id="bookings-grid"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 </div>
-<div class="card">
-<div class="card-label">숙박 3박</div>
-<div class="card-value">Hotel &amp; Villa Seahorse MIYAKOJIMA</div>
-<div class="card-sub">
-        아고다 예약 · VAT 포함 374,127원<br/>
-        1박 약 124,700원 · 요나하 마에하마 비치 근처 · 수영장 보유
-      </div>
-<span class="badge-ok">✓ 예약 확정</span>
-</div>
-<div class="card">
-<div class="card-label">렌터카 4일</div>
-<div class="card-value">오릭스렌터카 · 혼다 피트 또는 동급 (준중형차)</div>
-<div class="card-sub">
-        みやこ下地島空港ターミナル店 픽업·반납<br/>
-        6/16 11:30 출발 → 6/19 11:00 반납<br/>
-        카내비·ETC 표준장착 / 추가 운전자 1인 무료<br/>
-        클룩 프로텍트 포함 (CDW 자기부담금 ¥0)<br/>
-<strong style="color:var(--ink);font-weight:500">합계 259,837원 (온라인 64,737원 + 현장 ¥20,592)</strong>
-</div>
-<span class="badge-ok">✓ 예약 확정</span>
-</div>
-<div class="card" style="background:var(--ocean-pale); border-color:var(--ocean-light);">
-<div class="card-label" style="color:var(--ocean)">확정 지출 합계</div>
-<div class="card-value" style="font-size:22px;color:var(--ocean)">약 148만원</div>
-<div class="card-sub">
-        항공 846,800 + 숙박 374,127 + 렌터카 259,837
-      </div>
-</div>
-</div>
-</div>
-<!-- 투어 정보 -->
+
+<!-- 투어 -->
 <div class="sec">
-<div class="sec-title"><span class="icon">🤿</span> 투어 정보 — 야비지(八重干瀬) 보트 스노클링</div>
-<!-- 공통 정보 -->
+<div class="sec-title"><span class="icon">🤿</span> 투어 정보 — 야비지(八重干瀬) 보트 스노클링 <button class="edit-btn" onclick="openModal('tour')">✏️ 편집</button></div>
 <div style="background:var(--ocean-pale);border:1px solid var(--ocean-light);border-radius:10px;padding:.8rem 1.1rem;margin-bottom:1.1rem;font-size:12px;color:var(--ocean);line-height:1.9">
-<strong style="display:block;margin-bottom:.2rem;font-size:13px">야비지(八重干瀬)란?</strong>
-    미야코지마 북쪽 약 15km 해역 · 남북 17km × 동서 6.5km · 일본 최대 탁상 산호 군락 · 2013년 국가 천연기념물 지정<br/>
-<strong>멀미약 필수</strong> · 날씨·파도에 따라 당일 취소 가능 · 바다거북 조우율 낮음 (산호 전문 포인트)
+  <strong style="display:block;margin-bottom:.2rem;font-size:13px">야비지(八重干瀬)란?</strong>
+  미야코지마 북쪽 약 15km 해역 · 일본 최대 탁상 산호 군락 · 2013년 국가 천연기념물 지정<br/>
+  <strong>멀미약 필수</strong> · 날씨·파도에 따라 당일 취소 가능
+</div>
+<div id="tour-card"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
+<div style="border:1px solid #fcd34d;border-radius:10px;overflow:hidden;margin-top:10px">
+  <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.pb-toggle').textContent=this.nextElementSibling.style.display==='none'?'펼치기 ▾':'접기 ▴'" style="display:flex;align-items:center;gap:8px;padding:.7rem 1rem;background:var(--warn-bg);cursor:pointer;user-select:none">
+    <span style="font-size:13px;color:var(--warn)">⚠</span>
+    <span style="font-size:12px;font-weight:500;color:var(--warn);flex:1">플랜 B — 야비지 투어 당일 취소 시 대체 일정</span>
+    <span class="pb-toggle" style="font-size:10px;color:var(--warn);opacity:.7">펼치기 ▾</span>
   </div>
-<!-- 업체 2: 레오제이투어 -->
-<div class="tour-card" style="margin-bottom:10px">
-<div class="tour-card-header" style="background:var(--sand)">
-<div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem">
-<div>
-<div class="tour-card-title">레오제이투어</div>
-<div class="tour-card-sub">Activity Japan plan/40733 · Blue Forest 宮古島</div>
-</div>
-<span style="font-size:9px;background:var(--success-bg);color:var(--success);padding:3px 9px;border-radius:12px;font-weight:500;flex-shrink:0">✓ 예약 확정</span>
-</div>
-</div>
-<div class="tour-card-body">
-<div class="tour-row"><span class="tour-key">출발</span><span class="tour-val">이케마지마 어항 (이케마섬)<br/><span style="font-size:10px;color:var(--ink-pale)">야비지까지 보트 약 15~30분 — 히라라 출발보다 훨씬 가까움</span></span></div>
-<div class="tour-row"><span class="tour-key">집합</span><span class="tour-val">이케마 초중학교 바로 옆</span></div>
-<div class="tour-row"><span class="tour-key">시간</span><span class="tour-val">09:00~13:00<br/><span style="font-size:10px;color:var(--ink-pale)">총 약 3~4시간</span></span></div>
-<div class="tour-row"><span class="tour-key">가이드</span><span class="tour-val">이라부섬 출신 선장 직접 안내<br/><span style="font-size:10px;color:var(--ink-pale)">스탭 전원 PADI 스노클 가이드 자격 보유 · 15년 이상 무사고</span></span></div>
-<div class="tour-row"><span class="tour-key">포함</span><span class="tour-val">장비 렌탈 · 샤워실 · 투어 사진 · 드론 동영상</span></div>
-<div class="tour-row"><span class="tour-key">인원</span><span class="tour-val">최대 20명</span></div>
-<div class="tour-row"><span class="tour-key">가격</span><span class="tour-val">¥11,000~ (세금 포함 · 약 10만원)</span></div>
-<div class="tour-row"><span class="tour-key">취소</span><span class="tour-val">2일 전까지 무료</span></div>
-<div class="tour-row" style="border-bottom:none"><span class="tour-key">예약</span><span class="tour-val"><a href="https://ko.activityjapan.com/publish/plan/40733" style="color:var(--ocean);text-decoration:none;font-weight:500" target="_blank">Activity Japan →</a><span style="font-size:10px;color:var(--ink-pale);display:block">일본어 사이트 · 영어 대응 가능</span></span></div>
+  <div style="display:none;padding:.8rem 1rem 1rem;background:#fffbeb;font-size:12px;">
+    <div style="color:var(--warn);margin-bottom:.6rem;font-size:11px;">6월은 장마 말기로 풍랑·강우로 인한 투어 취소가 실제로 발생합니다.</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">오전</span><span style="color:var(--ink-mid)">이라부섬 드라이브 — 사와다노하마 비치, 나구리마하마 산책</span></div>
+      <div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">점심</span><span style="color:var(--ink-mid)">かわみつ食堂 (마제소바) 또는 Nakayukui Shoten (사타안다기)</span></div>
+      <div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">오후</span><span style="color:var(--ink-mid)">미야코 해중공원 (실내 수족관) → 히라라 시내 카페 투어</span></div>
+      <div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">저녁</span><span style="color:var(--ink-mid)">이자카야 훌라 HULAR — 예정대로 진행</span></div>
+    </div>
+  </div>
 </div>
 </div>
-<!-- 3업체 비교 → 레오제이투어 확정으로 단일 업체만 표시 -->
 
-
-<!-- 플랜 B -->
-<div style="border:1px solid #fcd34d;border-radius:10px;overflow:hidden">
-<div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.pb-toggle').textContent=this.nextElementSibling.style.display==='none'?'펼치기 ▾':'접기 ▴'" style="display:flex;align-items:center;gap:8px;padding:.7rem 1rem;background:var(--warn-bg);cursor:pointer;user-select:none">
-<span style="font-size:13px;color:var(--warn)">⚠</span>
-<span style="font-size:12px;font-weight:500;color:var(--warn);flex:1">플랜 B — 야비지 투어 당일 취소 시 대체 일정</span>
-<span class="pb-toggle" style="font-size:10px;color:var(--warn);opacity:.7">펼치기 ▾</span>
-</div>
-<div style="display:none;padding:.8rem 1rem 1rem;background:#fffbeb">
-<div style="font-size:11px;color:var(--warn);margin-bottom:.7rem;padding-bottom:.6rem;border-bottom:1px solid #fcd34d;line-height:1.6">
-        6월은 장마 말기로 풍랑·강우로 인한 투어 취소가 실제로 발생합니다. 미리 숙지해 두세요.
-      </div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
-<div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">오전</span><span style="color:var(--ink-mid)">이라부섬 드라이브 — 사와다노하마 비치, 나구리마하마 산책</span></div>
-<div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">점심</span><span style="color:var(--ink-mid)">かわみつ食堂 (마제소바) 또는 Nakayukui Shoten (사타안다기)</span></div>
-<div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">오후</span><span style="color:var(--ink-mid)">미야코 해중공원 (실내 수족관) → 히라라 시내 카페 투어</span></div>
-<div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">저녁</span><span style="color:var(--ink-mid)">이자카야 훌라 HULAR — 예정대로 진행</span></div>
-</div>
-</div>
-</div>
-</div>
-<!-- 전체 일정 -->
+<!-- 일정 -->
 <div class="sec">
 <div class="sec-title"><span class="icon">📅</span> 3박 4일 전체 일정</div>
-<!-- 뷰 토글 -->
 <div class="schedule-view-toggle">
-<button class="view-btn active" id="btn-all" onclick="setScheduleView('all')">📋 전체보기</button>
-<button class="view-btn" id="btn-tab" onclick="setScheduleView('tab')">탭으로 보기</button>
+  <button class="view-btn active" id="btn-all" onclick="setScheduleView('all')">📋 전체보기</button>
+  <button class="view-btn" id="btn-tab" onclick="setScheduleView('tab')">탭으로 보기</button>
 </div>
-<!-- 일차 탭 (탭 뷰에서만 표시) -->
 <div class="day-tabs" id="day-tabs">
-<button class="day-tab active" onclick="switchDay(1)">1일차 · 6/16</button>
-<button class="day-tab" onclick="switchDay(2)">2일차 · 6/17</button>
-<button class="day-tab" onclick="switchDay(3)">3일차 · 6/18</button>
-<button class="day-tab" onclick="switchDay(4)">4일차 · 6/19</button>
+  <button class="day-tab active" onclick="switchDay(1)">1일차 · 6/16</button>
+  <button class="day-tab" onclick="switchDay(2)">2일차 · 6/17</button>
+  <button class="day-tab" onclick="switchDay(3)">3일차 · 6/18</button>
+  <button class="day-tab" onclick="switchDay(4)">4일차 · 6/19</button>
 </div>
-<div id="schedule-body">
-<!-- 1일차 -->
-<div class="day-block tab-active" data-day="1">
-<div class="day-header">
-<span class="day-pill">1일차 · 6/16(화)</span>
-<span class="day-title">도착 &amp; 이라부 대교 드라이브</span>
-</div>
-<div class="timeline">
-<div class="tl-item">
-<div class="tl-dot blue"></div>
-<div class="tl-time">08:25</div>
-<div class="tl-name">인천 출발 <span class="badge-info">진에어 직항 확정</span></div>
-</div>
-<div class="tl-item">
-<div class="tl-dot blue"></div>
-<div class="tl-time">11:00</div>
-<div class="tl-name">시모지시마 공항 도착</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot blue"></div>
-<div class="tl-time">11:30</div>
-<div class="tl-name">오릭스렌터카 픽업</div>
-<div class="tl-desc">공항 내 카운터에서 수속. 약 30~40분 소요. 바우처 출력본 필수 지참</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-time">12:00~13:00</div>
-<div class="tl-name">이라부 대교 드라이브</div>
-<div class="tl-desc">공항 바로 앞. 일본 최장 무료 교량 3.54km. 갓길 정차 후 사진</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">12:30~13:30</div>
-<div class="tl-name">점심</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-time">14:00~16:30</div>
-<div class="tl-name">요나하 마에하마 비치</div>
-<div class="tl-desc">일본 최고 해변. 7km 백사장. 첫 미야코 블루 감상. 수온 25°C↑</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-time">17:00~18:30</div>
-<div class="tl-name">Seahorse 숙소 체크인</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">19:00~</div>
-<div class="tl-name">저녁</div>
-</div>
-</div>
-</div>
-<!-- 2일차 -->
-<div class="day-block" data-day="2">
-<div class="day-header">
-<span class="day-pill">2일차 · 6/17(수)</span>
-<span class="day-title">야비지 투어 메인</span>
-</div>
-<div class="timeline">
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-time">07:40~12:10</div>
-<div class="tl-name">야비지 보트 스노클링 투어 — 레오제이투어 <span class="badge-info">예약 확정</span></div>
-<div class="tl-desc">이케마지마 어항 집합 (이케마 초중학교 바로 옆). 멀미약 출발 30분 전 복용</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">12:30~13:30</div>
-<div class="tl-name">점심</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">오후</div>
-<div class="tl-name">오후 일정 <span class="badge-optional">추후 결정</span></div>
-<div class="tl-desc">야비지 투어 복귀 후 일정은 추후 의논</div></div>
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">19:00~</div>
-<div class="tl-name">저녁</div>
-</div>
-</div>
-</div>
-<!-- 3일차 -->
-<div class="day-block" data-day="3">
-<div class="day-header">
-<span class="day-pill">3일차 · 6/18(목)</span>
-<span class="day-title">섬 동쪽 탐방 &amp; 쇼핑</span>
-</div>
-<div class="timeline">
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">08:00~08:45</div>
-<div class="tl-name">아침 식사</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-time">09:00~10:30</div>
-<div class="tl-name">히가시헨나 곶 (東平安名崎)</div>
-<div class="tl-desc">미야코지마 동쪽 끝 천연기념물 산책로. 등대 파노라마 뷰. 오전 햇빛 최적</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-time">11:00~12:00</div>
-<div class="tl-name">망고농장 방문 <span class="badge-optional">농장 미정</span></div>
-<div class="tl-desc">미야코지마 특산 망고. 방문 농장은 추후 결정 (Blue Turtle Farm 또는 しらばり農園)</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">12:00~13:00</div>
-<div class="tl-name">점심</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot amber"></div>
-<div class="tl-time">13:30~15:00</div>
-<div class="tl-name">아라구스쿠 비치 — 바다거북 스노클링 <span class="badge-info">바다거북 조우율 최고</span></div>
-<div class="tl-desc">헨나 곶과 같은 동쪽 동선. 수심 1~2m. 개인 스노클링 무료 입장</div>
-</div>
-<div class="tl-item"><div class="tl-dot green"></div><div class="tl-time">15:30~17:00</div><div class="tl-name">히라라 시내 쇼핑</div><div class="tl-desc">기념품 · 잡화 쇼핑</div></div>
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">20:00~</div>
-<div class="tl-name">저녁</div>
-</div>
-</div>
-</div>
-<!-- 4일차 -->
-<div class="day-block" data-day="4">
-<div class="day-header">
-<span class="day-pill">4일차 · 6/19(금)</span>
-<span class="day-title">귀국</span>
-</div>
-<div class="timeline">
-<div class="tl-item">
-<div class="tl-dot green"></div>
-<div class="tl-time">09:00~09:45</div>
-<div class="tl-name">모닝</div>
+<div id="schedule-body"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 </div>
 
-<div class="tl-item">
-<div class="tl-dot amber"></div>
-<div class="tl-time">10:30~11:00</div>
-<div class="tl-name">렌터카 반납 → 공항 이동</div>
-<div class="tl-desc">みやこ下地島空港ターミナル店 반납. 체크인 마감 최소 1시간 전 도착</div>
-</div>
-<div class="tl-item">
-<div class="tl-dot blue"></div>
-<div class="tl-time">12:00</div>
-<div class="tl-name">시모지시마 출발 → 14:30 인천 도착 <span class="badge-info">직항 확정</span></div>
-</div>
-</div>
-</div><!-- /day-block 4일차 -->
-</div><!-- /schedule-body -->
-</div><!-- /sec -->
-<!-- 맛집 카페 표 -->
+<!-- 맛집 -->
 <div class="sec">
 <div class="sec-title">
   <span class="icon">🍽</span> 맛집 · 카페 영업시간 &amp; 방문 가부
-  <span id="resto-updated" style="font-size:10px;font-weight:400;color:var(--ink-pale);margin-left:auto"></span>
+  <button class="edit-btn" onclick="openModal('restaurant-add')">+ 추가</button>
+  <span id="resto-sync-label" style="font-size:10px;font-weight:400;color:var(--ink-pale);margin-left:4px"></span>
 </div>
-<div id="resto-table-wrap" class="table-wrap">
-  <div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div>
+<div id="resto-table-wrap" class="table-wrap"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 </div>
-</div>
+
 <!-- 준비물 -->
 <div class="sec">
-<div class="sec-title"><span class="icon">🎒</span> 준비물 체크리스트</div>
-<div class="pack-grid">
-<div class="pack-card">
-<div class="pack-title">운전</div>
-<div class="pack-item" id="pack-drive">
-<div class="check-item" data-group="pack-drive"><div class="check-box">✓</div><span class="check-label">국제운전면허증</span></div>
-<div class="check-item" data-group="pack-drive"><div class="check-box">✓</div><span class="check-label">한국 운전면허증</span></div>
-<div class="check-item" data-group="pack-drive"><div class="check-box">✓</div><span class="check-label">여권</span></div>
-<div class="check-item" data-group="pack-drive"><div class="check-box">✓</div><span class="check-label">렌터카 바우처 출력본</span></div>
+<div class="sec-title"><span class="icon">🎒</span> 준비물 체크리스트 <button class="edit-btn" onclick="openModal('pack-edit')">✏️ 편집</button></div>
+<div class="pack-grid" id="pack-grid"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 </div>
-<div class="pack-note">국제+한국 면허 둘 다 지참 필수 · 바우처 미지참 시 추가 비용 가능</div>
-<div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-drive">0 / 4</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-drive" style="width:0%"></div></div></div>
-</div>
-<div class="pack-card">
-<div class="pack-title">바다 · 액티비티</div>
-<div class="pack-item" id="pack-sea">
-<div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">래시가드 (자외선 차단·해파리 보호)</span></div>
-<div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">아쿠아슈즈</span></div>
-<div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">방수 파우치</span></div>
-<div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">스노클 세트 (현장 렌탈 가능)</span></div>
-<div class="check-item" data-group="pack-sea"><div class="check-box">✓</div><span class="check-label">멀미약 (야비지 보트 왕복 2시간)</span></div>
-</div>
-<div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-sea">0 / 5</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-sea" style="width:0%"></div></div></div>
-</div>
-<div class="pack-card">
-<div class="pack-title">날씨 대비</div>
-<div class="pack-item" id="pack-weather">
-<div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">접이식 우비 (스콜 대비)</span></div>
-<div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">선크림 SPF50+ 워터프루프 × 2개</span></div>
-<div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">선크림 스틱형 (부분 덧바름용)</span></div>
-<div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">챙 넓은 모자 (끈 있는 것)</span></div>
-<div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">선글라스</span></div>
-<div class="check-item" data-group="pack-weather"><div class="check-box">✓</div><span class="check-label">갈아입을 옷 (1일 2벌 기준)</span></div>
-</div>
-<div class="pack-note">6월 자외선 강함 · 스콜 대비 필수</div>
-<div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-weather">0 / 6</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-weather" style="width:0%"></div></div></div>
-</div>
-<div class="pack-card">
-<div class="pack-title">결제 · 통신</div>
-<div class="pack-item" id="pack-money">
-<div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">엔화 현금 50,000~70,000엔</span></div>
-<div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">해외결제 가능 카드 (보조 수단)</span></div>
-<div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">일본 eSIM 또는 포켓 와이파이</span></div>
-<div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">보조배터리</span></div>
-<div class="check-item" data-group="pack-money"><div class="check-box">✓</div><span class="check-label">C타입 케이블 + 멀티탭</span></div>
-</div>
-<div class="pack-note">렌터카 내비 앱에 데이터 필수</div>
-<div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-money">0 / 5</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-money" style="width:0%"></div></div></div>
-</div>
-<div class="pack-card">
-<div class="pack-title">의약품 · 위생</div>
-<div class="pack-item" id="pack-med">
-<div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">멀미약</span></div>
-<div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">소화제 · 지사제</span></div>
-<div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">모기기피제</span></div>
-<div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">해파리 쏘임 대비 (물파스)</span></div>
-<div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">밴드 · 소독약</span></div>
-<div class="check-item" data-group="pack-med"><div class="check-box">✓</div><span class="check-label">두통약 · 종합감기약</span></div>
-</div>
-<div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-med">0 / 6</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-med" style="width:0%"></div></div></div>
-</div>
-<div class="pack-card">
-<div class="pack-title">수중 촬영</div>
-<div class="pack-item" id="pack-cam">
-<div class="check-item" data-group="pack-cam"><div class="check-box">✓</div><span class="check-label">방수 케이스 (스마트폰용)</span></div>
-<div class="check-item" data-group="pack-cam"><div class="check-box">✓</div><span class="check-label">GoPro (선택 사항)</span></div>
-<div class="check-item" data-group="pack-cam"><div class="check-box">✓</div><span class="check-label">스포츠 타월 (속건성)</span></div>
-</div>
-<div class="pack-note">야비지 · 바다거북 스노클링 투어 업체 대부분 사진 무료 제공</div>
-<div class="pack-progress"><div class="pack-progress-label"><span class="prog-text-cam">0 / 3</span></div><div class="pack-progress-bar-bg"><div class="pack-progress-bar" id="bar-cam" style="width:0%"></div></div></div>
-</div>
-</div>
-</div>
+
 <!-- 예약 체크리스트 -->
 <div class="sec">
-<div class="sec-title"><span class="icon">📋</span> 예약 체크리스트</div>
+<div class="sec-title"><span class="icon">📋</span> 예약 체크리스트 <button class="edit-btn" onclick="openModal('todo-add')">+ 항목 추가</button></div>
 <div class="progress-banner">
-<span class="progress-banner-label">예약 진행률</span>
-<div class="progress-banner-bar-bg"><div class="progress-banner-bar" id="todo-bar" style="width:20%"></div></div>
-<span class="progress-banner-count" id="todo-count">2 / 10</span>
+  <span class="progress-banner-label">예약 진행률</span>
+  <div class="progress-banner-bar-bg"><div class="progress-banner-bar" id="todo-bar" style="width:0%"></div></div>
+  <span class="progress-banner-count" id="todo-count">0 / 0</span>
 </div>
-<div class="todo-list">
-<div class="todo-item completed" data-todo="1">
-<div class="todo-num done">1</div>
-<div class="todo-content">
-<div class="todo-title">항공권</div>
-<div class="todo-desc">진에어 직항 왕복 846,800원 (2인)</div>
+<div class="todo-list" id="todo-list"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 </div>
-<div class="todo-status st-done">✓ 완료</div>
-</div>
-<div class="todo-item completed" data-todo="2">
-<div class="todo-num done">2</div>
-<div class="todo-content">
-<div class="todo-title">숙박</div>
-<div class="todo-desc">Seahorse 3박 374,127원 (아고다 확정)</div>
-</div>
-<div class="todo-status st-done">✓ 완료</div>
-</div>
-<div class="todo-item completed" data-todo="3">
-<div class="todo-num done">3</div>
-<div class="todo-content">
-<div class="todo-title">렌터카</div>
-<div class="todo-desc">오릭스렌터카 · 혼다 피트 · 클룩 예약 확정 259,837원</div>
-</div>
-<div class="todo-status st-done">✓ 완료</div>
-</div>
-<div class="todo-item" data-todo="4">
-<div class="todo-num">4</div>
-<div class="todo-content">
-<div class="todo-title">국제운전면허증 발급</div>
-<div class="todo-desc">운전면허시험장·경찰서 방문 발급 / 준비물: 면허증 + 사진 1매 + 8,500원</div>
-</div>
-<div class="todo-status st-todo">미완료</div>
-</div>
-<div class="todo-item completed" data-todo="5">
-<div class="todo-num done">5</div>
-<div class="todo-content">
-<div class="todo-title">야비지 투어 예약</div>
-<div class="todo-desc">레오제이투어 확정 · Activity Japan · ¥11,000~ (2인)</div>
-</div>
-<div class="todo-status st-done">✓ 완료</div>
-</div>
-<div class="todo-item" data-todo="6">
-<div class="todo-num">6</div>
-<div class="todo-content">
-<div class="todo-title">바다거북 스노클링</div>
-<div class="todo-desc">아라구스쿠 비치 개인 스노클링 (무료) 또는 투어 업체 선택</div>
-</div>
-<div class="todo-status st-todo">미완료</div>
-</div>
-<div class="todo-item" data-todo="7">
-<div class="todo-num">7</div>
-<div class="todo-content">
-<div class="todo-title">식당 예약</div>
-<div class="todo-desc">あったかや 구글맵 채팅 · でいりぐち 전화 또는 구글맵</div>
-</div>
-<div class="todo-status st-todo">미완료</div>
-</div>
-<div class="todo-item" data-todo="8">
-<div class="todo-num">8</div>
-<div class="todo-content">
-<div class="todo-title">eSIM / 포켓 와이파이</div>
-<div class="todo-desc">쿠팡·네이버에서 일본 전용 eSIM 구매 후 도착 시 활성화</div>
-</div>
-<div class="todo-status st-todo">미완료</div>
-</div>
-<div class="todo-item" data-todo="9">
-<div class="todo-num">9</div>
-<div class="todo-content">
-<div class="todo-title">여행자보험 가입</div>
-<div class="todo-desc">해양 스포츠 특약 포함 필수 확인 / KB·삼성·현대해상 앱에서 당일 가입 가능</div>
-</div>
-<div class="todo-status st-todo">미완료</div>
-</div>
-<div class="todo-item" data-todo="10">
-<div class="todo-num">10</div>
-<div class="todo-content">
-<div class="todo-title">엔화 환전</div>
-<div class="todo-desc">2인 기준 50,000~70,000엔 / 토스뱅크·카카오뱅크 앱 환전 후 공항 수령 추천</div>
-</div>
-<div class="todo-status st-todo">미완료</div>
-</div>
-</div>
-</div>
+
 <!-- 예산 -->
 <div class="sec">
-<div class="sec-title"><span class="icon">💰</span> 예산 현황 (2인 기준 · 인당 150만원)</div>
-<div class="budget-grid">
-<div class="budget-card">
-<div class="budget-label">항공권 (2인 왕복)</div>
-<div class="budget-value">846,800원</div>
-<div class="budget-sub" style="color:var(--success)">✓ 확정</div>
-</div>
-<div class="budget-card">
-<div class="budget-label">숙박 3박 (Seahorse)</div>
-<div class="budget-value">374,127원</div>
-<div class="budget-sub" style="color:var(--success)">✓ 확정</div>
-</div>
-<div class="budget-card">
-<div class="budget-label">렌터카 4일 (오릭스)</div>
-<div class="budget-value">259,837원</div>
-<div class="budget-sub" style="color:var(--success)">✓ 확정 · 클룩 예약</div>
-</div>
-<div class="budget-card">
-<div class="budget-label">식비 4일 (2인)</div>
-<div class="budget-value">20~30만원</div>
-<div class="budget-sub">현금 지참 권장</div>
-</div>
-<div class="budget-card">
-<div class="budget-label">야비지 투어 (2인)</div>
-<div class="budget-value">약 20만원</div>
-<div class="budget-sub">레오제이투어 ¥11,000~ × 2 · 확정</div>
-</div>
-<div class="budget-card">
-<div class="budget-label">쇼핑·기념품·기타</div>
-<div class="budget-value">8~15만원</div>
-<div class="budget-sub">기념품 · 잡비</div>
+<div class="sec-title"><span class="icon">💰</span> 예산 현황 (2인 기준) <button class="edit-btn" onclick="openModal('budget-edit')">✏️ 편집</button></div>
+<div class="budget-grid" id="budget-grid"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
+<div class="total-box" id="budget-total" style="display:none">
+  <div><div class="total-label">2인 총 예상 합계</div><div class="total-note" id="budget-total-note"></div></div>
+  <div style="text-align:right"><div class="total-value" id="budget-total-value"></div></div>
 </div>
 </div>
-<div class="total-box">
-<div>
-<div class="total-label">2인 총 예상 합계</div>
-<div class="total-note">중간값 기준</div>
-</div>
-<div style="text-align:right">
-<div class="total-value">228~265만원</div>
-<div class="total-note">300만원 예산 내 여유 있음</div>
-</div>
-</div>
-</div>
-<!-- 참고 -->
+
+<!-- 긴급연락처 (정적) -->
 <div class="sec">
 <div class="sec-title"><span class="icon">!</span> 긴급 연락처 &amp; 참고</div>
 <div class="grid3">
-<div class="card">
-<div class="card-label">현지 긴급</div>
-<div class="card-value">110 (경찰) / 119 (구급)</div>
-</div>
-<div class="card">
-<div class="card-label">한국 총영사관 (오키나와)</div>
-<div class="card-value">+81-98-865-4683</div>
-</div>
-<div class="card">
-<div class="card-label">야비지 투어 취소·변경</div>
-<div class="card-value">예약 업체 카톡 채널</div>
-</div>
+  <div class="card"><div class="card-label">현지 긴급</div><div class="card-value">110 (경찰) / 119 (구급)</div></div>
+  <div class="card"><div class="card-label">한국 총영사관 (오키나와)</div><div class="card-value">+81-98-865-4683</div></div>
+  <div class="card"><div class="card-label">야비지 투어 취소·변경</div><div class="card-value">예약 업체 카톡 채널</div></div>
 </div>
 <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:10px;padding:.9rem 1.1rem;margin-top:10px;font-size:12px;color:var(--warn);line-height:1.8">
-<strong>태풍·악천후 대체 일정:</strong> 야비지 투어 당일 취소 시 — 이라부섬 드라이브 / 미야코 해중공원 (실내 수족관) / 히라라 시내 카페 투어<br/>
-<strong>운전 주의:</strong> 일본 좌측통행 (우리나라 반대). 내비는 구글맵 또는 야후카내비 (일어 설정). 반납 전 가득 주유 (레귤러/レギュラー).
+  <strong>운전 주의:</strong> 일본 좌측통행. 내비는 구글맵 또는 야후카내비 (일어 설정). 반납 전 가득 주유 (레귤러/レギュラー).
+</div>
+</div>
+
+</div><!-- /container -->
+
+<!-- 편집 모달 -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+<div class="modal">
+  <div class="modal-title" id="modal-title">편집</div>
+  <div id="modal-body"></div>
+  <div class="modal-actions" id="modal-actions">
+    <button class="btn-cancel" onclick="closeModal()">취소</button>
+    <button class="btn-save" id="modal-save-btn" onclick="modalSave()">저장</button>
   </div>
 </div>
 </div>
-<footer>
-  미야코지마 여행 계획서 · 2026.06.16~19 · 최종 업데이트 2026.04.05
-</footer>
+
+<footer>미야코지마 여행 계획서 · 2026.06.16~19</footer>
+
 <script>
-// ── 준비물 진행률 ──
-const packGroups = {
-  'pack-drive':   { total: 4,  bar: 'bar-drive',   text: 'prog-text-drive' },
-  'pack-sea':     { total: 5,  bar: 'bar-sea',      text: 'prog-text-sea' },
-  'pack-weather': { total: 6,  bar: 'bar-weather',  text: 'prog-text-weather' },
-  'pack-money':   { total: 5,  bar: 'bar-money',    text: 'prog-text-money' },
-  'pack-med':     { total: 6,  bar: 'bar-med',      text: 'prog-text-med' },
-  'pack-cam':     { total: 3,  bar: 'bar-cam',      text: 'prog-text-cam' },
-};
+// ════════════════════════════════════════════════════════
+//  전역 상태
+// ════════════════════════════════════════════════════════
+const EDIT_MODE  = location.search.includes('edit');
+const TRIP_DAYS  = [
+  { jsDay:2, label:'화<br/>6/16', dayNum:1 },
+  { jsDay:3, label:'수<br/>6/17', dayNum:2 },
+  { jsDay:4, label:'목<br/>6/18', dayNum:3 },
+  { jsDay:5, label:'금<br/>6/19', dayNum:4 },
+];
+const BADGE_MAP = { bi:'badge-info', bv:'badge-ok', ba:'badge-warn', br:'badge-danger' };
+const DAY_LABELS = {1:'1일차',2:'2일차',3:'3일차',4:'4일차'};
+let DB, scheduleView='all', currentDay=1, _modalSaveFn=null;
 
-function updatePackProgress(groupId) {
-  const g = packGroups[groupId];
-  if (!g) return;
-  const items = document.querySelectorAll('[data-group="' + groupId + '"]');
-  const done = [...items].filter(el => el.classList.contains('checked')).length;
-  const pct = g.total > 0 ? Math.round(done / g.total * 100) : 0;
-  const bar = document.getElementById(g.bar);
-  const txt = document.querySelector('.' + g.text);
-  if (bar) bar.style.width = pct + '%';
-  if (txt) txt.textContent = done + ' / ' + g.total;
-}
-
-// ── 예약 진행률 ──
-function updateTodoProgress() {
-  const items = document.querySelectorAll('.todo-item');
-  const done = [...items].filter(el => el.classList.contains('completed')).length;
-  const total = items.length;
-  const pct = total > 0 ? Math.round(done / total * 100) : 0;
-  const bar = document.getElementById('todo-bar');
-  const cnt = document.getElementById('todo-count');
-  if (bar) bar.style.width = pct + '%';
-  if (cnt) cnt.textContent = done + ' / ' + total;
-}
-
-// ── D-Day 카운터 ──
-(function() {
-  const target = new Date('2026-06-16T00:00:00+09:00');
-  const now = new Date();
-  const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
-  const numEl = document.getElementById('dday-num');
-  const sufEl = document.getElementById('dday-suffix');
-  if (!numEl) return;
-  if (diff > 0) {
-    numEl.textContent = 'D-' + diff;
-    sufEl.textContent = '일 남음';
-  } else if (diff === 0) {
-    numEl.textContent = 'D-DAY';
-    sufEl.textContent = '오늘 출발 ✈️';
-  } else {
-    numEl.textContent = 'D+' + Math.abs(diff);
-    sufEl.textContent = '일째 여행중 🌊';
-  }
+// ── D-Day ──
+(()=>{
+  const t=new Date('2026-06-16T00:00:00+09:00'), now=new Date();
+  const d=Math.ceil((t-now)/(864e5));
+  const n=document.getElementById('dday-num'), s=document.getElementById('dday-suffix');
+  if(!n) return;
+  if(d>0){n.textContent='D-'+d;s.textContent='일 남음';}
+  else if(d===0){n.textContent='D-DAY';s.textContent='오늘 출발 ✈️';}
+  else{n.textContent='D+'+Math.abs(d);s.textContent='일째 여행중 🌊';}
 })();
 
-// ── 일정 탭/전체보기 토글 ──
-let currentView = 'all';
-let currentDay = 1;
+// ── 편집 모드 활성화 ──
+if(EDIT_MODE) document.body.classList.add('edit-mode');
 
-function setScheduleView(view) {
-  currentView = view;
-  const body = document.getElementById('schedule-body');
-  const tabs = document.getElementById('day-tabs');
-  const btnAll = document.getElementById('btn-all');
-  const btnTab = document.getElementById('btn-tab');
-  if (view === 'tab') {
-    body.classList.add('tab-mode');
-    tabs.classList.add('visible');
-    btnTab.classList.add('active');
-    btnAll.classList.remove('active');
-    switchDay(currentDay);
-  } else {
-    body.classList.remove('tab-mode');
-    tabs.classList.remove('visible');
-    btnAll.classList.add('active');
-    btnTab.classList.remove('active');
-  }
-  if (window._fbSaveView) window._fbSaveView(view);
-}
+// ════════════════════════════════════════════════════════
+//  Firebase 초기화 및 전체 렌더 시작
+// ════════════════════════════════════════════════════════
+function initApp(){
+  const {db,ref,set,get,onValue,update} = window._fb;
+  DB = db;
 
-function switchDay(day) {
-  currentDay = day;
-  document.querySelectorAll('.day-block').forEach(el => {
-    el.classList.toggle('tab-active', parseInt(el.dataset.day) === day);
+  const r = path => ref(db, path);
+  const fbSet = (path,val) => set(r(path),val);
+  const fbUpdate = (path,val) => update(r(path),val);
+  window._fbSet = fbSet; window._fbUpdate = fbUpdate; window._r = r;
+
+  // ── 예약 ──────────────────────────────────────────────
+  onValue(r('miyako/bookings'), snap => {
+    const d = snap.val() || {};
+    renderBookings(d);
   });
-  document.querySelectorAll('.day-tab').forEach((el, i) => {
-    el.classList.toggle('active', i + 1 === day);
+
+  // ── 투어 ──────────────────────────────────────────────
+  onValue(r('miyako/tour'), snap => {
+    const d = snap.val() || {};
+    renderTour(d);
   });
-}
 
-// ── 맛집 날짜 칸 ──
-const DAY_LABELS = { 1: '1일차', 2: '2일차', 3: '3일차', 4: '4일차' };
+  // ── 일정 ──────────────────────────────────────────────
+  onValue(r('miyako/schedule'), snap => {
+    const d = snap.val() || {};
+    renderSchedule(d);
+    restoreScheduleView();
+  });
 
-function applyDateMark(td, isMarked) {
-  const day = parseInt(td.dataset.day);
-  let badge = td.querySelector('.pick-badge');
-  if (isMarked) {
-    td.classList.add('day-marked');
-    if (!badge) {
-      badge = document.createElement('span');
-      badge.className = 'pick-badge';
-      td.appendChild(badge);
-    }
-    badge.textContent = DAY_LABELS[day];
-  } else {
-    td.classList.remove('day-marked');
-    if (badge) badge.remove();
-  }
-}
+  // ── 맛집 ──────────────────────────────────────────────
+  onValue(r('miyako/restaurants'), snap => {
+    const d = snap.val() || {};
+    renderRestoTable(d);
+  });
 
-// 날짜 칸 클릭 이벤트 — 테이블 렌더링 후 bindDateCells()로 호출
-function bindDateCells() {
-  document.querySelectorAll('td.date-cell').forEach(td => {
-    if (!td.querySelector('.ok')) return;
-    td.addEventListener('click', () => {
-      const isMarked = !td.classList.contains('day-marked');
-      applyDateMark(td, isMarked);
-      if (window._fbSaveDates) window._fbSaveDates();
+  // ── 준비물 ────────────────────────────────────────────
+  onValue(r('miyako/pack'), snap => {
+    const d = snap.val() || {};
+    renderPack(d);
+  });
+
+  // ── 예약 체크리스트 ───────────────────────────────────
+  onValue(r('miyako/todo'), snap => {
+    const d = snap.val() || {};
+    renderTodo(d);
+  });
+
+  // ── 예산 ──────────────────────────────────────────────
+  onValue(r('miyako/budget'), snap => {
+    const d = snap.val() || {};
+    renderBudget(d);
+  });
+
+  // ── 날짜 칸 마크 ─────────────────────────────────────
+  // 맛집 테이블 렌더 후 bindDateCells()에서 적용하므로 여기선 캐싱만
+  onValue(r('miyako/dates'), snap => {
+    window._dateMarks = snap.val() || {};
+    // 테이블이 이미 렌더된 경우 즉시 적용
+    document.querySelectorAll('td.date-cell').forEach(td => {
+      const key = (td.dataset.rid||'x')+'_'+td.dataset.day;
+      applyDateMark(td, !!(window._dateMarks[key]));
     });
   });
-}
 
-// ── 맛집 테이블 렌더링 ────────────────────────────────────────
-// 여행 날짜: 화(2)=1일차, 수(3)=2일차, 목(4)=3일차, 금(5)=4일차
-const TRIP_DAYS = [
-  { jsDay: 2, label: '화<br/>6/16', dayNum: 1 },
-  { jsDay: 3, label: '수<br/>6/17', dayNum: 2 },
-  { jsDay: 4, label: '목<br/>6/18', dayNum: 3 },
-  { jsDay: 5, label: '금<br/>6/19', dayNum: 4 },
-];
-
-// Apps Script Web App URL — 배포 후 교체
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycby0RZGEMM1bpgn1c_IAWfvYadZX9OQYdaTZ2w98C5aYnV1bi3dI83bQucur2eSjGcmU0A/exec';
-
-// Sheets 데이터 없을 때 사용할 폴백 데이터 (현재 하드코딩 그대로 유지)
-const FALLBACK_DATA = [
-  { id:'r01', category:'식사',      name_jp:'Fish Lab 魚熟',           name_kr:'피시랩 우오쥬쿠',        location:'히라라 남쪽',           menu:'해산물 정식 · 해산물 덮밥',              hours_raw:'07:30~15:00',                          closed_days:'',    is_new:false },
-  { id:'r02', category:'식사',      name_jp:'Nakayukui Shoten',        name_kr:'나카유쿠이 쇼텐',        location:'이라부섬',               menu:'사타안다기 (오키나와 튀김 도넛)',         hours_raw:'09:30~12:00 / 13:30~16:00',            closed_days:'4',   is_new:false },
-  { id:'r03', category:'식사',      name_jp:'みなと食堂',               name_kr:'미나토 쇼쿠도',          location:'니가와도리 어항',         menu:'생선 정식 · 문어 야키소바',               hours_raw:'11:00~16:00 (L.O 15:30)',              closed_days:'3',   is_new:false },
-  { id:'r04', category:'식사',      name_jp:'にいまそば',               name_kr:'니이마 소바',            location:'섬 북쪽 가리마타',        menu:'미야코 소바 · 쥬시 세트',                hours_raw:'11:00~15:00',                          closed_days:'4',   is_new:false },
-  { id:'r05', category:'식사',      name_jp:"HARRY'S Shrimp Truck",    name_kr:'해리스 쉬림프 트럭',      location:'서평안나자키',            menu:'갈릭 버터 새우 플레이트 · 타코',          hours_raw:'11:00~17:00',                          closed_days:'',    is_new:false },
-  { id:'r06', category:'식사',      name_jp:'Utopia Farms',            name_kr:'유토피아 팜스',           location:'우에노 (섬 남동쪽)',      menu:'농장 채소 플레이트 · 스무디',             hours_raw:'10:00~17:00',                          closed_days:'',    is_new:false },
-  { id:'r07', category:'식사',      name_jp:'かわみつ食堂',             name_kr:'카와미츠 쇼쿠도',         location:'이라부 방면',             menu:'미야코 마제소바',                         hours_raw:'11:00~14:30',                          closed_days:'',    is_new:true  },
-  { id:'r08', category:'식사',      name_jp:'沖縄そば まるかみ',        name_kr:'오키나와소바 마루카미',    location:'구리마섬',               menu:'연골 소키소바 · 오키나와소바',            hours_raw:'11:00~15:00 (L.O 14:00)',              closed_days:'',    is_new:true  },
-  { id:'r09', category:'식사',      name_jp:'浜屋',                    name_kr:'하마야',                 location:'이라부섬 사와다',         menu:'정식류 · 테이크아웃 가능',                hours_raw:'11:00~16:00',                          closed_days:'',    is_new:true  },
-  { id:'r10', category:'식사',      name_jp:'タコライス専門店 Shot',    name_kr:'타코라이스 전문점 Shot',  location:'우에치',                 menu:'타코라이스',                              hours_raw:'11:30~16:00',                          closed_days:'',    is_new:true  },
-  { id:'r11', category:'식사',      name_jp:'麺屋サマー太陽',           name_kr:'멘야사마 타이요',         location:'히라라 니시자토',         menu:'국수 전문점',                             hours_raw:'10:30~14:30',                          closed_days:'3,6', is_new:true  },
-  { id:'r12', category:'식사',      name_jp:'みゃ〜く商店',             name_kr:'마~쿠 상점',             location:'히라라 쿠가이',           menu:'튀김덮밥 전문점',                         hours_raw:'11:30~14:30',                          closed_days:'2,3', is_new:true  },
-  { id:'r13', category:'식사',      name_jp:'釜あげうどん宮もと',       name_kr:'카마아게우동 미야모토',    location:'히라라',                 menu:'가마아게 우동',                           hours_raw:'10:00~15:00',                          closed_days:'3,4', is_new:true  },
-  { id:'r14', category:'이자카야',  name_jp:'琉球居酒屋 吟なん亭',      name_kr:'긴난테이',               location:'히라라 니시자토',         menu:'류큐 요리 · 이자카야',                    hours_raw:'18:00~22:00',                          closed_days:'',    is_new:true  },
-  { id:'r15', category:'이자카야',  name_jp:'이자카야 훌라 HULAR',      name_kr:'이자카야 훌라 HULAR',    location:'히라라 시내',             menu:'시마 오뎅 · 생선 안주류',                 hours_raw:'17:00~23:00',                          closed_days:'2',   is_new:false },
-  { id:'r16', category:'이자카야',  name_jp:'でいりぐち 下里通り店',    name_kr:'데이리구치',             location:'히라라 시내',             menu:'오뎅 모리와세 · 테비치 조림',             hours_raw:'18:00~23:00',                          closed_days:'2',   is_new:false },
-  { id:'r17', category:'이자카야',  name_jp:'やんばるアグー嘉福',       name_kr:'얀바루 아구 카후쿠',      location:'히라라',                 menu:'아구 돼지 샤브샤브 코스',                 hours_raw:'17:00~24:00',                          closed_days:'',    is_new:false },
-  { id:'r18', category:'이자카야',  name_jp:'あったかや',               name_kr:'앗타카야',               location:'시모지섬 스가마',         menu:'미야코산 사시미 · 히야시 고마소바',       hours_raw:'17:00~22:00',                          closed_days:'2',   is_new:true  },
-  { id:'r19', category:'이자카야',  name_jp:'島の鉄板 BOBURI',          name_kr:'시마노 뎃판 보부리',      location:'히라라',                 menu:'오코노미야키 · 미야코규 햄버그',           hours_raw:'17:00~23:00',                          closed_days:'',    is_new:true  },
-  { id:'r20', category:'이자카야',  name_jp:'北琉笑店 いころ',          name_kr:'호쿠류쇼텐 이코로',       location:'히라라',                 menu:'징기스칸 · 치즈 가리비구이',              hours_raw:'18:00~24:00 (수 15:00~21:00)',         closed_days:'',    is_new:true  },
-  { id:'r21', category:'이자카야',  name_jp:'焼肉 焼武者',              name_kr:'야키니쿠 야키무샤',       location:'히라라 시모자토',         menu:'야키니쿠',                                hours_raw:'17:00~23:00',                          closed_days:'2',   is_new:true  },
-  { id:'r22', category:'이자카야',  name_jp:'にんにく焼肉 プルシン',    name_kr:'마늘 야키니쿠 프루신',    location:'미야코지마',             menu:'마늘 야키니쿠 런치&디너',                  hours_raw:'런치 11:30~14:00 / 디너 17:00~23:00', closed_days:'',    is_new:true  },
-  { id:'r23', category:'카페·디저트', name_jp:'Blue Turtle Farm Mango Cafe', name_kr:'블루터틀팜 망고카페', location:'히라라 마츠바라',        menu:'망고 음료 · 디저트',                      hours_raw:'11:00~17:30',                          closed_days:'',    is_new:true  },
-  { id:'r24', category:'카페·디저트', name_jp:'しらばり農園',           name_kr:'시라바리 농원',           location:'히라라 니시나카소네',     menu:'망고 음료 · 망고 체험',                   hours_raw:'11:00~16:30',                          closed_days:'',    is_new:true  },
-  { id:'r25', category:'카페·디저트', name_jp:'GOODMANS COFFEE',        name_kr:'굿맨스 커피',            location:'히라라 시내',             menu:'드립 커피 · 라떼류',                      hours_raw:'현장 확인',                            closed_days:'',    is_new:false },
-  { id:'r26', category:'카페·디저트', name_jp:'1 LAB Hello VACAY',      name_kr:'1 LAB 헬로 바케이',       location:'이라부섬 나카지',         menu:'아이스 카페라떼 · 호지차라떼',            hours_raw:'11:00~17:00 (L.O 16:30)',              closed_days:'',    is_new:false },
-  { id:'r27', category:'카페·디저트', name_jp:'リッコジェラート',        name_kr:'릿코 젤라토',            location:'히라라',                 menu:'망고 젤라토 · 계절 과일',                 hours_raw:'11:00~16:45',                          closed_days:'2,3', is_new:false },
-  { id:'r28', category:'카페·디저트', name_jp:'バナナケーキ monte doll', name_kr:'바나나케이키 몬테 도루', location:'히라라',                 menu:'미야코지마 바나나케이크 (기념품)',         hours_raw:'09:00~19:00',                          closed_days:'',    is_new:false },
-  { id:'r29', category:'카페·디저트', name_jp:'小さな幸せ Sakuri',       name_kr:'사쿠리',                location:'히라라 쿠가이',           menu:'케이크 · 드라이브스루 가능',              hours_raw:'10:00~15:00',                          closed_days:'5',   is_new:true  },
-];
-
-function isOpen(item, jsDay) {
-  if (!item.closed_days) return true;
-  const closed = String(item.closed_days).split(',').map(d => parseInt(d.trim())).filter(d => !isNaN(d));
-  return !closed.includes(jsDay);
-}
-
-function renderRestoTable(data) {
-  const wrap = document.getElementById('resto-table-wrap');
-  if (!wrap) return;
-
-  const categories = [...new Set(data.map(r => r.category))];
-
-  let html = '<table><thead><tr>';
-  html += '<th style="min-width:140px">가게</th>';
-  html += '<th style="min-width:72px">영업시간</th>';
-  TRIP_DAYS.forEach(d => {
-    html += `<th class="t-center" style="min-width:22px;width:22px">${d.label}</th>`;
+  // ── 스케줄 뷰 상태 ────────────────────────────────────
+  onValue(r('miyako/state/scheduleView'), snap => {
+    const v = snap.val();
+    if(v && v!==scheduleView) setScheduleView(v, false);
   });
-  html += '</tr></thead><tbody>';
+}
 
-  categories.forEach(cat => {
-    html += `<tr class="cat-row"><td colspan="6">${cat}</td></tr>`;
-    data.filter(r => r.category === cat).forEach(r => {
-      const newBadge = (r.is_new === true || r.is_new === 'TRUE')
-        ? '<span class="new-badge">신규</span>' : '';
-      html += '<tr>';
-      html += `<td>
-        <span class="t-name">${r.name_jp} ${newBadge}</span>
-        <span class="t-kr">${r.name_kr} · ${r.location}</span>
-        <span class="t-loc">${r.menu}</span>
-      </td>`;
-      html += `<td>${r.hours_raw.replace(/\n/g, '<br/>')}</td>`;
+if(window._fb) initApp();
+else window.addEventListener('firebase-ready', initApp);
+
+// ════════════════════════════════════════════════════════
+//  렌더 함수들
+// ════════════════════════════════════════════════════════
+
+// ── 예약 렌더 ──
+function renderBookings(data){
+  const keys = ['flight','hotel','car'];
+  let html = '';
+  keys.forEach(k => {
+    const b = data[k]; if(!b) return;
+    const sub = (b.sub||'').replace(/\n/g,'<br/>');
+    html += `<div class="card" style="position:relative">
+      <div class="card-label">${esc(b.label)}</div>
+      <div class="card-value">${esc(b.value)}</div>
+      <div class="card-sub">${sub}</div>
+      ${b.status==='confirmed'?'<span class="badge-ok">✓ 예약 확정</span>':''}
+      ${EDIT_MODE?`<button class="edit-btn" style="display:inline-flex;position:absolute;top:10px;right:10px" onclick="openModal('booking-edit','${k}')">✏️</button>`:''}
+    </div>`;
+  });
+  // 확정 합계 카드 — value에서 숫자 추출해서 합산
+  const confirmed = keys.map(k=>data[k]).filter(b=>b&&b.status==='confirmed');
+  if(confirmed.length){
+    const total = confirmed.reduce((sum,b)=>{
+      const m=(b.value||'').match(/[\d,]+/);
+      if(!m) return sum;
+      const n=parseInt(m[0].replace(/,/g,''));
+      return sum+(isNaN(n)?0:n);
+    },0);
+    const totalStr = total>0?'약 '+Math.round(total/10000)+'만원':'—';
+    const detail = confirmed.map(b=>{const m=(b.value||'').match(/[\d,]+/);return m?m[0]+'원':''}).filter(Boolean).join(' + ');
+    html += `<div class="card" style="background:var(--ocean-pale);border-color:var(--ocean-light)">
+      <div class="card-label" style="color:var(--ocean)">확정 지출 합계</div>
+      <div class="card-value" style="font-size:22px;color:var(--ocean)">${totalStr}</div>
+      <div class="card-sub" style="color:var(--ocean);opacity:.7">${detail}</div>
+    </div>`;
+  }
+  document.getElementById('bookings-grid').innerHTML = html;
+}
+
+// ── 투어 렌더 ──
+function renderTour(t){
+  const statusBadge = t.status==='confirmed'
+    ? '<span style="font-size:9px;background:var(--success-bg);color:var(--success);padding:3px 9px;border-radius:12px;font-weight:500">✓ 예약 확정</span>' : '';
+  let rows = '';
+  (t.rows||[]).forEach(row => {
+    const val = row.key==='예약' && row.val.startsWith('http')
+      ? `<a href="${row.val}" target="_blank" style="color:var(--ocean);font-weight:500">Activity Japan →</a>`
+      : esc(row.val).replace(/\n/g,'<br/>');
+    rows += `<div class="tour-row"><span class="tour-key">${esc(row.key)}</span><span class="tour-val">${val}</span></div>`;
+  });
+  document.getElementById('tour-card').innerHTML = `
+    <div class="tour-card">
+      <div class="tour-card-header" style="background:var(--sand)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+          <div>
+            <div class="tour-card-title">${esc(t.name||'')}</div>
+            <div class="tour-card-sub">${esc(t.sub||'')}</div>
+          </div>
+          ${statusBadge}
+        </div>
+      </div>
+      <div class="tour-card-body">${rows}</div>
+    </div>`;
+}
+
+// ── 일정 렌더 ──
+function renderSchedule(data){
+  let html = '';
+  [1,2,3,4].forEach(d => {
+    const day = data[d]; if(!day) return;
+    const isFirst = d===1;
+    let items = '';
+    (day.items||[]).forEach(it => {
+      const badge = it.badge
+        ? `<span class="${BADGE_MAP[it.badge_type]||'badge-info'}">${esc(it.badge)}</span>` : '';
+      const editBtn = EDIT_MODE
+        ? `<button class="edit-btn" style="display:inline-flex;vertical-align:middle;margin-left:6px" onclick="openModal('schedule-item','${d}','${it.id}')">✏️</button>` : '';
+      items += `<div class="tl-item" data-sid="${it.id}">
+        <div class="tl-dot ${it.dot||''}"></div>
+        <div class="tl-time">${esc(it.time)}</div>
+        <div class="tl-name">${esc(it.name)}${badge}${editBtn}</div>
+        ${it.desc?`<div class="tl-desc">${esc(it.desc)}</div>`:''}
+      </div>`;
+    });
+    const addBtn = `<button class="item-add-btn" onclick="openModal('schedule-add','${d}')">+ 일정 추가</button>`;
+    html += `<div class="day-block ${isFirst?'tab-active':''}" data-day="${d}">
+      <div class="day-header">
+        <span class="day-pill">${esc(day.title)}</span>
+        <span class="day-title">${esc(day.subtitle)}</span>
+        ${EDIT_MODE?`<button class="edit-btn" style="display:inline-flex" onclick="openModal('schedule-day','${d}')">✏️ 날 편집</button>`:''}
+      </div>
+      <div class="timeline">${items}</div>
+      ${addBtn}
+    </div>`;
+  });
+  document.getElementById('schedule-body').innerHTML = html;
+  restoreScheduleView();
+}
+
+// ── 맛집 테이블 렌더 ──
+function renderRestoTable(data){
+  const items = Object.values(data).filter(r=>r.active!==false && r.active!=='FALSE');
+  if(!items.length){ document.getElementById('resto-table-wrap').innerHTML='<div style="padding:1rem;color:var(--ink-pale);font-size:12px">등록된 맛집이 없습니다.</div>'; return; }
+  const cats = [...new Set(items.map(r=>r.category))];
+  let html = '<table><thead><tr><th style="min-width:140px">가게</th><th style="min-width:72px">영업시간</th>';
+  TRIP_DAYS.forEach(d => { html+=`<th class="t-center" style="min-width:22px;width:22px">${d.label}</th>`; });
+  if(EDIT_MODE) html+='<th style="width:28px"></th>';
+  html += '</tr></thead><tbody>';
+  cats.forEach(cat => {
+    html += `<tr class="cat-row"><td colspan="${6+(EDIT_MODE?1:0)}">${cat}</td></tr>`;
+    items.filter(r=>r.category===cat).forEach(r => {
+      const nb = (r.is_new===true||r.is_new==='TRUE') ? '<span class="new-badge">신규</span>' : '';
+      html += `<tr><td>
+        <span class="t-name">${esc(r.name_jp)}${nb}</span>
+        <span class="t-kr">${esc(r.name_kr)} · ${esc(r.location)}</span>
+        <span class="t-loc">${esc(r.menu)}</span>
+      </td><td>${esc(r.hours_raw||'').replace(/\n/g,'<br/>')}</td>`;
       TRIP_DAYS.forEach(d => {
-        const open = isOpen(r, d.jsDay);
-        const cellClass = open ? 'ok' : 'ng';
-        const mark = open ? '✓' : '✗';
-        html += `<td class="t-center date-cell" data-rid="${r.id}" data-day="${d.dayNum}">`;
-        html += `<span class="${cellClass}">${mark}</span>`;
-        html += `</td>`;
+        const open = isOpen(r,d.jsDay);
+        html += `<td class="t-center date-cell" data-rid="${r.id}" data-day="${d.dayNum}"><span class="${open?'ok':'ng'}">${open?'✓':'✗'}</span></td>`;
       });
+      if(EDIT_MODE) html+=`<td><button style="font-size:9px;padding:2px 5px;border:1px solid var(--border-dark);border-radius:4px;cursor:pointer;background:var(--white)" onclick="openModal('restaurant-edit','${r.id}')">✏️</button></td>`;
       html += '</tr>';
     });
   });
-
   html += '</tbody></table>';
-  wrap.innerHTML = html;
-
-  // 이벤트 바인딩 및 Firebase 저장 상태 복원
+  document.getElementById('resto-table-wrap').innerHTML = html;
   bindDateCells();
-  if (window._fbRestoreDates) window._fbRestoreDates();
+  // hours_updated 표시
+  const latest = items.filter(r=>r.hours_updated).sort((a,b)=>b.hours_updated>a.hours_updated?1:-1)[0];
+  if(latest) document.getElementById('resto-sync-label').textContent = '최근 갱신: '+latest.hours_updated.slice(0,10);
 }
 
-async function loadRestaurants() {
-  // WEBAPP_URL이 설정되지 않은 경우 폴백 데이터 사용
-  if (!WEBAPP_URL || WEBAPP_URL === 'https://script.google.com/macros/s/AKfycby0RZGEMM1bpgn1c_IAWfvYadZX9OQYdaTZ2w98C5aYnV1bi3dI83bQucur2eSjGcmU0A/exec') {
-    renderRestoTable(FALLBACK_DATA);
-    const el = document.getElementById('resto-updated');
-    if (el) el.textContent = '(로컬 데이터)';
+function isOpen(item,jsDay){
+  if(!item.closed_days) return true;
+  return !String(item.closed_days).split(',').map(d=>parseInt(d.trim())).filter(d=>!isNaN(d)).includes(jsDay);
+}
+
+// ── 준비물 렌더 ──
+function renderPack(data){
+  const groups = data.groups||{};
+  const order  = data.order||Object.keys(groups);
+  const checked = data.checked||{};
+  let html = '';
+  order.forEach(gid => {
+    const g = groups[gid]; if(!g) return;
+    const items = g.items||[];
+    const doneCount = items.filter((_,i)=>checked[gid+'_'+i]).length;
+    const pct = items.length ? Math.round(doneCount/items.length*100) : 0;
+    let checkHtml = '';
+    items.forEach((label,i) => {
+      const key = gid+'_'+i;
+      const isChecked = !!checked[key];
+      checkHtml += `<div class="check-item ${isChecked?'checked':''}" onclick="togglePack('${gid}',${i})">
+        <div class="check-box">✓</div><span class="check-label">${esc(label)}</span>
+      </div>`;
+    });
+    html += `<div class="pack-card">
+      <div class="pack-title">${esc(g.title)}</div>
+      <div>${checkHtml}</div>
+      ${g.note?`<div class="pack-note">${esc(g.note)}</div>`:''}
+      <div class="pack-progress">
+        <div class="pack-progress-label"><span>${doneCount} / ${items.length}</span></div>
+        <div class="pack-progress-bar-bg"><div class="pack-progress-bar" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('pack-grid').innerHTML = html;
+}
+
+function togglePack(gid, idx){
+  const {db,ref,get,set} = window._fb;
+  const key = gid+'_'+idx;
+  const r = ref(db,'miyako/pack/checked/'+key);
+  get(r).then(snap => set(r, !snap.val()));
+}
+
+// ── 예약 체크리스트 렌더 ──
+function renderTodo(data){
+  const items = data.items||{};
+  const order = data.order||Object.keys(items);
+  let html='', done=0;
+  order.forEach((id,idx) => {
+    const t = items[id]; if(!t) return;
+    if(t.done) done++;
+    html += `<div class="todo-item ${t.done?'completed':''}" onclick="toggleTodo('${id}')">
+      <div class="todo-num">${idx+1}</div>
+      <div class="todo-content">
+        <div class="todo-title">${esc(t.title)}</div>
+        <div class="todo-desc">${esc(t.desc)}</div>
+      </div>
+      <div class="todo-status ${t.done?'st-done':'st-todo'}">${t.done?'✓ 완료':'미완료'}</div>
+      ${EDIT_MODE?`<button style="font-size:9px;padding:2px 5px;border:1px solid var(--border-dark);border-radius:4px;cursor:pointer;background:var(--white);margin-top:1px;flex-shrink:0" onclick="event.stopPropagation();openModal('todo-edit','${id}')">✏️</button>`:''}
+    </div>`;
+  });
+  document.getElementById('todo-list').innerHTML = html;
+  const total = order.filter(id=>items[id]).length;
+  const pct = total?Math.round(done/total*100):0;
+  document.getElementById('todo-bar').style.width = pct+'%';
+  document.getElementById('todo-count').textContent = done+' / '+total;
+}
+
+function toggleTodo(id){
+  const {db,ref,get,set} = window._fb;
+  const r = ref(db,'miyako/todo/items/'+id+'/done');
+  get(r).then(snap => set(r, !snap.val()));
+}
+
+// ── 예산 렌더 ──
+function renderBudget(data){
+  const items = data.items||[];
+  let html='';
+  items.forEach(b => {
+    const subColor = b.confirmed ? 'color:var(--success)' : '';
+    html += `<div class="budget-card">
+      <div class="budget-label">${esc(b.label)}</div>
+      <div class="budget-value">${esc(b.value)}</div>
+      <div class="budget-sub" style="${subColor}">${esc(b.sub)}</div>
+    </div>`;
+  });
+  document.getElementById('budget-grid').innerHTML = html || '<div style="padding:1rem;color:var(--ink-pale);font-size:12px">데이터 없음</div>';
+  const tb = document.getElementById('budget-total');
+  if(data.total){ tb.style.display='flex'; document.getElementById('budget-total-value').textContent=data.total; document.getElementById('budget-total-note').textContent=data.total_note||''; }
+}
+
+// ════════════════════════════════════════════════════════
+//  날짜 칸 인터랙션
+// ════════════════════════════════════════════════════════
+function applyDateMark(td,isMarked){
+  const day=parseInt(td.dataset.day);
+  let badge=td.querySelector('.pick-badge');
+  if(isMarked){
+    td.classList.add('day-marked');
+    if(!badge){badge=document.createElement('span');badge.className='pick-badge';td.appendChild(badge);}
+    badge.textContent=DAY_LABELS[day];
+  } else {
+    td.classList.remove('day-marked');
+    if(badge) badge.remove();
+  }
+}
+
+function bindDateCells(){
+  // 저장된 마크 복원
+  const marks = window._dateMarks || {};
+  document.querySelectorAll('td.date-cell').forEach(td => {
+    const key = (td.dataset.rid||'x')+'_'+td.dataset.day;
+    if(marks[key]) applyDateMark(td, true);
+  });
+  document.querySelectorAll('td.date-cell').forEach(td => {
+    if(!td.querySelector('.ok')) return;
+    td.onclick = () => {
+      const isMarked = !td.classList.contains('day-marked');
+      applyDateMark(td, isMarked);
+      const marks={};
+      document.querySelectorAll('td.date-cell').forEach(c=>{
+        const k=(c.dataset.rid||'x')+'_'+c.dataset.day;
+        marks[k]=c.classList.contains('day-marked')?1:0;
+      });
+      window._fbSet('miyako/dates', marks);
+    };
+  });
+}
+
+// ════════════════════════════════════════════════════════
+//  일정 뷰 토글
+// ════════════════════════════════════════════════════════
+function setScheduleView(view, save=true){
+  scheduleView=view;
+  const body=document.getElementById('schedule-body');
+  const tabs=document.getElementById('day-tabs');
+  if(view==='tab'){
+    body.classList.add('tab-mode'); tabs.classList.add('visible');
+    document.getElementById('btn-tab').classList.add('active');
+    document.getElementById('btn-all').classList.remove('active');
+    switchDay(currentDay);
+  } else {
+    body.classList.remove('tab-mode'); tabs.classList.remove('visible');
+    document.getElementById('btn-all').classList.add('active');
+    document.getElementById('btn-tab').classList.remove('active');
+  }
+  if(save) window._fbSet('miyako/state/scheduleView', view);
+}
+
+function restoreScheduleView(){ setScheduleView(scheduleView, false); }
+
+function switchDay(day){
+  currentDay=day;
+  document.querySelectorAll('.day-block').forEach(el=>el.classList.toggle('tab-active',parseInt(el.dataset.day)===day));
+  document.querySelectorAll('.day-tab').forEach((el,i)=>el.classList.toggle('active',i+1===day));
+}
+
+// ════════════════════════════════════════════════════════
+//  편집 모달
+// ════════════════════════════════════════════════════════
+function openModal(type, ...args){
+  const overlay=document.getElementById('modal-overlay');
+  const title=document.getElementById('modal-title');
+  const body=document.getElementById('modal-body');
+  const actions=document.getElementById('modal-actions');
+  _modalSaveFn=null;
+
+  if(type==='booking-edit'){
+    const key=args[0];
+    const {db,ref,get,set}=window._fb;
+    get(ref(db,'miyako/bookings/'+key)).then(snap=>{
+      const b=snap.val()||{};
+      title.textContent='예약 편집 — '+b.label;
+      body.innerHTML=`
+        <label>제목</label><input id="m-bv" value="${esc(b.value||'')}">
+        <label>설명 (줄바꿈 가능)</label><textarea id="m-bs" rows="4">${b.sub||''}</textarea>
+        <label>상태</label><select id="m-bst"><option value="confirmed" ${b.status==='confirmed'?'selected':''}>예약 확정</option><option value="pending" ${b.status!=='confirmed'?'selected':''}>미확정</option></select>`;
+      _modalSaveFn=()=>{
+        set(ref(db,'miyako/bookings/'+key),{...b, value:document.getElementById('m-bv').value, sub:document.getElementById('m-bs').value, status:document.getElementById('m-bst').value});
+        closeModal();
+      };
+      overlay.classList.add('open');
+    });
     return;
   }
 
-  try {
-    const res  = await fetch(WEBAPP_URL);
-    const data = await res.json();
-    renderRestoTable(data);
-    const el = document.getElementById('resto-updated');
-    if (el) el.textContent = 'Sheets 연동됨';
-  } catch (err) {
-    console.warn('Sheets fetch 실패, 폴백 사용:', err);
-    renderRestoTable(FALLBACK_DATA);
-    const el = document.getElementById('resto-updated');
-    if (el) el.textContent = '(오프라인 데이터)';
+  if(type==='schedule-item'){
+    const [dayNum,itemId]=args;
+    const {db,ref,get,set}=window._fb;
+    get(ref(db,'miyako/schedule/'+dayNum)).then(snap=>{
+      const day=snap.val()||{};
+      const item=(day.items||[]).find(it=>it.id===itemId)||{};
+      title.textContent='일정 편집';
+      body.innerHTML=`
+        <label>시간</label><input id="m-st" value="${esc(item.time||'')}">
+        <label>제목</label><input id="m-sn" value="${esc(item.name||'')}">
+        <label>설명</label><textarea id="m-sd">${item.desc||''}</textarea>
+        <label>도트 색상</label><select id="m-sdot">
+          <option value="" ${!item.dot?'selected':''}>기본(회색)</option>
+          <option value="blue" ${item.dot==='blue'?'selected':''}>파랑(항공·렌터카)</option>
+          <option value="green" ${item.dot==='green'?'selected':''}>초록(식사·카페)</option>
+          <option value="amber" ${item.dot==='amber'?'selected':''}>노랑(주의)</option>
+        </select>
+        <label>배지 텍스트</label><input id="m-sb" value="${esc(item.badge||'')}">
+        <label>배지 색상</label><select id="m-sbt">
+          <option value="bi" ${item.badge_type==='bi'?'selected':''}>파랑(정보)</option>
+          <option value="bv" ${item.badge_type==='bv'?'selected':''}>초록(확정)</option>
+          <option value="ba" ${item.badge_type==='ba'?'selected':''}>노랑(주의)</option>
+        </select>`;
+      actions.innerHTML=`
+        <button class="btn-danger" onclick="deleteScheduleItem(${dayNum},'${itemId}')">삭제</button>
+        <button class="btn-cancel" onclick="closeModal()">취소</button>
+        <button class="btn-save" onclick="saveScheduleItem(${dayNum},'${itemId}')">저장</button>`;
+      overlay.classList.add('open');
+    });
+    return;
   }
-}
 
-loadRestaurants();
-
-// ── Firebase 연동 ──
-function initFirebase() {
-  const db = window._fbDb;
-  const fbRef = window._fbRef;
-  const fbSet = window._fbSet;
-  const fbOnValue = window._fbOnValue;
-
-  // 준비물
-  window._fbSavePack = function() {
-    const state = {};
-    document.querySelectorAll('.check-item').forEach((el, i) => {
-      state['p' + i] = el.classList.contains('checked') ? 1 : 0;
-    });
-    fbSet(fbRef(db, 'miyako/pack'), state);
-  };
-
-  fbOnValue(fbRef(db, 'miyako/pack'), (snap) => {
-    const state = snap.val() || {};
-    document.querySelectorAll('.check-item').forEach((el, i) => {
-      el.classList.toggle('checked', !!state['p' + i]);
-    });
-    Object.keys(packGroups).forEach(updatePackProgress);
-  });
-
-  document.querySelectorAll('.check-item').forEach(el => {
-    el.addEventListener('click', () => {
-      el.classList.toggle('checked');
-      updatePackProgress(el.dataset.group);
-      window._fbSavePack();
-    });
-  });
-
-  // 예약
-  window._fbSaveTodo = function() {
-    const state = {};
-    document.querySelectorAll('.todo-item').forEach(el => {
-      state['t' + el.dataset.todo] = el.classList.contains('completed') ? 1 : 0;
-    });
-    fbSet(fbRef(db, 'miyako/todo'), state);
-  };
-
-  fbOnValue(fbRef(db, 'miyako/todo'), (snap) => {
-    const state = snap.val() || {};
-    document.querySelectorAll('.todo-item').forEach(el => {
-      const done = !!state['t' + el.dataset.todo];
-      el.classList.toggle('completed', done);
-      const statusEl = el.querySelector('.todo-status');
-      if (done) {
-        statusEl.textContent = '✓ 완료';
-        statusEl.className = 'todo-status st-done';
-      } else if (!statusEl.classList.contains('st-wip')) {
-        statusEl.textContent = '미완료';
-        statusEl.className = 'todo-status st-todo';
-      }
-    });
-    updateTodoProgress();
-  });
-
-  document.querySelectorAll('.todo-item').forEach(el => {
-    el.addEventListener('click', () => {
-      const isNowDone = !el.classList.contains('completed');
-      el.classList.toggle('completed', isNowDone);
-      const statusEl = el.querySelector('.todo-status');
-      statusEl.textContent = isNowDone ? '✓ 완료' : '미완료';
-      statusEl.className = isNowDone ? 'todo-status st-done' : 'todo-status st-todo';
-      updateTodoProgress();
-      window._fbSaveTodo();
-    });
-  });
-
-  // 날짜 칸 — rid+day 키로 저장 (테이블 재렌더링에도 안정적)
-  window._fbSaveDates = function() {
-    const marks = {};
-    document.querySelectorAll('td.date-cell').forEach(td => {
-      const key = (td.dataset.rid || 'x') + '_' + td.dataset.day;
-      marks[key] = td.classList.contains('day-marked') ? 1 : 0;
-    });
-    fbSet(fbRef(db, 'miyako/dates'), marks);
-  };
-
-  window._fbRestoreDates = function() {
-    fbOnValue(fbRef(db, 'miyako/dates'), (snap) => {
-      const marks = snap.val() || {};
-      document.querySelectorAll('td.date-cell').forEach(td => {
-        const key = (td.dataset.rid || 'x') + '_' + td.dataset.day;
-        applyDateMark(td, !!marks[key]);
+  if(type==='schedule-add'){
+    const dayNum=args[0];
+    title.textContent=dayNum+'일차 일정 추가';
+    body.innerHTML=`
+      <label>시간</label><input id="m-st" placeholder="예: 14:00~16:00">
+      <label>제목</label><input id="m-sn" placeholder="일정 이름">
+      <label>설명</label><textarea id="m-sd" placeholder="선택사항"></textarea>
+      <label>도트 색상</label><select id="m-sdot">
+        <option value="">기본(회색)</option><option value="blue">파랑</option><option value="green">초록</option><option value="amber">노랑</option>
+      </select>`;
+    _modalSaveFn=()=>{
+      const {db,ref,get,set}=window._fb;
+      get(ref(db,'miyako/schedule/'+dayNum+'/items')).then(snap=>{
+        const items=snap.val()||[];
+        const newId='s'+dayNum+'-'+(Date.now());
+        items.push({id:newId,time:document.getElementById('m-st').value,name:document.getElementById('m-sn').value,desc:document.getElementById('m-sd').value,dot:document.getElementById('m-sdot').value,badge:'',badge_type:'bi'});
+        set(ref(db,'miyako/schedule/'+dayNum+'/items'),items);
+        closeModal();
       });
-    }, { onlyOnce: true });
-  };
+    };
+    overlay.classList.add('open');
+    return;
+  }
 
-  // 뷰 상태
-  window._fbSaveView = function(view) {
-    fbSet(fbRef(db, 'miyako/view'), view);
-  };
+  if(type==='todo-add'){
+    title.textContent='체크리스트 항목 추가';
+    body.innerHTML=`
+      <label>제목</label><input id="m-tt" placeholder="항목 이름">
+      <label>설명</label><textarea id="m-td" placeholder="선택사항"></textarea>`;
+    _modalSaveFn=()=>{
+      const {db,ref,get,set}=window._fb;
+      const newId='t'+(Date.now());
+      get(ref(db,'miyako/todo')).then(snap=>{
+        const data=snap.val()||{items:{},order:[]};
+        data.items[newId]={title:document.getElementById('m-tt').value,desc:document.getElementById('m-td').value,done:false};
+        data.order=[...(data.order||[]),newId];
+        set(ref(db,'miyako/todo'),data);
+        closeModal();
+      });
+    };
+    overlay.classList.add('open');
+    return;
+  }
 
-  fbOnValue(fbRef(db, 'miyako/view'), (snap) => {
-    const val = snap.val();
-    if (val === 'tab' && currentView !== 'tab') setScheduleView('tab');
-    else if (val === 'all' && currentView !== 'all') setScheduleView('all');
+  if(type==='todo-edit'){
+    const id=args[0];
+    const {db,ref,get,set}=window._fb;
+    get(ref(db,'miyako/todo/items/'+id)).then(snap=>{
+      const t=snap.val()||{};
+      title.textContent='체크리스트 편집';
+      body.innerHTML=`
+        <label>제목</label><input id="m-tt" value="${esc(t.title||'')}">
+        <label>설명</label><textarea id="m-td">${t.desc||''}</textarea>`;
+      actions.innerHTML=`
+        <button class="btn-danger" onclick="deleteTodoItem('${id}')">삭제</button>
+        <button class="btn-cancel" onclick="closeModal()">취소</button>
+        <button class="btn-save" onclick="saveTodoItem('${id}')">저장</button>`;
+      overlay.classList.add('open');
+    });
+    return;
+  }
+
+  if(type==='restaurant-add'){
+    title.textContent='맛집 추가';
+    body.innerHTML=`
+      <label>카테고리</label><select id="m-rc"><option>식사</option><option>이자카야</option><option>카페·디저트</option></select>
+      <label>일본어 이름</label><input id="m-rn" placeholder="Fish Lab 魚熟">
+      <label>한국어 이름</label><input id="m-rk" placeholder="피시랩 우오쥬쿠">
+      <label>위치</label><input id="m-rl" placeholder="히라라 남쪽">
+      <label>대표 메뉴</label><input id="m-rm" placeholder="해산물 정식 · 덮밥">
+      <label>영업시간</label><input id="m-rh" placeholder="11:00~15:00">
+      <label>정기휴무 (JS 요일, 쉼표구분)</label><input id="m-rd" placeholder="예: 3,4 (수,목 휴무)">
+      <label>Google Place ID</label><input id="m-rp" placeholder="ChIJ...">`;
+    _modalSaveFn=()=>{
+      const {db,ref,get,set}=window._fb;
+      const newId='r'+(Date.now());
+      const item={
+        id:newId, category:document.getElementById('m-rc').value,
+        name_jp:document.getElementById('m-rn').value, name_kr:document.getElementById('m-rk').value,
+        location:document.getElementById('m-rl').value, menu:document.getElementById('m-rm').value,
+        hours_raw:document.getElementById('m-rh').value, closed_days:document.getElementById('m-rd').value,
+        place_id:document.getElementById('m-rp').value, is_new:true, active:true, created_at:new Date().toISOString()
+      };
+      set(ref(db,'miyako/restaurants/'+newId),item);
+      closeModal();
+    };
+    overlay.classList.add('open');
+    return;
+  }
+
+  if(type==='restaurant-edit'){
+    const rid=args[0];
+    const {db,ref,get,set}=window._fb;
+    get(ref(db,'miyako/restaurants/'+rid)).then(snap=>{
+      const r=snap.val()||{};
+      title.textContent='맛집 편집';
+      body.innerHTML=`
+        <label>카테고리</label><select id="m-rc">
+          <option ${r.category==='식사'?'selected':''}>식사</option>
+          <option ${r.category==='이자카야'?'selected':''}>이자카야</option>
+          <option ${r.category==='카페·디저트'?'selected':''}>카페·디저트</option>
+        </select>
+        <label>일본어 이름</label><input id="m-rn" value="${esc(r.name_jp||'')}">
+        <label>한국어 이름</label><input id="m-rk" value="${esc(r.name_kr||'')}">
+        <label>위치</label><input id="m-rl" value="${esc(r.location||'')}">
+        <label>대표 메뉴</label><input id="m-rm" value="${esc(r.menu||'')}">
+        <label>영업시간</label><input id="m-rh" value="${esc(r.hours_raw||'')}">
+        <label>정기휴무 (JS 요일)</label><input id="m-rd" value="${esc(String(r.closed_days||''))}">
+        <label>Google Place ID</label><input id="m-rp" value="${esc(r.place_id||'')}">
+        <label>표시 여부</label><select id="m-ra"><option value="true" ${r.active!==false?'selected':''}>표시</option><option value="false" ${r.active===false?'selected':''}>숨김</option></select>`;
+      actions.innerHTML=`
+        <button class="btn-cancel" onclick="closeModal()">취소</button>
+        <button class="btn-save" onclick="saveRestaurant('${rid}')">저장</button>`;
+      overlay.classList.add('open');
+    });
+    return;
+  }
+
+  if(type==='schedule-day'){
+    const dayNum=args[0];
+    const {db,ref,get,set}=window._fb;
+    get(ref(db,'miyako/schedule/'+dayNum)).then(snap=>{
+      const day=snap.val()||{};
+      title.textContent=dayNum+'일차 날짜 편집';
+      body.innerHTML=`
+        <label>날짜 라벨 (예: 1일차 · 6/16(화))</label><input id="m-dt" value="${esc(day.title||'')}">
+        <label>소제목 (예: 도착 & 이라부 대교 드라이브)</label><input id="m-ds" value="${esc(day.subtitle||'')}">`;
+      _modalSaveFn=()=>{
+        set(ref(db,'miyako/schedule/'+dayNum),{...day,title:document.getElementById('m-dt').value,subtitle:document.getElementById('m-ds').value});
+        closeModal();
+      };
+      overlay.classList.add('open');
+    });
+    return;
+  }
+
+  if(type==='budget-edit'){
+    const {db,ref,get,set}=window._fb;
+    get(ref(db,'miyako/budget')).then(snap=>{
+      const data=snap.val()||{items:[],total:'',total_note:''};
+      title.textContent='예산 편집';
+      let itemsHtml='';
+      (data.items||[]).forEach((b,i)=>{
+        itemsHtml+=`<div style="border:1px solid var(--border);border-radius:8px;padding:.7rem;margin-bottom:.5rem">
+          <div style="font-size:11px;font-weight:500;color:var(--ink-light);margin-bottom:.4rem">#${i+1}</div>
+          <label>항목명</label><input id="m-bl-${i}" value="${esc(b.label||'')}">
+          <label>금액</label><input id="m-bv-${i}" value="${esc(b.value||'')}">
+          <label>설명</label><input id="m-bs-${i}" value="${esc(b.sub||'')}">
+        </div>`;
+      });
+      body.innerHTML=`${itemsHtml}
+        <div style="border-top:1px solid var(--border);margin-top:.8rem;padding-top:.8rem">
+          <label>합계 표시 (예: 228~265만원)</label><input id="m-btotal" value="${esc(data.total||'')}">
+          <label>합계 설명 (예: 300만원 예산 내 여유 있음)</label><input id="m-bnote" value="${esc(data.total_note||'')}">
+        </div>`;
+      _modalSaveFn=()=>{
+        const newItems=(data.items||[]).map((b,i)=>({
+          ...b,
+          label:document.getElementById('m-bl-'+i).value,
+          value:document.getElementById('m-bv-'+i).value,
+          sub:document.getElementById('m-bs-'+i).value,
+        }));
+        set(ref(db,'miyako/budget'),{...data,items:newItems,total:document.getElementById('m-btotal').value,total_note:document.getElementById('m-bnote').value});
+        closeModal();
+      };
+      overlay.classList.add('open');
+    });
+    return;
+  }
+
+  if(type==='pack-edit'){
+    const {db,ref,get,set}=window._fb;
+    get(ref(db,'miyako/pack')).then(snap=>{
+      const data=snap.val()||{groups:{},order:[]};
+      const order=data.order||Object.keys(data.groups||{});
+      title.textContent='준비물 편집';
+      let html='<div style="font-size:11px;color:var(--ink-light);margin-bottom:.8rem">항목은 줄바꿈으로 구분하세요</div>';
+      order.forEach(gid=>{
+        const g=(data.groups||{})[gid]||{};
+        html+=`<div style="border:1px solid var(--border);border-radius:8px;padding:.7rem;margin-bottom:.5rem">
+          <div style="font-size:12px;font-weight:500;margin-bottom:.4rem">${esc(g.title||gid)}</div>
+          <label>항목 (줄바꿈 구분)</label>
+          <textarea id="m-pack-${gid}" rows="4">${(g.items||[]).join('\n')}</textarea>
+          <label>하단 메모</label><input id="m-packnote-${gid}" value="${esc(g.note||'')}">
+        </div>`;
+      });
+      body.innerHTML=html;
+      _modalSaveFn=()=>{
+        const newGroups={...data.groups};
+        order.forEach(gid=>{
+          const ta=document.getElementById('m-pack-'+gid);
+          const note=document.getElementById('m-packnote-'+gid);
+          if(!ta) return;
+          newGroups[gid]={...newGroups[gid],items:ta.value.split('\n').map(s=>s.trim()).filter(Boolean),note:note?note.value:''};
+        });
+        set(ref(db,'miyako/pack'),{...data,groups:newGroups});
+        closeModal();
+      };
+      overlay.classList.add('open');
+    });
+    return;
+  }
+
+  // 기본 닫기
+  overlay.classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.getElementById('modal-actions').innerHTML=`
+    <button class="btn-cancel" onclick="closeModal()">취소</button>
+    <button class="btn-save" id="modal-save-btn" onclick="modalSave()">저장</button>`;
+}
+
+function modalSave(){ if(_modalSaveFn) _modalSaveFn(); }
+
+// ── 일정 저장/삭제 ──
+function saveScheduleItem(dayNum, itemId){
+  const {db,ref,get,set}=window._fb;
+  get(ref(db,'miyako/schedule/'+dayNum+'/items')).then(snap=>{
+    const items=(snap.val()||[]).map(it => it.id!==itemId ? it : {
+      ...it,
+      time:document.getElementById('m-st').value,
+      name:document.getElementById('m-sn').value,
+      desc:document.getElementById('m-sd').value,
+      dot:document.getElementById('m-sdot').value,
+      badge:document.getElementById('m-sb').value,
+      badge_type:document.getElementById('m-sbt').value,
+    });
+    set(ref(db,'miyako/schedule/'+dayNum+'/items'),items);
+    closeModal();
+  });
+}
+function deleteScheduleItem(dayNum, itemId){
+  if(!confirm('이 일정을 삭제할까요?')) return;
+  const {db,ref,get,set}=window._fb;
+  get(ref(db,'miyako/schedule/'+dayNum+'/items')).then(snap=>{
+    const items=(snap.val()||[]).filter(it=>it.id!==itemId);
+    set(ref(db,'miyako/schedule/'+dayNum+'/items'),items);
+    closeModal();
   });
 }
 
-if (window._fbReady) {
-  initFirebase();
-} else {
-  window.addEventListener('firebase-ready', initFirebase);
+// ── 체크리스트 저장/삭제 ──
+function saveTodoItem(id){
+  const {db,ref,get,set}=window._fb;
+  get(ref(db,'miyako/todo/items/'+id)).then(snap=>{
+    const t=snap.val()||{};
+    set(ref(db,'miyako/todo/items/'+id),{...t,title:document.getElementById('m-tt').value,desc:document.getElementById('m-td').value});
+    closeModal();
+  });
 }
+function deleteTodoItem(id){
+  if(!confirm('이 항목을 삭제할까요?')) return;
+  const {db,ref,get,set}=window._fb;
+  get(ref(db,'miyako/todo')).then(snap=>{
+    const data=snap.val()||{};
+    delete data.items[id];
+    data.order=(data.order||[]).filter(k=>k!==id);
+    set(ref(db,'miyako/todo'),data);
+    closeModal();
+  });
+}
+
+// ── 맛집 저장 ──
+function saveRestaurant(rid){
+  const {db,ref,get,set}=window._fb;
+  get(ref(db,'miyako/restaurants/'+rid)).then(snap=>{
+    const r=snap.val()||{};
+    set(ref(db,'miyako/restaurants/'+rid),{
+      ...r,
+      category:document.getElementById('m-rc').value,
+      name_jp:document.getElementById('m-rn').value,
+      name_kr:document.getElementById('m-rk').value,
+      location:document.getElementById('m-rl').value,
+      menu:document.getElementById('m-rm').value,
+      hours_raw:document.getElementById('m-rh').value,
+      closed_days:document.getElementById('m-rd').value,
+      place_id:document.getElementById('m-rp').value,
+      active:document.getElementById('m-ra').value==='true',
+    });
+    closeModal();
+  });
+}
+
+// ── XSS 방지 ──
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
