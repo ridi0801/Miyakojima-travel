@@ -1397,6 +1397,7 @@ function parsePeriods(r){
 // 짧은 표시 — 요일별 다르면 "화수) 18:00~23:30 / 목금) 18:00~22:30"
 // 브레이크타임이면 "07:30~10:30 / 11:30~14:30"
 function renderHoursShort(r){
+  if(r.hours_na) return '<span style="font-size:10px;color:var(--ink-pale)">영업시간 미등록</span>';
   const periods = parsePeriods(r);
   const TRIP_DAYS = [2,3,4,5]; // 화,수,목,금
 
@@ -1441,11 +1442,27 @@ function renderHoursShort(r){
   }
 
   // 패턴이 여러 개 = 요일마다 다름
-  return patterns.map(([slotStr, days]) => {
-    const dayLabels = days.sort().map(d => DAY_KR[d]).join('');
-    const slots = slotStr.split(',');
-    return dayLabels+') '+slots[0]+(slots[1] ? '<br/>'+dayLabels+') '+slots[1] : '');
-  }).join('<br/>');
+  // 첫 번째 슬롯 기준으로 그룹화 → 묶을 수 있는 요일 묶기
+  // 추가 슬롯(저녁 등)은 해당 요일만 별도 줄
+  const firstSlotGroups = {}; // 첫 슬롯 → [days]
+  const extraSlots = []; // {day, slot} 추가 슬롯
+  Object.entries(byDay).forEach(([day, slots]) => {
+    const first = slots[0];
+    if(!firstSlotGroups[first]) firstSlotGroups[first] = [];
+    firstSlotGroups[first].push(parseInt(day));
+    // 2번째 슬롯부터 추가
+    slots.slice(1).forEach(slot => extraSlots.push({day:parseInt(day), slot}));
+  });
+
+  const lines = [];
+  Object.entries(firstSlotGroups).forEach(([slot, days]) => {
+    const label = days.sort().map(d => DAY_KR[d]).join('');
+    lines.push((days.length > 1 ? label+') ' : label+') ') + slot);
+  });
+  extraSlots.forEach(({day, slot}) => {
+    lines.push(DAY_KR[day]+') '+slot);
+  });
+  return lines.join('<br/>');
 }
 
 function getBreak(slots){
