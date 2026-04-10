@@ -1395,36 +1395,35 @@ function parsePeriods(r){
 }
 
 // 짧은 표시 — 요일별 다르면 "화수) 18:00~23:30 / 목금) 18:00~22:30"
-// 브레이크타임이면 "07:30~10:30, 11:30~14:30"
+// 브레이크타임이면 "07:30~10:30 / 11:30~14:30"
 function renderHoursShort(r){
   const periods = parsePeriods(r);
+  const TRIP_DAYS = [2,3,4,5]; // 화,수,목,금
 
-  // periods 없으면 weekday_text 첫 줄에서 시간 추출
+  // periods 없으면 weekday_text에서 화요일(index=1) 기준으로 시간 추출
   if(!periods || !periods.length){
-    const raw = (r.hours_raw||'').split('||')[0] || '';
-    const m = raw.match(/(\d{1,2}:\d{2})[~～–-](\d{1,2}:\d{2})/);
-    return m ? m[1]+'~'+m[2] : (raw ? raw.replace(/^.+?:\s*/,'') : '—');
+    const weekdays = (r.hours_raw||'').split('||');
+    const raw = weekdays[1] || weekdays[0] || ''; // 화요일 우선
+    const m = raw.match(/(\d{1,2}:\d{2})[~～–\-](\d{1,2}:\d{2})/);
+    return m ? m[1]+'~'+m[2] : (raw ? raw.replace(/^[^:]+:\s*/,'') : '—');
   }
 
-  // 여행 날짜(화2, 수3, 목4, 금5)에 해당하는 periods만
-  const tripDays = [2,3,4,5];
-  const tripPeriods = periods.filter(p => tripDays.includes(p.open ? p.open.day === 0 ? 0 : p.open.day : -1));
-
-  // periods를 시간 슬롯 그룹으로 묶기
-  // 같은 요일에 두 슬롯 = 브레이크타임
+  // 화/수/목/금만 필터링해서 byDay 구성
   const byDay = {};
   periods.forEach(p => {
     if(!p.open || !p.close) return;
-    const day = p.open.day; // 0=일,1=월,...
-    const jsDay = day; // periods는 JS와 동일
-    if(!byDay[jsDay]) byDay[jsDay] = [];
+    const day = p.open.day;
+    if(!TRIP_DAYS.includes(day)) return; // 월/토/일 제외
+    if(!byDay[day]) byDay[day] = [];
     const open  = p.open.time.slice(0,2)+':'+p.open.time.slice(2);
     const close = p.close.time.slice(0,2)+':'+p.close.time.slice(2);
-    byDay[jsDay].push(open+'~'+close);
+    byDay[day].push(open+'~'+close);
   });
 
+  if(!Object.keys(byDay).length) return '—';
+
   // 시간 패턴으로 그룹화
-  const patternGroups = {}; // "07:30~10:30,11:30~14:30" → [days]
+  const patternGroups = {};
   Object.entries(byDay).forEach(([day, slots]) => {
     const key = slots.join(',');
     if(!patternGroups[key]) patternGroups[key] = [];
@@ -1433,11 +1432,11 @@ function renderHoursShort(r){
 
   const patterns = Object.entries(patternGroups);
 
-  // 패턴이 1개면 그냥 슬롯 표시
+  // 패턴이 1개 = 화수목금 모두 동일
   if(patterns.length === 1){
     const slots = patterns[0][0].split(',');
-    if(slots.length === 1) return slots[0]; // 단일 슬롯
-    // 2슬롯 = 브레이크타임 → 전체 시간 바로 표시
+    if(slots.length === 1) return slots[0];
+    // 2슬롯 = 브레이크타임
     return slots[0] + '<br/>' + slots[1];
   }
 
@@ -1457,17 +1456,34 @@ function getBreak(slots){
 }
 
 // 상세 표시 — 여행일(화/수/목/금) 영업시간
-// periods 있으면 요일별로 정리, 없으면 weekday_text 발췌
 function renderHoursDetail(r){
   const TRIP = [{jsDay:2,label:'화 6/16'},{jsDay:3,label:'수 6/17'},{jsDay:4,label:'목 6/18'},{jsDay:5,label:'금 6/19'}];
-  const weekdays = (r.hours_raw||'').split('||'); // 0=월,...,6=일
+  const periods = parsePeriods(r);
 
-  // weekday_text → 여행일 4개만 추출 (인덱스: 월0,화1,수2,목3,금4,토5,일6)
+  if(periods && periods.length){
+    // periods 기반 — 요일별 슬롯 정확히 추출
+    const byDay = {};
+    periods.forEach(p => {
+      if(!p.open || !p.close) return;
+      const day  = p.open.day; // 0=일,1=월,...,6=토
+      const open  = p.open.time.slice(0,2)+':'+p.open.time.slice(2);
+      const close = p.close.time.slice(0,2)+':'+p.close.time.slice(2);
+      if(!byDay[day]) byDay[day] = [];
+      byDay[day].push(open+'~'+close);
+    });
+    const lines = TRIP.map(d => {
+      const slots = byDay[d.jsDay];
+      const time  = slots ? slots.join(' / ') : '휴무';
+      return '<span style="opacity:.6;margin-right:6px">'+d.label+'</span>'+esc(time);
+    });
+    return lines.join('<br/>');
+  }
+
+  // periods 없으면 weekday_text 발췌 (월0,화1,수2,목3,금4,토5,일6)
+  const weekdays = (r.hours_raw||'').split('||');
   const weekdayMap = {2:1, 3:2, 4:3, 5:4}; // jsDay → weekday_text index
   const lines = TRIP.map(d => {
-    const idx = weekdayMap[d.jsDay];
-    const raw = weekdays[idx] || '';
-    // "화요일: 18:00~23:30" → "18:00~23:30"
+    const raw  = weekdays[weekdayMap[d.jsDay]] || '';
     const time = raw.replace(/^[^:]+:\s*/, '').trim() || '—';
     return '<span style="opacity:.6;margin-right:6px">'+d.label+'</span>'+esc(time);
   });
