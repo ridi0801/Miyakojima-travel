@@ -46,7 +46,7 @@ header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:40p
 .header-title-row{display:flex;align-items:center;justify-content:space-between;gap:1.4rem;}
 header h1{font-family:'Noto Serif KR',serif;font-size:2.6rem;font-weight:600;letter-spacing:-.02em;line-height:1.2;}
 .header-sub{font-size:13px;color:rgba(255,255,255,.55);display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.8rem;}
-.header-sub span{display:flex;align-items:center;gap:.4rem;}
+.header-sub span{display:flex;align-items:center;gap:.4rem;min-width:0;}
 .dday-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:.6rem 1.3rem;min-width:96px;flex-shrink:0;}
 .dday-badge .dday-top{font-size:10px;font-weight:300;color:rgba(255,255,255,.5);letter-spacing:.1em;margin-bottom:3px;}
 .dday-badge .dday-num{font-size:1.6rem;font-weight:500;color:var(--white);letter-spacing:-.03em;line-height:1;}
@@ -60,6 +60,13 @@ header h1{font-family:'Noto Serif KR',serif;font-size:2.6rem;font-weight:600;let
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 @media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr;}}
+@media(max-width:640px){
+  .header-title-row{flex-direction:column;align-items:flex-start;}
+  .day-header{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem;}
+  .day-pill{flex-shrink:0;}
+  .day-title{min-width:0;}
+  .day-tab{white-space:normal;}
+}
 .card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;}
 .card-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-pale);margin-bottom:.3rem;}
 .card-value{font-size:15px;font-weight:500;color:var(--ink);line-height:1.4;}
