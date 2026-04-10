@@ -197,6 +197,21 @@ td.date-cell.day-marked{background:var(--success-bg);}
 .edit-mode .item-add-btn{display:block;}
 
 .hours-short{ font-size:11px; line-height:1.5; }
+.hours-popup{
+  position:fixed;
+  background:var(--ink);
+  color:var(--white);
+  border-radius:10px;
+  padding:.7rem 1rem;
+  font-size:11px;
+  line-height:2;
+  z-index:200;
+  white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+  pointer-events:none;
+  max-width:280px;
+  white-space:normal;
+}
 footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;border-top:1px solid var(--border);}
 
 /* ── 목차 사이드바 ── */
@@ -717,9 +732,8 @@ function renderRestoTable(data){
         <span class="t-name">${esc(r.name_jp)}${nb}</span>
         <span class="t-kr">${esc(r.name_kr)} · ${esc(r.location)}</span>
         <span class="t-loc">${esc(r.menu)}</span>
-      </td><td style="cursor:pointer;position:relative" onclick="toggleHoursDetail(this)" title="탭하면 상세 영업시간">
+      </td><td style="cursor:pointer" onclick="toggleHoursDetail(event,this)" title="탭하면 여행일 상세 영업시간">
         <span class="hours-short">${renderHoursShort(r)}</span>
-        <div class="hours-detail" style="display:none;position:absolute;right:0;top:100%;background:var(--ink);color:var(--white);border-radius:8px;padding:.6rem .8rem;font-size:10px;line-height:1.9;z-index:10;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.2)">${renderHoursDetail(r)}</div>
       </td>`;
       TRIP_DAYS.forEach(d => {
         const open = isOpen(r,d.jsDay);
@@ -734,6 +748,9 @@ function renderRestoTable(data){
   });
   html += '</tbody></table>';
   document.getElementById('resto-table-wrap').innerHTML = html;
+  // 팝업용 데이터 캐시
+  window._restoData = {};
+  Object.values(data).forEach(r => { if(r && r.id) window._restoData[r.id] = r; });
   bindDateCells();
 }
 
@@ -1321,22 +1338,54 @@ function saveRestaurant(rid){
 // ── 영업시간 렌더링 ─────────────────────────────────────────
 const DAY_KR = ['일','월','화','수','목','금','토'];
 
-function toggleHoursDetail(td){
-  const detail = td.querySelector('.hours-detail');
-  if(!detail) return;
-  const isOpen = detail.style.display === 'block';
-  // 다른 열린 것들 닫기
-  document.querySelectorAll('.hours-detail').forEach(d => d.style.display='none');
-  if(!isOpen) detail.style.display = 'block';
-  // 바깥 클릭 시 닫기
-  if(!isOpen){
-    setTimeout(()=>{
-      document.addEventListener('click', function handler(e){
-        if(!e.target.closest('td')) detail.style.display='none';
-        document.removeEventListener('click', handler);
-      });
-    }, 10);
+function toggleHoursDetail(e, td){
+  e.stopPropagation();
+  // 기존 팝업 제거
+  const existing = document.getElementById('hours-popup');
+  if(existing){
+    existing.remove();
+    if(existing._td === td) return; // 같은 셀 재클릭 → 닫기
   }
+
+  // r 객체 가져오기 (data-rid로 Firebase 데이터에서)
+  const rid = td.closest('tr') ? td.closest('tr').querySelector('td[data-rid]') : null;
+  // 렌더링 시 data-rid를 td에 직접 붙임
+  const row = td.closest('tr');
+  if(!row) return;
+  const dataCells = row.querySelectorAll('td.date-cell');
+  if(!dataCells.length) return;
+  const rId = dataCells[0].dataset.rid;
+  if(!rId || !window._restoData) return;
+  const r = window._restoData[rId];
+  if(!r) return;
+
+  const content = renderHoursDetail(r);
+  if(!content || content === '영업시간 정보 없음') return;
+
+  const popup = document.createElement('div');
+  popup.id = 'hours-popup';
+  popup.className = 'hours-popup';
+  popup._td = td;
+  popup.innerHTML = content;
+  document.body.appendChild(popup);
+
+  // 위치 계산 — 셀 기준
+  const rect = td.getBoundingClientRect();
+  const popW = 220;
+  let left = rect.right - popW;
+  let top  = rect.bottom + 4;
+  if(left < 8) left = 8;
+  if(top + 200 > window.innerHeight) top = rect.top - popup.offsetHeight - 4;
+  popup.style.left = left + 'px';
+  popup.style.top  = top  + 'px';
+
+  // 바깥 클릭 시 닫기
+  setTimeout(()=>{
+    document.addEventListener('click', function handler(){
+      popup.remove();
+      document.removeEventListener('click', handler);
+    }, {once:true});
+  }, 10);
 }
 
 // periods 파싱 → {open, close, day} 배열
@@ -1388,8 +1437,8 @@ function renderHoursShort(r){
   if(patterns.length === 1){
     const slots = patterns[0][0].split(',');
     if(slots.length === 1) return slots[0]; // 단일 슬롯
-    // 2슬롯 = 브레이크타임
-    return slots[0] + '<br/><span style="font-size:9px;color:var(--ink-pale)">브레이크 '+getBreak(slots)+'</span>';
+    // 2슬롯 = 브레이크타임 → 전체 시간 바로 표시
+    return slots[0] + '<br/>' + slots[1];
   }
 
   // 패턴이 여러 개 = 요일마다 다름
@@ -1407,10 +1456,22 @@ function getBreak(slots){
   return closeOfFirst+'~'+openOfSecond;
 }
 
-// 상세 표시 — weekday_text 전체
+// 상세 표시 — 여행일(화/수/목/금) 영업시간
+// periods 있으면 요일별로 정리, 없으면 weekday_text 발췌
 function renderHoursDetail(r){
-  if(!r.hours_raw) return '영업시간 정보 없음';
-  return r.hours_raw.split('||').map(line => esc(line)).join('<br/>');
+  const TRIP = [{jsDay:2,label:'화 6/16'},{jsDay:3,label:'수 6/17'},{jsDay:4,label:'목 6/18'},{jsDay:5,label:'금 6/19'}];
+  const weekdays = (r.hours_raw||'').split('||'); // 0=월,...,6=일
+
+  // weekday_text → 여행일 4개만 추출 (인덱스: 월0,화1,수2,목3,금4,토5,일6)
+  const weekdayMap = {2:1, 3:2, 4:3, 5:4}; // jsDay → weekday_text index
+  const lines = TRIP.map(d => {
+    const idx = weekdayMap[d.jsDay];
+    const raw = weekdays[idx] || '';
+    // "화요일: 18:00~23:30" → "18:00~23:30"
+    const time = raw.replace(/^[^:]+:\s*/, '').trim() || '—';
+    return '<span style="opacity:.6;margin-right:6px">'+d.label+'</span>'+esc(time);
+  });
+  return lines.join('<br/>');
 }
 
 // ── XSS 방지 ──
