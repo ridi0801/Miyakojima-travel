@@ -203,7 +203,8 @@ td.date-cell.day-marked{background:var(--success-bg);}
 .item-add-btn:hover{border-color:var(--ocean);color:var(--ocean);}
 .edit-mode .item-add-btn{display:block;}
 
-.hours-short{ font-size:11px; line-height:1.5; }
+.hours-short{ font-size:11px; line-height:1.5; word-break:keep-all; white-space:normal; }
+.hours-short .weekday-label{white-space:nowrap;}
 .hours-popup{
   position:fixed;
   background:var(--ink);
@@ -1316,16 +1317,21 @@ function saveRestaurant(rid){
   });
 
   // IntersectionObserver로 현재 섹션 감지
+  const sectionState = new Map();
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if(entry.isIntersecting){
-        const id = entry.target.id;
-        items.forEach(item => {
-          item.classList.toggle('active', item.dataset.target === id);
-        });
-      }
+      sectionState.set(entry.target.id, {
+        isIntersecting: entry.isIntersecting,
+        ratio: entry.intersectionRatio,
+        top: entry.boundingClientRect.top
+      });
     });
-  }, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
+    const visible = [...sectionState.entries()]
+      .filter(([,state]) => state.isIntersecting)
+      .sort((a,b) => Math.abs(a[1].top) - Math.abs(b[1].top));
+    const activeId = visible.length ? visible[0][0] : null;
+    items.forEach(item => item.classList.toggle('active', item.dataset.target === activeId));
+  }, { threshold: [0.25,0.5], rootMargin: '-15% 0px -70% 0px' });
 
   // 섹션 로드 후 관찰 시작 (Firebase 렌더 후 섹션이 생기므로 지연)
   function observeSections(){
@@ -1464,7 +1470,7 @@ function renderHoursShort(r){
   const lines = [];
   Object.entries(firstSlotGroups).forEach(([slot, days]) => {
     const label = days.sort().map(d => DAY_KR[d]).join('');
-    lines.push((days.length > 1 ? label+') ' : label+') ') + slot);
+    lines.push((days.length > 1 ? '<span class="weekday-label">'+label+'</span>) ' : '<span class="weekday-label">'+label+'</span>) ') + slot);
   });
   extraSlots.forEach(({day, slot}) => {
     lines.push(DAY_KR[day]+') '+slot);
