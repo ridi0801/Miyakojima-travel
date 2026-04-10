@@ -196,6 +196,7 @@ td.date-cell.day-marked{background:var(--success-bg);}
 .item-add-btn:hover{border-color:var(--ocean);color:var(--ocean);}
 .edit-mode .item-add-btn{display:block;}
 
+.hours-short{ font-size:11px; line-height:1.5; }
 footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;border-top:1px solid var(--border);}
 
 /* ── 목차 사이드바 ── */
@@ -716,7 +717,10 @@ function renderRestoTable(data){
         <span class="t-name">${esc(r.name_jp)}${nb}</span>
         <span class="t-kr">${esc(r.name_kr)} · ${esc(r.location)}</span>
         <span class="t-loc">${esc(r.menu)}</span>
-      </td><td>${esc(r.hours_raw||'').replace(/\n/g,'<br/>')}</td>`;
+      </td><td style="cursor:pointer;position:relative" onclick="toggleHoursDetail(this)" title="탭하면 상세 영업시간">
+        <span class="hours-short">${renderHoursShort(r)}</span>
+        <div class="hours-detail" style="display:none;position:absolute;right:0;top:100%;background:var(--ink);color:var(--white);border-radius:8px;padding:.6rem .8rem;font-size:10px;line-height:1.9;z-index:10;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.2)">${renderHoursDetail(r)}</div>
+      </td>`;
       TRIP_DAYS.forEach(d => {
         const open = isOpen(r,d.jsDay);
         html += `<td class="t-center date-cell" data-rid="${r.id}" data-day="${d.dayNum}"><span class="${open?'ok':'ng'}">${open?'✓':'✗'}</span></td>`;
@@ -1313,6 +1317,101 @@ function saveRestaurant(rid){
   observeSections();
   setTimeout(observeSections, 2000);
 })();
+
+// ── 영업시간 렌더링 ─────────────────────────────────────────
+const DAY_KR = ['일','월','화','수','목','금','토'];
+
+function toggleHoursDetail(td){
+  const detail = td.querySelector('.hours-detail');
+  if(!detail) return;
+  const isOpen = detail.style.display === 'block';
+  // 다른 열린 것들 닫기
+  document.querySelectorAll('.hours-detail').forEach(d => d.style.display='none');
+  if(!isOpen) detail.style.display = 'block';
+  // 바깥 클릭 시 닫기
+  if(!isOpen){
+    setTimeout(()=>{
+      document.addEventListener('click', function handler(e){
+        if(!e.target.closest('td')) detail.style.display='none';
+        document.removeEventListener('click', handler);
+      });
+    }, 10);
+  }
+}
+
+// periods 파싱 → {open, close, day} 배열
+function parsePeriods(r){
+  if(!r.hours_periods) return null;
+  try { return JSON.parse(r.hours_periods); } catch(e){ return null; }
+}
+
+// 짧은 표시 — 요일별 다르면 "화수) 18:00~23:30 / 목금) 18:00~22:30"
+// 브레이크타임이면 "07:30~10:30, 11:30~14:30"
+function renderHoursShort(r){
+  const periods = parsePeriods(r);
+
+  // periods 없으면 weekday_text 첫 줄에서 시간 추출
+  if(!periods || !periods.length){
+    const raw = (r.hours_raw||'').split('||')[0] || '';
+    const m = raw.match(/(\d{1,2}:\d{2})[~～–-](\d{1,2}:\d{2})/);
+    return m ? m[1]+'~'+m[2] : (raw ? raw.replace(/^.+?:\s*/,'') : '—');
+  }
+
+  // 여행 날짜(화2, 수3, 목4, 금5)에 해당하는 periods만
+  const tripDays = [2,3,4,5];
+  const tripPeriods = periods.filter(p => tripDays.includes(p.open ? p.open.day === 0 ? 0 : p.open.day : -1));
+
+  // periods를 시간 슬롯 그룹으로 묶기
+  // 같은 요일에 두 슬롯 = 브레이크타임
+  const byDay = {};
+  periods.forEach(p => {
+    if(!p.open || !p.close) return;
+    const day = p.open.day; // 0=일,1=월,...
+    const jsDay = day; // periods는 JS와 동일
+    if(!byDay[jsDay]) byDay[jsDay] = [];
+    const open  = p.open.time.slice(0,2)+':'+p.open.time.slice(2);
+    const close = p.close.time.slice(0,2)+':'+p.close.time.slice(2);
+    byDay[jsDay].push(open+'~'+close);
+  });
+
+  // 시간 패턴으로 그룹화
+  const patternGroups = {}; // "07:30~10:30,11:30~14:30" → [days]
+  Object.entries(byDay).forEach(([day, slots]) => {
+    const key = slots.join(',');
+    if(!patternGroups[key]) patternGroups[key] = [];
+    patternGroups[key].push(parseInt(day));
+  });
+
+  const patterns = Object.entries(patternGroups);
+
+  // 패턴이 1개면 그냥 슬롯 표시
+  if(patterns.length === 1){
+    const slots = patterns[0][0].split(',');
+    if(slots.length === 1) return slots[0]; // 단일 슬롯
+    // 2슬롯 = 브레이크타임
+    return slots[0] + '<br/><span style="font-size:9px;color:var(--ink-pale)">브레이크 '+getBreak(slots)+'</span>';
+  }
+
+  // 패턴이 여러 개 = 요일마다 다름
+  return patterns.map(([slotStr, days]) => {
+    const dayLabels = days.sort().map(d => DAY_KR[d]).join('');
+    const slots = slotStr.split(',');
+    return dayLabels+') '+slots[0]+(slots[1] ? '<br/>'+dayLabels+') '+slots[1] : '');
+  }).join('<br/>');
+}
+
+function getBreak(slots){
+  // slots = ["07:30~10:30", "11:30~14:30"] → 브레이크: 10:30~11:30
+  const closeOfFirst = slots[0].split('~')[1];
+  const openOfSecond = slots[1].split('~')[0];
+  return closeOfFirst+'~'+openOfSecond;
+}
+
+// 상세 표시 — weekday_text 전체
+function renderHoursDetail(r){
+  if(!r.hours_raw) return '영업시간 정보 없음';
+  return r.hours_raw.split('||').map(line => esc(line)).join('<br/>');
+}
 
 // ── XSS 방지 ──
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
