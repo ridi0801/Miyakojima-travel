@@ -734,18 +734,20 @@ function renderRestoCard(r){
   const mapsUrl = r.place_id
     ? `https://www.google.com/maps/place/?q=place_id:${r.place_id}`
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name_jp||r.name_kr||'')}`;
+  const cardId = 'rc-' + (r.id || Math.random().toString(36).slice(2));
 
   let imgHtml = '';
   if(photos.length){
     const imgs = photos.map((url,i)=>`<img src="${url}" alt="${esc(r.name_jp||'')}" class="${i===0?'active':''}" loading="lazy">`).join('');
+    // 도트: 표시 전용, 클릭 없음
     const dots = photos.length > 1
-      ? `<div class="tl-resto-dots">${photos.map((_,i)=>`<span class="${i===0?'active':''}" onclick="restoSlide(this,${i})"></span>`).join('')}</div>` : '';
+      ? `<div class="tl-resto-dots">${photos.map((_,i)=>`<span class="${i===0?'active':''}"></span>`).join('')}</div>` : '';
     imgHtml = `<div class="tl-resto-img" style="aspect-ratio:3/4">${imgs}${dots}</div>`;
   } else {
     imgHtml = `<div class="tl-resto-img" style="aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-size:20px">🍽</div>`;
   }
 
-  return `<div class="tl-resto-card">
+  return `<div class="tl-resto-card" id="${cardId}" data-photo-count="${photos.length}">
     ${imgHtml}
     <div class="tl-resto-info">
       <div class="tl-resto-name">${esc(r.name_jp||'')}</div>
@@ -759,11 +761,47 @@ function renderRestoCard(r){
   </div>`;
 }
 
-function restoSlide(dotEl, idx){
-  const card = dotEl.closest('.tl-resto-card');
-  if(!card) return;
-  card.querySelectorAll('.tl-resto-img img').forEach((img,i)=>img.classList.toggle('active',i===idx));
-  card.querySelectorAll('.tl-resto-dots span').forEach((s,i)=>s.classList.toggle('active',i===idx));
+// ── 식당 카드 슬라이드쇼 (자동 + 스와이프) ──
+// renderSchedule 후 호출 — 모든 .tl-resto-card에 타이머 + 스와이프 바인딩
+const _restoTimers = {};  // cardId → intervalId
+
+function bindRestoSlideshow(){
+  // 기존 타이머 전부 정리
+  Object.values(_restoTimers).forEach(id => clearInterval(id));
+  Object.keys(_restoTimers).forEach(k => delete _restoTimers[k]);
+
+  document.querySelectorAll('.tl-resto-card').forEach(card => {
+    const count = parseInt(card.dataset.photoCount || '0');
+    if(count < 2) return; // 사진 1장 이하면 슬라이드 불필요
+
+    let idx = 0;
+
+    function goTo(n){
+      idx = (n + count) % count;
+      card.querySelectorAll('.tl-resto-img img').forEach((img,i) => img.classList.toggle('active', i===idx));
+      card.querySelectorAll('.tl-resto-dots span').forEach((s,i) => s.classList.toggle('active', i===idx));
+    }
+
+    function startTimer(){
+      if(_restoTimers[card.id]) clearInterval(_restoTimers[card.id]);
+      _restoTimers[card.id] = setInterval(() => goTo(idx + 1), 5000);
+    }
+
+    // 자동 슬라이드 시작
+    startTimer();
+
+    // 스와이프 처리
+    let touchStartX = 0;
+    card.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    card.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if(Math.abs(dx) < 30) return; // 너무 짧은 건 무시
+      goTo(dx < 0 ? idx + 1 : idx - 1);
+      startTimer(); // 수동 조작 후 타이머 리셋
+    }, { passive: true });
+  });
 }
 
 // ── 일정 렌더 ──
@@ -801,6 +839,8 @@ function renderSchedule(data){
   });
   document.getElementById('schedule-body').innerHTML = html;
   restoreScheduleView();
+  // DOM 삽입 후 슬라이드쇼 바인딩
+  bindRestoSlideshow();
 }
 
 // ── 맛집 테이블 렌더 ──
