@@ -346,13 +346,13 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 
 <!-- 확정 예약 -->
 <div class="sec" id="sec-bookings">
-<div class="sec-title"><span class="icon">✓</span> 확정 예약 현황 <button class="edit-btn" onclick="openModal('bookings')">✏️ 편집</button></div>
+<div class="sec-title"><span class="icon">✓</span> 확정 예약 현황</div>
 <div class="grid2" id="bookings-grid"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
 </div>
 
 <!-- 투어 -->
 <div class="sec" id="sec-tour">
-<div class="sec-title"><span class="icon">🤿</span> 투어 정보 — 야비지(八重干瀬) 보트 스노클링 <button class="edit-btn" onclick="openModal('tour')">✏️ 편집</button></div>
+<div class="sec-title"><span class="icon">🤿</span> 투어 정보 — 야비지(八重干瀬) 보트 스노클링 <button class="edit-btn" onclick="openModal('tour-edit')">✏️ 편집</button></div>
 <div style="background:var(--ocean-pale);border:1px solid var(--ocean-light);border-radius:10px;padding:.8rem 1.1rem;margin-bottom:1.1rem;font-size:12px;color:var(--ocean);line-height:1.9">
   <strong style="display:block;margin-bottom:.2rem;font-size:13px">야비지(八重干瀬)란?</strong>
   미야코지마 북쪽 약 15km 해역 · 일본 최대 탁상 산호 군락 · 2013년 국가 천연기념물 지정<br/>
@@ -1062,6 +1062,46 @@ function openModal(type, ...args){
       });
     };
     overlay.classList.add('open');
+    return;
+  }
+
+  if(type==='tour-edit'){
+    const {db,ref,get,set}=window._fb;
+    get(ref(db,'miyako/tour')).then(snap=>{
+      const t=snap.val()||{};
+      title.textContent='투어 정보 편집';
+      let rowsHtml='';
+      (t.rows||[]).forEach((row,i)=>{
+        rowsHtml+=`<div style="display:flex;gap:6px;margin-bottom:5px">
+          <input style="width:72px;flex-shrink:0" id="m-trk-${i}" value="${esc(row.key||'')}">
+          <input style="flex:1" id="m-trv-${i}" value="${esc(row.val||'')}">
+        </div>`;
+      });
+      body.innerHTML=`
+        <label>투어명</label><input id="m-tname" value="${esc(t.name||'')}">
+        <label>부제</label><input id="m-tsub" value="${esc(t.sub||'')}">
+        <label>상태</label><select id="m-tst">
+          <option value="confirmed" ${t.status==='confirmed'?'selected':''}>예약 확정</option>
+          <option value="pending" ${t.status!=='confirmed'?'selected':''}>미확정</option>
+        </select>
+        <label style="margin-top:.8rem;display:block">정보 행 (항목명 / 내용)</label>
+        <div style="font-size:10px;color:var(--ink-pale);margin-bottom:5px">왼쪽: 항목명, 오른쪽: 내용</div>
+        <div id="m-tour-rows">${rowsHtml}</div>`;
+      _modalSaveFn=()=>{
+        const newRows=(t.rows||[]).map((_,i)=>({
+          key:document.getElementById('m-trk-'+i).value,
+          val:document.getElementById('m-trv-'+i).value,
+        }));
+        set(ref(db,'miyako/tour'),{...t,
+          name:document.getElementById('m-tname').value,
+          sub:document.getElementById('m-tsub').value,
+          status:document.getElementById('m-tst').value,
+          rows:newRows,
+        });
+        closeModal();
+      };
+      overlay.classList.add('open');
+    });
     return;
   }
 
