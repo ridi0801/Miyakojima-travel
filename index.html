@@ -630,25 +630,32 @@ function renderBookings(data){
   keys.forEach(k => {
     const b = data[k]; if(!b) return;
     const sub = (b.sub||'').replace(/\n/g,'<br/>');
+    const priceStr = b.price ? Number(b.price).toLocaleString()+'원' : '';
     html += `<div class="card" style="position:relative">
       <div class="card-label">${esc(b.label)}</div>
       <div class="card-value">${esc(b.value)}</div>
+      ${priceStr?`<div style="font-size:15px;font-weight:500;color:var(--ocean);margin-top:3px">${priceStr}</div>`:''}
       <div class="card-sub">${sub}</div>
       ${b.status==='confirmed'?'<span class="badge-ok">✓ 예약 확정</span>':''}
       ${EDIT_MODE?`<button class="edit-btn" style="display:inline-flex;position:absolute;top:10px;right:10px" onclick="openModal('booking-edit','${k}')">✏️</button>`:''}
     </div>`;
   });
-  // 확정 합계 카드 — value에서 숫자 추출해서 합산
+  // 확정 합계 카드 — price 필드 우선, 없으면 value 문자열에서 폴백
   const confirmed = keys.map(k=>data[k]).filter(b=>b&&b.status==='confirmed');
   if(confirmed.length){
     const total = confirmed.reduce((sum,b)=>{
+      if(b.price) return sum + Number(b.price);
       const m=(b.value||'').match(/[\d,]+/);
       if(!m) return sum;
       const n=parseInt(m[0].replace(/,/g,''));
       return sum+(isNaN(n)?0:n);
     },0);
     const totalStr = total>0?'약 '+Math.round(total/10000)+'만원':'—';
-    const detail = confirmed.map(b=>{const m=(b.value||'').match(/[\d,]+/);return m?m[0]+'원':''}).filter(Boolean).join(' + ');
+    const detail = confirmed.map(b=>{
+      if(b.price) return Number(b.price).toLocaleString()+'원';
+      const m=(b.value||'').match(/[\d,]+/);
+      return m?m[0]+'원':'';
+    }).filter(Boolean).join(' + ');
     html += `<div class="card" style="background:var(--ocean-pale);border-color:var(--ocean-light)">
       <div class="card-label" style="color:var(--ocean)">확정 지출 합계</div>
       <div class="card-value" style="font-size:22px;color:var(--ocean)">${totalStr}</div>
@@ -984,10 +991,17 @@ function openModal(type, ...args){
       title.textContent='예약 편집 — '+b.label;
       body.innerHTML=`
         <label>제목</label><input id="m-bv" value="${esc(b.value||'')}">
+        <label>금액 (숫자만, 원 단위)</label><input id="m-bp" type="number" value="${b.price||''}" placeholder="예: 846800">
         <label>설명 (줄바꿈 가능)</label><textarea id="m-bs" rows="4">${b.sub||''}</textarea>
         <label>상태</label><select id="m-bst"><option value="confirmed" ${b.status==='confirmed'?'selected':''}>예약 확정</option><option value="pending" ${b.status!=='confirmed'?'selected':''}>미확정</option></select>`;
       _modalSaveFn=()=>{
-        set(ref(db,'miyako/bookings/'+key),{...b, value:document.getElementById('m-bv').value, sub:document.getElementById('m-bs').value, status:document.getElementById('m-bst').value});
+        const priceVal = document.getElementById('m-bp').value;
+        set(ref(db,'miyako/bookings/'+key),{...b,
+          value:document.getElementById('m-bv').value,
+          price:priceVal ? Number(priceVal) : null,
+          sub:document.getElementById('m-bs').value,
+          status:document.getElementById('m-bst').value
+        });
         closeModal();
       };
       overlay.classList.add('open');
