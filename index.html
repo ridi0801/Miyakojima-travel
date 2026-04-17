@@ -747,13 +747,10 @@ function renderRestoCard(r, isAlt){
     imgHtml = `<div class="tl-resto-img" style="aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-size:20px">🍽</div>`;
   }
 
-  // 후보 레이블 — isAlt일 때만 카드 상단에 표시
-  const altLabel = isAlt
-    ? `<div style="font-size:9px;font-weight:500;color:var(--warn);background:var(--warn-bg);padding:2px 7px;border-bottom:1px solid #fcd34d;letter-spacing:.04em">▸ 후보</div>`
-    : '';
+  // 후보 표시 — isAlt일 때 왼쪽 노란 세로 바
+  const altBorder = isAlt ? 'border-left:3px solid #fcd34d;margin-top:6px;opacity:.85' : '';
 
-  return `<div class="tl-resto-card" id="${cardId}" data-photo-count="${photos.length}" style="${isAlt?'margin-top:6px;opacity:.85':''}">
-    ${altLabel}
+  return `<div class="tl-resto-card" id="${cardId}" data-photo-count="${photos.length}" style="${altBorder}">
     ${imgHtml}
     <div class="tl-resto-info">
       <div class="tl-resto-name">${esc(r.name_jp||'')}</div>
@@ -823,8 +820,9 @@ function renderSchedule(data){
         ? `<span class="${BADGE_MAP[it.badge_type]||'badge-info'}">${esc(it.badge)}</span>` : '';
       const editBtn = EDIT_MODE
         ? `<button class="edit-btn" style="display:inline-flex;vertical-align:middle;margin-left:6px" onclick="openModal('schedule-item','${d}','${it.id}')">✏️</button>` : '';
-      const restoCard    = it.restaurant_id     ? renderRestoCard(restoData[it.restaurant_id],     false) : '';
-      const restoCardAlt = it.restaurant_id_alt ? renderRestoCard(restoData[it.restaurant_id_alt], true)  : '';
+      const restoCard     = it.restaurant_id      ? renderRestoCard(restoData[it.restaurant_id],      false) : '';
+      const restoCardAlt  = it.restaurant_id_alt  ? renderRestoCard(restoData[it.restaurant_id_alt],  true)  : '';
+      const restoCardAlt2 = it.restaurant_id_alt2 ? renderRestoCard(restoData[it.restaurant_id_alt2], true)  : '';
       items += `<div class="tl-item" data-sid="${it.id}">
         <div class="tl-dot ${it.dot||''}"></div>
         <div class="tl-time">${esc(it.time)}</div>
@@ -832,6 +830,7 @@ function renderSchedule(data){
         ${it.desc?`<div class="tl-desc">${esc(it.desc)}</div>`:''}
         ${restoCard}
         ${restoCardAlt}
+        ${restoCardAlt2}
       </div>`;
     });
     const addBtn = `<button class="item-add-btn" onclick="openModal('schedule-add','${d}')">+ 일정 추가</button>`;
@@ -1148,12 +1147,15 @@ function openModal(type, ...args){
       restos.sort((a,b)=>(a.name_jp||'').localeCompare(b.name_jp||''));
       let restoOptions=`<option value="">— 없음 —</option>`;
       let restoOptionsAlt=`<option value="">— 없음 —</option>`;
+      let restoOptionsAlt2=`<option value="">— 없음 —</option>`;
       restos.forEach(r=>{
-        const sel    = item.restaurant_id     === r.id ? 'selected' : '';
-        const selAlt = item.restaurant_id_alt === r.id ? 'selected' : '';
-        const label  = esc(r.name_jp||'') + (r.name_kr ? ' ('+r.name_kr+')' : '');
-        restoOptions    += `<option value="${r.id}" ${sel}>${label}</option>`;
-        restoOptionsAlt += `<option value="${r.id}" ${selAlt}>${label}</option>`;
+        const sel     = item.restaurant_id      === r.id ? 'selected' : '';
+        const selAlt  = item.restaurant_id_alt  === r.id ? 'selected' : '';
+        const selAlt2 = item.restaurant_id_alt2 === r.id ? 'selected' : '';
+        const label   = esc(r.name_jp||'') + (r.name_kr ? ' ('+r.name_kr+')' : '');
+        restoOptions     += `<option value="${r.id}" ${sel}>${label}</option>`;
+        restoOptionsAlt  += `<option value="${r.id}" ${selAlt}>${label}</option>`;
+        restoOptionsAlt2 += `<option value="${r.id}" ${selAlt2}>${label}</option>`;
       });
       title.textContent='일정 편집';
       body.innerHTML=`
@@ -1174,8 +1176,10 @@ function openModal(type, ...args){
         </select>
         <label style="margin-top:.8rem;display:block">연결 식당 <span style="font-weight:400;color:var(--ink-pale)">— 선택 시 일정에 식당 카드 표시</span></label>
         <select id="m-srid">${restoOptions}</select>
-        <label style="margin-top:.6rem;display:block">후보 식당 <span style="font-weight:400;color:var(--ink-pale)">— 불가 시 대안으로 표시</span></label>
-        <select id="m-srid-alt">${restoOptionsAlt}</select>`;
+        <label style="margin-top:.6rem;display:block">후보 식당 2순위 <span style="font-weight:400;color:var(--ink-pale)">— 불가 시 대안</span></label>
+        <select id="m-srid-alt">${restoOptionsAlt}</select>
+        <label style="margin-top:.6rem;display:block">후보 식당 3순위 <span style="font-weight:400;color:var(--ink-pale)">— 불가 시 대안</span></label>
+        <select id="m-srid-alt2">${restoOptionsAlt2}</select>`;
       actions.innerHTML=`
         <button class="btn-danger" onclick="deleteScheduleItem(${dayNum},'${itemId}')">삭제</button>
         <button class="btn-cancel" onclick="closeModal()">취소</button>
@@ -1465,8 +1469,9 @@ function modalSave(){ if(_modalSaveFn) _modalSaveFn(); }
 function saveScheduleItem(dayNum, itemId){
   const {db,ref,get,set}=window._fb;
   get(ref(db,'miyako/schedule/'+dayNum+'/items')).then(snap=>{
-    const rid    = document.getElementById('m-srid')     ? document.getElementById('m-srid').value     : undefined;
-    const ridAlt = document.getElementById('m-srid-alt') ? document.getElementById('m-srid-alt').value : undefined;
+    const rid     = document.getElementById('m-srid')      ? document.getElementById('m-srid').value      : undefined;
+    const ridAlt  = document.getElementById('m-srid-alt')  ? document.getElementById('m-srid-alt').value  : undefined;
+    const ridAlt2 = document.getElementById('m-srid-alt2') ? document.getElementById('m-srid-alt2').value : undefined;
     const items=(snap.val()||[]).map(it => it.id!==itemId ? it : {
       ...it,
       time:document.getElementById('m-st').value,
@@ -1475,8 +1480,9 @@ function saveScheduleItem(dayNum, itemId){
       dot:document.getElementById('m-sdot').value,
       badge:document.getElementById('m-sb').value,
       badge_type:document.getElementById('m-sbt').value,
-      restaurant_id:     rid    || '',
-      restaurant_id_alt: ridAlt || '',
+      restaurant_id:      rid     || '',
+      restaurant_id_alt:  ridAlt  || '',
+      restaurant_id_alt2: ridAlt2 || '',
     });
     set(ref(db,'miyako/schedule/'+dayNum+'/items'),items);
     closeModal();
