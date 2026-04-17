@@ -83,6 +83,25 @@ header h1{font-family:'Noto Serif KR',serif;font-size:2.6rem;font-weight:600;let
 .tl-time{font-size:10px;color:var(--ink-pale);margin-bottom:1px;}
 .tl-name{font-size:13px;font-weight:500;color:var(--ink);line-height:1.4;}
 .tl-desc{font-size:11px;color:var(--ink-light);margin-top:3px;line-height:1.6;}
+
+/* ── 타임라인 식당 카드 ── */
+.tl-resto-card{display:flex;gap:0;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;max-width:360px;}
+.tl-resto-img{width:110px;flex-shrink:0;position:relative;background:var(--border);}
+.tl-resto-img img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;opacity:0;transition:opacity .3s;}
+.tl-resto-img img.active{opacity:1;}
+.tl-resto-dots{position:absolute;bottom:5px;left:0;right:0;display:flex;justify-content:center;gap:4px;}
+.tl-resto-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:background .15s;}
+.tl-resto-dots span.active{background:#fff;}
+.tl-resto-info{padding:.6rem .75rem;flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px;}
+.tl-resto-name{font-size:12px;font-weight:500;color:var(--ink);line-height:1.3;}
+.tl-resto-name-kr{font-size:10px;color:var(--ink-light);}
+.tl-resto-meta{font-size:10px;color:var(--ink-pale);margin-top:1px;}
+.tl-resto-maps{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--ocean);margin-top:4px;text-decoration:none;}
+.tl-resto-maps:hover{text-decoration:underline;}
+@media(max-width:480px){
+  .tl-resto-card{max-width:100%;}
+  .tl-resto-img{width:90px;}
+}
 .schedule-view-toggle{display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;}
 .view-btn{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;border:1px solid var(--border-dark);background:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;color:var(--ink-light);cursor:pointer;transition:all .15s;}
 .view-btn.active{background:var(--ink);border-color:var(--ink);color:var(--white);}
@@ -566,8 +585,10 @@ function initApp(){
   });
 
   // ── 일정 ──────────────────────────────────────────────
+  // _restoData가 아직 없을 수 있으므로 데이터를 캐시해두고 맛집 로드 후 재렌더
   onValue(r('miyako/schedule'), snap => {
     const d = snap.val() || {};
+    window._pendingScheduleData = d;
     renderSchedule(d);
   });
 
@@ -575,6 +596,8 @@ function initApp(){
   onValue(r('miyako/restaurants'), snap => {
     const d = snap.val() || {};
     renderRestoTable(d);
+    // _restoData가 갱신됐으므로 일정 내 식당 카드도 재렌더
+    if(window._pendingScheduleData) renderSchedule(window._pendingScheduleData);
   });
 
   // ── 준비물 ────────────────────────────────────────────
@@ -704,8 +727,48 @@ function renderTour(t){
     </div>`;
 }
 
+// ── 타임라인 식당 카드 렌더 ──
+function renderRestoCard(r){
+  if(!r) return '';
+  const photos = r.photo_urls ? (Array.isArray(r.photo_urls) ? r.photo_urls : String(r.photo_urls).split('\n').map(s=>s.trim()).filter(Boolean)) : [];
+  const mapsUrl = r.place_id
+    ? `https://www.google.com/maps/place/?q=place_id:${r.place_id}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name_jp||r.name_kr||'')}`;
+
+  let imgHtml = '';
+  if(photos.length){
+    const imgs = photos.map((url,i)=>`<img src="${url}" alt="${esc(r.name_jp||'')}" class="${i===0?'active':''}" loading="lazy">`).join('');
+    const dots = photos.length > 1
+      ? `<div class="tl-resto-dots">${photos.map((_,i)=>`<span class="${i===0?'active':''}" onclick="restoSlide(this,${i})"></span>`).join('')}</div>` : '';
+    imgHtml = `<div class="tl-resto-img" style="aspect-ratio:3/4">${imgs}${dots}</div>`;
+  } else {
+    imgHtml = `<div class="tl-resto-img" style="aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-size:20px">🍽</div>`;
+  }
+
+  return `<div class="tl-resto-card">
+    ${imgHtml}
+    <div class="tl-resto-info">
+      <div class="tl-resto-name">${esc(r.name_jp||'')}</div>
+      ${r.name_kr?`<div class="tl-resto-name-kr">${esc(r.name_kr)}</div>`:''}
+      <div class="tl-resto-meta">${[r.category,r.location].filter(Boolean).map(esc).join(' · ')}</div>
+      <a class="tl-resto-maps" href="${mapsUrl}" target="_blank" rel="noopener">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Google Maps
+      </a>
+    </div>
+  </div>`;
+}
+
+function restoSlide(dotEl, idx){
+  const card = dotEl.closest('.tl-resto-card');
+  if(!card) return;
+  card.querySelectorAll('.tl-resto-img img').forEach((img,i)=>img.classList.toggle('active',i===idx));
+  card.querySelectorAll('.tl-resto-dots span').forEach((s,i)=>s.classList.toggle('active',i===idx));
+}
+
 // ── 일정 렌더 ──
 function renderSchedule(data){
+  const restoData = window._restoData || {};
   let html = '';
   [1,2,3,4].forEach(d => {
     const day = data[d]; if(!day) return;
@@ -716,11 +779,13 @@ function renderSchedule(data){
         ? `<span class="${BADGE_MAP[it.badge_type]||'badge-info'}">${esc(it.badge)}</span>` : '';
       const editBtn = EDIT_MODE
         ? `<button class="edit-btn" style="display:inline-flex;vertical-align:middle;margin-left:6px" onclick="openModal('schedule-item','${d}','${it.id}')">✏️</button>` : '';
+      const restoCard = it.restaurant_id ? renderRestoCard(restoData[it.restaurant_id]) : '';
       items += `<div class="tl-item" data-sid="${it.id}">
         <div class="tl-dot ${it.dot||''}"></div>
         <div class="tl-time">${esc(it.time)}</div>
         <div class="tl-name">${esc(it.name)}${badge}${editBtn}</div>
         ${it.desc?`<div class="tl-desc">${esc(it.desc)}</div>`:''}
+        ${restoCard}
       </div>`;
     });
     const addBtn = `<button class="item-add-btn" onclick="openModal('schedule-add','${d}')">+ 일정 추가</button>`;
@@ -1025,9 +1090,20 @@ function openModal(type, ...args){
   if(type==='schedule-item'){
     const [dayNum,itemId]=args;
     const {db,ref,get,set}=window._fb;
-    get(ref(db,'miyako/schedule/'+dayNum)).then(snap=>{
-      const day=snap.val()||{};
+    // 일정 데이터 + 맛집 목록 동시 로드
+    Promise.all([
+      get(ref(db,'miyako/schedule/'+dayNum)),
+      get(ref(db,'miyako/restaurants')),
+    ]).then(([daySnap, restoSnap])=>{
+      const day=daySnap.val()||{};
       const item=(day.items||[]).find(it=>it.id===itemId)||{};
+      const restos=Object.values(restoSnap.val()||{}).filter(r=>r&&r.active!==false);
+      restos.sort((a,b)=>(a.name_jp||'').localeCompare(b.name_jp||''));
+      let restoOptions=`<option value="">— 없음 —</option>`;
+      restos.forEach(r=>{
+        const sel=item.restaurant_id===r.id?'selected':'';
+        restoOptions+=`<option value="${r.id}" ${sel}>${esc(r.name_jp||'')}${r.name_kr?' ('+r.name_kr+')':''}</option>`;
+      });
       title.textContent='일정 편집';
       body.innerHTML=`
         <label>시간</label><input id="m-st" value="${esc(item.time||'')}">
@@ -1044,7 +1120,9 @@ function openModal(type, ...args){
           <option value="bi" ${item.badge_type==='bi'?'selected':''}>파랑(정보)</option>
           <option value="bv" ${item.badge_type==='bv'?'selected':''}>초록(확정)</option>
           <option value="ba" ${item.badge_type==='ba'?'selected':''}>노랑(주의)</option>
-        </select>`;
+        </select>
+        <label style="margin-top:.8rem;display:block">연결 식당 <span style="font-weight:400;color:var(--ink-pale)">— 선택 시 일정에 식당 카드 표시</span></label>
+        <select id="m-srid">${restoOptions}</select>`;
       actions.innerHTML=`
         <button class="btn-danger" onclick="deleteScheduleItem(${dayNum},'${itemId}')">삭제</button>
         <button class="btn-cancel" onclick="closeModal()">취소</button>
@@ -1206,6 +1284,7 @@ function openModal(type, ...args){
     const {db,ref,get,set}=window._fb;
     get(ref(db,'miyako/restaurants/'+rid)).then(snap=>{
       const r=snap.val()||{};
+      const photoVal = Array.isArray(r.photo_urls) ? r.photo_urls.join('\n') : (r.photo_urls||'');
       title.textContent='맛집 편집';
       body.innerHTML=`
         <label>카테고리</label><select id="m-rc">
@@ -1220,6 +1299,8 @@ function openModal(type, ...args){
         <label>영업시간</label><input id="m-rh" value="${esc(r.hours_raw||'')}">
         <label>정기휴무 (JS 요일)</label><input id="m-rd" value="${esc(String(r.closed_days||''))}">
         <label>Google Place ID</label><input id="m-rp" value="${esc(r.place_id||'')}">
+        <label>사진 URL <span style="font-weight:400;color:var(--ink-pale)">— 줄바꿈으로 구분, 최대 4장 (Places API 자동 저장)</span></label>
+        <textarea id="m-rphotos" rows="4" placeholder="https://lh3.googleusercontent.com/...">${photoVal}</textarea>
         <label>표시 여부</label><select id="m-ra"><option value="true" ${r.active!==false?'selected':''}>표시</option><option value="false" ${r.active===false?'selected':''}>숨김</option></select>`;
       actions.innerHTML=`
         <button class="btn-cancel" onclick="closeModal()">취소</button>
@@ -1331,6 +1412,7 @@ function modalSave(){ if(_modalSaveFn) _modalSaveFn(); }
 function saveScheduleItem(dayNum, itemId){
   const {db,ref,get,set}=window._fb;
   get(ref(db,'miyako/schedule/'+dayNum+'/items')).then(snap=>{
+    const rid = document.getElementById('m-srid') ? document.getElementById('m-srid').value : undefined;
     const items=(snap.val()||[]).map(it => it.id!==itemId ? it : {
       ...it,
       time:document.getElementById('m-st').value,
@@ -1339,6 +1421,7 @@ function saveScheduleItem(dayNum, itemId){
       dot:document.getElementById('m-sdot').value,
       badge:document.getElementById('m-sb').value,
       badge_type:document.getElementById('m-sbt').value,
+      restaurant_id: rid || '',
     });
     set(ref(db,'miyako/schedule/'+dayNum+'/items'),items);
     closeModal();
@@ -1390,6 +1473,8 @@ function saveRestaurant(rid){
   const {db,ref,get,set}=window._fb;
   get(ref(db,'miyako/restaurants/'+rid)).then(snap=>{
     const r=snap.val()||{};
+    const photosRaw = document.getElementById('m-rphotos').value||'';
+    const photoUrls = photosRaw.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,4);
     set(ref(db,'miyako/restaurants/'+rid),{
       ...r,
       category:document.getElementById('m-rc').value,
@@ -1400,6 +1485,7 @@ function saveRestaurant(rid){
       hours_raw:document.getElementById('m-rh').value,
       closed_days:document.getElementById('m-rd').value,
       place_id:document.getElementById('m-rp').value,
+      photo_urls:photoUrls,
       active:document.getElementById('m-ra').value==='true',
     });
     closeModal();
