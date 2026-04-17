@@ -46,7 +46,7 @@ header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:40p
 .header-title-row{display:flex;align-items:center;justify-content:space-between;gap:1.4rem;}
 header h1{font-family:'Noto Serif KR',serif;font-size:2.6rem;font-weight:600;letter-spacing:-.02em;line-height:1.2;}
 .header-sub{font-size:13px;color:rgba(255,255,255,.55);display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.8rem;}
-.header-sub span{display:flex;align-items:center;gap:.4rem;min-width:0;}
+.header-sub span{display:flex;align-items:center;gap:.4rem;}
 .dday-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:.6rem 1.3rem;min-width:96px;flex-shrink:0;}
 .dday-badge .dday-top{font-size:10px;font-weight:300;color:rgba(255,255,255,.5);letter-spacing:.1em;margin-bottom:3px;}
 .dday-badge .dday-num{font-size:1.6rem;font-weight:500;color:var(--white);letter-spacing:-.03em;line-height:1;}
@@ -60,13 +60,6 @@ header h1{font-family:'Noto Serif KR',serif;font-size:2.6rem;font-weight:600;let
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 @media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr;}}
-@media(max-width:640px){
-  .header-title-row{flex-direction:column;align-items:flex-start;}
-  .day-header{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem;}
-  .day-pill{flex-shrink:0;}
-  .day-title{min-width:0;}
-  .day-tab{white-space:normal;}
-}
 .card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;}
 .card-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-pale);margin-bottom:.3rem;}
 .card-value{font-size:15px;font-weight:500;color:var(--ink);line-height:1.4;}
@@ -203,8 +196,11 @@ td.date-cell.day-marked{background:var(--success-bg);}
 .item-add-btn:hover{border-color:var(--ocean);color:var(--ocean);}
 .edit-mode .item-add-btn{display:block;}
 
-.hours-short{ font-size:11px; line-height:1.5; word-break:keep-all; white-space:normal; }
-.hours-short .weekday-label{white-space:nowrap;}
+.resto-tabs{display:flex;gap:4px;margin-bottom:1rem;flex-wrap:wrap;}
+.resto-tab{padding:5px 14px;border-radius:20px;border:1px solid var(--border-dark);background:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;color:var(--ink-light);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.resto-tab.active{background:var(--ink);border-color:var(--ink);color:var(--white);}
+.resto-tab:hover:not(.active){border-color:var(--ink-mid);color:var(--ink-mid);}
+.hours-short{ font-size:11px; line-height:1.5; }
 .hours-popup{
   position:fixed;
   background:var(--ink);
@@ -723,20 +719,32 @@ function renderSchedule(data){
 }
 
 // ── 맛집 테이블 렌더 ──
+let _currentRestoCat = 'all';
 function renderRestoTable(data){
   const items = Object.values(data).filter(r=>r.active!==false && r.active!=='FALSE');
   if(!items.length){ document.getElementById('resto-table-wrap').innerHTML='<div style="padding:1rem;color:var(--ink-pale);font-size:12px">등록된 맛집이 없습니다.</div>'; return; }
   const cats = [...new Set(items.map(r=>r.category))];
-  let html = '<table><thead><tr><th style="min-width:140px">가게</th><th style="min-width:72px">영업시간</th>';
-  TRIP_DAYS.forEach(d => { html+=`<th class="t-center" style="min-width:22px;width:22px">${d.label}</th>`; });
-  if(EDIT_MODE) html+='<th style="width:28px"></th>';
-  html += '</tr></thead><tbody>';
+
+  // 탭 HTML
+  let tabHtml = '<div class="resto-tabs">';
+  tabHtml += `<button class="resto-tab ${_currentRestoCat==='all'?'active':''}" onclick="switchRestoTab('all')">전체</button>`;
   cats.forEach(cat => {
-    html += `<tr class="cat-row"><td colspan="${6+(EDIT_MODE?1:0)}">${cat}</td></tr>`;
+    tabHtml += `<button class="resto-tab ${_currentRestoCat===cat?'active':''}" onclick="switchRestoTab('${esc(cat)}')">${esc(cat)}</button>`;
+  });
+  tabHtml += '</div>';
+
+  // 테이블 HTML
+  let tableHtml = '<table><thead><tr><th style="min-width:140px">가게</th><th style="min-width:72px">영업시간</th>';
+  TRIP_DAYS.forEach(d => { tableHtml+=`<th class="t-center" style="min-width:22px;width:22px">${d.label}</th>`; });
+  if(EDIT_MODE) tableHtml+='<th style="width:28px"></th>';
+  tableHtml += '</tr></thead><tbody>';
+  cats.forEach(cat => {
+    const catVisible = _currentRestoCat==='all' || _currentRestoCat===cat;
+    tableHtml += `<tr class="cat-row" data-cat="${esc(cat)}" style="${catVisible?'':'display:none'}"><td colspan="${6+(EDIT_MODE?1:0)}">${esc(cat)}</td></tr>`;
     items.filter(r=>r.category===cat).forEach(r => {
       const isNew = r.created_at && (Date.now()-new Date(r.created_at).getTime() < 7*24*60*60*1000);
       const nb = isNew ? '<span class="new-badge">신규</span>' : '';
-      html += `<tr><td>
+      tableHtml += `<tr data-cat="${esc(cat)}" style="${catVisible?'':'display:none'}"><td>
         <span class="t-name">${esc(r.name_jp)}${nb}</span>
         <span class="t-kr">${esc(r.name_kr)} · ${esc(r.location)}</span>
         <span class="t-loc">${esc(r.menu)}</span>
@@ -745,21 +753,35 @@ function renderRestoTable(data){
       </td>`;
       TRIP_DAYS.forEach(d => {
         const open = isOpen(r,d.jsDay);
-        html += `<td class="t-center date-cell" data-rid="${r.id}" data-day="${d.dayNum}"><span class="${open?'ok':'ng'}">${open?'✓':'✗'}</span></td>`;
+        tableHtml += `<td class="t-center date-cell" data-rid="${r.id}" data-day="${d.dayNum}"><span class="${open?'ok':'ng'}">${open?'✓':'✗'}</span></td>`;
       });
-      if(EDIT_MODE) html+=`<td style="white-space:nowrap">
+      if(EDIT_MODE) tableHtml+=`<td style="white-space:nowrap">
         <button style="font-size:9px;padding:2px 5px;border:1px solid var(--border-dark);border-radius:4px;cursor:pointer;background:var(--white);margin-right:2px" onclick="openModal('restaurant-edit','${r.id}')">✏️</button>
         <button style="font-size:9px;padding:2px 5px;border:1px solid var(--danger);border-radius:4px;cursor:pointer;background:var(--white);color:var(--danger)" onclick="deleteRestaurant('${r.id}')">🗑</button>
       </td>`;
-      html += '</tr>';
+      tableHtml += '</tr>';
     });
   });
-  html += '</tbody></table>';
-  document.getElementById('resto-table-wrap').innerHTML = html;
+  tableHtml += '</tbody></table>';
+
+  document.getElementById('resto-table-wrap').innerHTML = tabHtml + tableHtml;
   // 팝업용 데이터 캐시
   window._restoData = {};
   Object.values(data).forEach(r => { if(r && r.id) window._restoData[r.id] = r; });
   bindDateCells();
+}
+
+function switchRestoTab(cat){
+  _currentRestoCat = cat;
+  // 탭 버튼 active 상태 전환
+  document.querySelectorAll('.resto-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === (cat==='all'?'전체':cat));
+  });
+  // 행 표시/숨김
+  document.querySelectorAll('#resto-table-wrap tr[data-cat]').forEach(tr => {
+    const show = cat==='all' || tr.dataset.cat===cat;
+    tr.style.display = show ? '' : 'none';
+  });
 }
 
 function isOpen(item,jsDay){
@@ -1317,21 +1339,16 @@ function saveRestaurant(rid){
   });
 
   // IntersectionObserver로 현재 섹션 감지
-  const sectionState = new Map();
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      sectionState.set(entry.target.id, {
-        isIntersecting: entry.isIntersecting,
-        ratio: entry.intersectionRatio,
-        top: entry.boundingClientRect.top
-      });
+      if(entry.isIntersecting){
+        const id = entry.target.id;
+        items.forEach(item => {
+          item.classList.toggle('active', item.dataset.target === id);
+        });
+      }
     });
-    const visible = [...sectionState.entries()]
-      .filter(([,state]) => state.isIntersecting)
-      .sort((a,b) => Math.abs(a[1].top) - Math.abs(b[1].top));
-    const activeId = visible.length ? visible[0][0] : null;
-    items.forEach(item => item.classList.toggle('active', item.dataset.target === activeId));
-  }, { threshold: [0.25,0.5], rootMargin: '-15% 0px -70% 0px' });
+  }, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
 
   // 섹션 로드 후 관찰 시작 (Firebase 렌더 후 섹션이 생기므로 지연)
   function observeSections(){
@@ -1470,7 +1487,7 @@ function renderHoursShort(r){
   const lines = [];
   Object.entries(firstSlotGroups).forEach(([slot, days]) => {
     const label = days.sort().map(d => DAY_KR[d]).join('');
-    lines.push((days.length > 1 ? '<span class="weekday-label">'+label+'</span>) ' : '<span class="weekday-label">'+label+'</span>) ') + slot);
+    lines.push((days.length > 1 ? label+') ' : label+') ') + slot);
   });
   extraSlots.forEach(({day, slot}) => {
     lines.push(DAY_KR[day]+') '+slot);
