@@ -359,22 +359,7 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
   <strong>멀미약 필수</strong> · 날씨·파도에 따라 당일 취소 가능
 </div>
 <div id="tour-card"><div style="padding:2rem;text-align:center;color:var(--ink-pale);font-size:12px">불러오는 중...</div></div>
-<div style="border:1px solid #fcd34d;border-radius:10px;overflow:hidden;margin-top:10px">
-  <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.pb-toggle').textContent=this.nextElementSibling.style.display==='none'?'펼치기 ▾':'접기 ▴'" style="display:flex;align-items:center;gap:8px;padding:.7rem 1rem;background:var(--warn-bg);cursor:pointer;user-select:none">
-    <span style="font-size:13px;color:var(--warn)">⚠</span>
-    <span style="font-size:12px;font-weight:500;color:var(--warn);flex:1">플랜 B — 야비지 투어 당일 취소 시 대체 일정</span>
-    <span class="pb-toggle" style="font-size:10px;color:var(--warn);opacity:.7">펼치기 ▾</span>
-  </div>
-  <div style="display:none;padding:.8rem 1rem 1rem;background:#fffbeb;font-size:12px;">
-    <div style="color:var(--warn);margin-bottom:.6rem;font-size:11px;">6월은 장마 말기로 풍랑·강우로 인한 투어 취소가 실제로 발생합니다.</div>
-    <div style="display:flex;flex-direction:column;gap:5px">
-      <div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">오전</span><span style="color:var(--ink-mid)">이라부섬 드라이브 — 사와다노하마 비치, 나구리마하마 산책</span></div>
-      <div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">점심</span><span style="color:var(--ink-mid)">かわみつ食堂 (마제소바) 또는 Nakayukui Shoten (사타안다기)</span></div>
-      <div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">오후</span><span style="color:var(--ink-mid)">미야코 해중공원 (실내 수족관) → 히라라 시내 카페 투어</span></div>
-      <div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">저녁</span><span style="color:var(--ink-mid)">이자카야 훌라 HULAR — 예정대로 진행</span></div>
-    </div>
-  </div>
-</div>
+<div id="planb-wrap"></div>
 </div>
 
 <!-- 일정 -->
@@ -514,6 +499,33 @@ const BADGE_MAP = { bi:'badge-info', bv:'badge-ok', ba:'badge-warn', br:'badge-d
 const DAY_LABELS = {1:'1일차',2:'2일차',3:'3일차',4:'4일차'};
 let DB, scheduleView='all', currentDay=1, _modalSaveFn=null;
 
+const PLANB_DEFAULT = [
+  { time:'오전', desc:'이라부섬 드라이브 — 사와다노하마 비치, 나구리마하마 산책' },
+  { time:'점심', desc:'かわみつ食堂 (마제소바) 또는 Nakayukui Shoten (사타안다기)' },
+  { time:'오후', desc:'미야코 해중공원 (실내 수족관) → 히라라 시내 카페 투어' },
+  { time:'저녁', desc:'이자카야 훌라 HULAR — 예정대로 진행' },
+];
+
+function renderPlanB(items){
+  const data = items || PLANB_DEFAULT;
+  const wrap = document.getElementById('planb-wrap');
+  if(!wrap) return;
+  const rowsHtml = data.map(it =>
+    `<div style="display:flex;gap:10px"><span style="font-weight:500;color:var(--warn);min-width:32px">${esc(it.time)}</span><span style="color:var(--ink-mid)">${esc(it.desc)}</span></div>`
+  ).join('');
+  wrap.innerHTML = `<div style="border:1px solid #fcd34d;border-radius:10px;overflow:hidden;margin-top:10px">
+    <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.pb-toggle').textContent=this.nextElementSibling.style.display==='none'?'펼치기 ▾':'접기 ▴'" style="display:flex;align-items:center;gap:8px;padding:.7rem 1rem;background:var(--warn-bg);cursor:pointer;user-select:none">
+      <span style="font-size:13px;color:var(--warn)">⚠</span>
+      <span style="font-size:12px;font-weight:500;color:var(--warn);flex:1">플랜 B — 야비지 투어 당일 취소 시 대체 일정</span>
+      <span class="pb-toggle" style="font-size:10px;color:var(--warn);opacity:.7">펼치기 ▾</span>
+    </div>
+    <div style="display:none;padding:.8rem 1rem 1rem;background:#fffbeb;font-size:12px;">
+      <div style="color:var(--warn);margin-bottom:.6rem;font-size:11px;">6월은 장마 말기로 풍랑·강우로 인한 투어 취소가 실제로 발생합니다.</div>
+      <div style="display:flex;flex-direction:column;gap:5px">${rowsHtml}</div>
+    </div>
+  </div>`;
+}
+
 // ── D-Day ──
 (()=>{
   const t=new Date('2026-06-16T00:00:00+09:00'), now=new Date();
@@ -550,6 +562,7 @@ function initApp(){
   onValue(r('miyako/tour'), snap => {
     const d = snap.val() || {};
     renderTour(d);
+    renderPlanB(d.planB || null);
   });
 
   // ── 일정 ──────────────────────────────────────────────
@@ -1069,12 +1082,20 @@ function openModal(type, ...args){
     const {db,ref,get,set}=window._fb;
     get(ref(db,'miyako/tour')).then(snap=>{
       const t=snap.val()||{};
+      const planB=t.planB||PLANB_DEFAULT;
       title.textContent='투어 정보 편집';
       let rowsHtml='';
       (t.rows||[]).forEach((row,i)=>{
         rowsHtml+=`<div style="display:flex;gap:6px;margin-bottom:5px">
           <input style="width:72px;flex-shrink:0" id="m-trk-${i}" value="${esc(row.key||'')}">
           <input style="flex:1" id="m-trv-${i}" value="${esc(row.val||'')}">
+        </div>`;
+      });
+      let planbHtml='';
+      planB.forEach((item,i)=>{
+        planbHtml+=`<div style="display:flex;gap:6px;margin-bottom:5px">
+          <input style="width:52px;flex-shrink:0" id="m-pbt-${i}" value="${esc(item.time||'')}">
+          <input style="flex:1" id="m-pbd-${i}" value="${esc(item.desc||'')}">
         </div>`;
       });
       body.innerHTML=`
@@ -1086,17 +1107,27 @@ function openModal(type, ...args){
         </select>
         <label style="margin-top:.8rem;display:block">정보 행 (항목명 / 내용)</label>
         <div style="font-size:10px;color:var(--ink-pale);margin-bottom:5px">왼쪽: 항목명, 오른쪽: 내용</div>
-        <div id="m-tour-rows">${rowsHtml}</div>`;
+        <div id="m-tour-rows">${rowsHtml}</div>
+        <div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:.8rem">
+          <label style="display:block;margin-bottom:.2rem">플랜 B 항목 (시간대 / 내용)</label>
+          <div style="font-size:10px;color:var(--ink-pale);margin-bottom:5px">왼쪽: 시간대, 오른쪽: 내용</div>
+          <div id="m-planb-rows">${planbHtml}</div>
+        </div>`;
       _modalSaveFn=()=>{
         const newRows=(t.rows||[]).map((_,i)=>({
           key:document.getElementById('m-trk-'+i).value,
           val:document.getElementById('m-trv-'+i).value,
+        }));
+        const newPlanB=planB.map((_,i)=>({
+          time:document.getElementById('m-pbt-'+i).value,
+          desc:document.getElementById('m-pbd-'+i).value,
         }));
         set(ref(db,'miyako/tour'),{...t,
           name:document.getElementById('m-tname').value,
           sub:document.getElementById('m-tsub').value,
           status:document.getElementById('m-tst').value,
           rows:newRows,
+          planB:newPlanB,
         });
         closeModal();
       };
