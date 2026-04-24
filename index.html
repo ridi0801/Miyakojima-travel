@@ -992,9 +992,26 @@ function toggleTodo(id){
 }
 
 // ── 예산 렌더 ──
+// 예산 항목 value 문자열에서 min/max 금액(원) 추출
+// 지원 패턴: "846,800원", "약 20만원", "20~30만원", "약 8~15만원"
+function parseBudgetValue_(value){
+  if(!value) return { min:0, max:0 };
+  const v = String(value).replace(/,/g,'').replace(/\s/g,'');
+  // 만원 단위 범위: "20~30만원" or "약8~15만원"
+  let m = v.match(/(\d+)[~～\-](\d+)만원/);
+  if(m) return { min: parseInt(m[1])*10000, max: parseInt(m[2])*10000 };
+  // 만원 단위 단일: "20만원" or "약20만원"
+  m = v.match(/(\d+)만원/);
+  if(m) { const n = parseInt(m[1])*10000; return { min:n, max:n }; }
+  // 원 단위 단일: "846800원"
+  m = v.match(/(\d+)원/);
+  if(m) { const n = parseInt(m[1]); return { min:n, max:n }; }
+  return { min:0, max:0 };
+}
+
 function renderBudget(data){
   const items = data.items||[];
-  let html='';
+  let html='', minTotal=0, maxTotal=0;
   items.forEach(b => {
     const subColor = b.confirmed ? 'color:var(--success)' : '';
     html += `<div class="budget-card">
@@ -1002,10 +1019,38 @@ function renderBudget(data){
       <div class="budget-value">${esc(b.value)}</div>
       <div class="budget-sub" style="${subColor}">${esc(b.sub)}</div>
     </div>`;
+    const r = parseBudgetValue_(b.value);
+    minTotal += r.min;
+    maxTotal += r.max;
   });
   document.getElementById('budget-grid').innerHTML = html || '<div style="padding:1rem;color:var(--ink-pale);font-size:12px">데이터 없음</div>';
+
+  // 합계 자동 계산 + 동적 설명
   const tb = document.getElementById('budget-total');
-  if(data.total){ tb.style.display='flex'; document.getElementById('budget-total-value').textContent=data.total; document.getElementById('budget-total-note').textContent=data.total_note||''; }
+  if(maxTotal > 0){
+    tb.style.display='flex';
+    const minMan = Math.round(minTotal/10000);
+    const maxMan = Math.round(maxTotal/10000);
+    const totalStr = (minMan === maxMan) ? `약 ${minMan}만원` : `${minMan}~${maxMan}만원`;
+    document.getElementById('budget-total-value').textContent = totalStr;
+
+    // 임계값 4단계 (상한 300만원)
+    const LIMIT = 300;
+    let note = '', color = '';
+    if(maxMan <= 250)        { note = `${LIMIT}만원 예산 내 여유 있음`; color = 'var(--success)'; }
+    else if(maxMan <= 280)   { note = `${LIMIT}만원 예산 내 안정권`;     color = 'var(--success)'; }
+    else if(maxMan < LIMIT)  { note = `${LIMIT}만원 예산 빠듯함`;        color = 'var(--warn)'; }
+    else if(maxMan === LIMIT){ note = `${LIMIT}만원 예산 정확히 도달`;   color = 'var(--warn)'; }
+    else                     { note = `${LIMIT}만원 예산 초과 (${maxMan-LIMIT}만원 초과)`; color = 'var(--danger)'; }
+
+    const noteEl = document.getElementById('budget-total-note');
+    noteEl.textContent = note;
+    noteEl.style.color = color;
+    noteEl.style.opacity = '1';
+    noteEl.style.fontWeight = '500';
+  } else {
+    tb.style.display='none';
+  }
 }
 
 // ════════════════════════════════════════════════════════
@@ -1388,7 +1433,7 @@ function openModal(type, ...args){
   if(type==='budget-edit'){
     const {db,ref,get,set}=window._fb;
     get(ref(db,'miyako/budget')).then(snap=>{
-      const data=snap.val()||{items:[],total:'',total_note:''};
+      const data=snap.val()||{items:[]};
       title.textContent='예산 편집';
       let itemsHtml='';
       (data.items||[]).forEach((b,i)=>{
@@ -1400,9 +1445,9 @@ function openModal(type, ...args){
         </div>`;
       });
       body.innerHTML=`${itemsHtml}
-        <div style="border-top:1px solid var(--border);margin-top:.8rem;padding-top:.8rem">
-          <label>합계 표시 (예: 228~265만원)</label><input id="m-btotal" value="${esc(data.total||'')}">
-          <label>합계 설명 (예: 300만원 예산 내 여유 있음)</label><input id="m-bnote" value="${esc(data.total_note||'')}">
+        <div style="margin-top:.8rem;padding:.7rem;background:var(--info-bg);border-radius:8px;font-size:11px;color:var(--info);line-height:1.6">
+          ※ 합계와 설명은 각 항목 금액에서 <strong>자동 계산</strong>됩니다 (예산 상한 300만원 기준)<br/>
+          <span style="opacity:.8">금액 형식 예시: <code>846,800원</code> · <code>약 20만원</code> · <code>20~30만원</code> · <code>약 8~15만원</code></span>
         </div>`;
       _modalSaveFn=()=>{
         const newItems=(data.items||[]).map((b,i)=>({
@@ -1411,7 +1456,7 @@ function openModal(type, ...args){
           value:document.getElementById('m-bv-'+i).value,
           sub:document.getElementById('m-bs-'+i).value,
         }));
-        set(ref(db,'miyako/budget'),{...data,items:newItems,total:document.getElementById('m-btotal').value,total_note:document.getElementById('m-bnote').value});
+        set(ref(db,'miyako/budget'),{...data,items:newItems});
         closeModal();
       };
       overlay.classList.add('open');
