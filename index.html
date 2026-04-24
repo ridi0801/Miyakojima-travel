@@ -732,8 +732,8 @@ function renderRestoCard(r, isAlt){
   if(!r) return '';
   const photos = r.photo_urls ? (Array.isArray(r.photo_urls) ? r.photo_urls : String(r.photo_urls).split('\n').map(s=>s.trim()).filter(Boolean)) : [];
   const mapsUrl = r.place_id
-    ? `https://maps.google.com/?q=place_id:${r.place_id}`
-    : `https://maps.google.com/?q=${encodeURIComponent(r.name_jp||r.name_kr||'')}`;
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name_jp||r.name_kr||'')}&query_place_id=${r.place_id}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name_jp||r.name_kr||'')}`;
   const cardId = 'rc-' + (r.id || Math.random().toString(36).slice(2)) + (isAlt ? '-alt' : '');
 
   let imgHtml = '';
