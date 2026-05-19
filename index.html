@@ -516,6 +516,8 @@ const TRIP_DAYS  = [
 ];
 const BADGE_MAP = { bi:'badge-info', bv:'badge-ok', ba:'badge-warn', br:'badge-danger' };
 const DAY_LABELS = {1:'1일차',2:'2일차',3:'3일차',4:'4일차'};
+const pad = n => String(n).padStart(2,'0');
+const fmtTime = t => t.slice(0,2)+':'+t.slice(2);
 let DB, scheduleView='all', currentDay=1, _modalSaveFn=null;
 
 const PLANB_DEFAULT = [
@@ -659,7 +661,6 @@ function initApp(){
     if(!el) return;
     if(v) {
       const d = new Date(v);
-      const pad = n => String(n).padStart(2,'0');
       const str = d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate())
         +' '+pad(d.getHours())+':'+pad(d.getMinutes());
       el.textContent = 'Google Maps 기준 · 최근 갱신: '+str;
@@ -787,8 +788,7 @@ const _restoTimers = {};  // cardId → intervalId
 
 function bindRestoSlideshow(){
   // 기존 타이머 전부 정리
-  Object.values(_restoTimers).forEach(id => clearInterval(id));
-  Object.keys(_restoTimers).forEach(k => delete _restoTimers[k]);
+  Object.entries(_restoTimers).forEach(([k, id]) => { clearInterval(id); delete _restoTimers[k]; });
 
   document.querySelectorAll('.tl-resto-card').forEach(card => {
     const count = parseInt(card.dataset.photoCount || '0');
@@ -1142,7 +1142,6 @@ function renderBudget(data){
   let rateBoxHtml = '';
   if(rateInfo){
     const d = new Date(rateInfo.updated_at);
-    const pad = n => String(n).padStart(2,'0');
     const dateStr = d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate());
     rateBoxHtml = `<div style="background:var(--info-bg);border:1px solid var(--ocean-light);border-radius:8px;padding:.5rem .8rem;margin-bottom:10px;font-size:11px;color:var(--info);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
       <span><strong>현재 환율</strong> · 100¥ = ${Math.round(rate*100).toLocaleString()}원</span>
@@ -1961,7 +1960,7 @@ function parsePeriods(r){
 function renderHoursShort(r){
   if(r.hours_na) return '<span style="font-size:10px;color:var(--ink-pale)">영업시간 미등록</span>';
   const periods = parsePeriods(r);
-  const TRIP_DAYS = [2,3,4,5]; // 화,수,목,금
+  const TRIP_JS_DAYS = [2,3,4,5]; // 화,수,목,금
 
   // periods 없으면 weekday_text에서 화요일(index=1) 기준으로 시간 추출
   if(!periods || !periods.length){
@@ -1976,11 +1975,9 @@ function renderHoursShort(r){
   periods.forEach(p => {
     if(!p.open || !p.close) return;
     const day = p.open.day;
-    if(!TRIP_DAYS.includes(day)) return; // 월/토/일 제외
+    if(!TRIP_JS_DAYS.includes(day)) return; // 월/토/일 제외
     if(!byDay[day]) byDay[day] = [];
-    const open  = p.open.time.slice(0,2)+':'+p.open.time.slice(2);
-    const close = p.close.time.slice(0,2)+':'+p.close.time.slice(2);
-    byDay[day].push(open+'~'+close);
+    byDay[day].push(fmtTime(p.open.time)+'~'+fmtTime(p.close.time));
   });
 
   if(!Object.keys(byDay).length) return '—';
@@ -2019,19 +2016,12 @@ function renderHoursShort(r){
   const lines = [];
   Object.entries(firstSlotGroups).forEach(([slot, days]) => {
     const label = days.sort().map(d => DAY_KR[d]).join('');
-    lines.push((days.length > 1 ? label+') ' : label+') ') + slot);
+    lines.push(label+') ' + slot);
   });
   extraSlots.forEach(({day, slot}) => {
     lines.push(DAY_KR[day]+') '+slot);
   });
   return lines.join('<br/>');
-}
-
-function getBreak(slots){
-  // slots = ["07:30~10:30", "11:30~14:30"] → 브레이크: 10:30~11:30
-  const closeOfFirst = slots[0].split('~')[1];
-  const openOfSecond = slots[1].split('~')[0];
-  return closeOfFirst+'~'+openOfSecond;
 }
 
 // 상세 표시 — 여행일(화/수/목/금) 영업시간
@@ -2045,10 +2035,8 @@ function renderHoursDetail(r){
     periods.forEach(p => {
       if(!p.open || !p.close) return;
       const day  = p.open.day; // 0=일,1=월,...,6=토
-      const open  = p.open.time.slice(0,2)+':'+p.open.time.slice(2);
-      const close = p.close.time.slice(0,2)+':'+p.close.time.slice(2);
       if(!byDay[day]) byDay[day] = [];
-      byDay[day].push(open+'~'+close);
+      byDay[day].push(fmtTime(p.open.time)+'~'+fmtTime(p.close.time));
     });
     const lines = TRIP.map(d => {
       const slots = byDay[d.jsDay];
