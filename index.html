@@ -101,6 +101,7 @@ header h1{font-family:'Noto Serif KR',serif;font-size:2.6rem;font-weight:600;let
 @media(max-width:480px){
   .tl-resto-card{max-width:100%;}
   .tl-resto-img{width:90px;}
+  header h1{font-size:2.3rem;}
 }
 .schedule-view-toggle{display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;}
 .view-btn{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;border:1px solid var(--border-dark);background:var(--white);font-size:11px;font-family:'Noto Sans KR',sans-serif;color:var(--ink-light);cursor:pointer;transition:all .15s;}
@@ -311,8 +312,7 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
     white-space:nowrap;
   }
   .toc-item.active .toc-label{
-    opacity:1;
-    transform:translateX(0);
+    opacity:0;
   }
   .toc-item.toc-peek .toc-label{
     opacity:1;
@@ -1871,6 +1871,7 @@ function saveRestaurant(rid){
   // 현재 뷰포트 상단 30% 기준으로 가장 아래에 있는 섹션을 active로 표시
   const SEC_IDS = ['sec-info','sec-bookings','sec-tour','sec-schedule',
                    'sec-resto','sec-pack','sec-todo','sec-budget','sec-emergency'];
+  let _prevTocId = null, _peekTimer = null;
   function updateToc(){
     const threshold = window.scrollY + window.innerHeight * 0.3;
     let activeId = SEC_IDS[0];
@@ -1879,6 +1880,16 @@ function saveRestaurant(rid){
       if(el && el.getBoundingClientRect().top + window.scrollY <= threshold) activeId = id;
     });
     items.forEach(item => item.classList.toggle('active', item.dataset.target === activeId));
+    if(activeId !== _prevTocId){
+      _prevTocId = activeId;
+      clearTimeout(_peekTimer);
+      items.forEach(item => item.classList.remove('toc-peek'));
+      const active = [...items].find(i => i.dataset.target === activeId);
+      if(active){
+        active.classList.add('toc-peek');
+        _peekTimer = setTimeout(() => active.classList.remove('toc-peek'), 1500);
+      }
+    }
   }
   window.addEventListener('scroll', updateToc, { passive: true });
 
