@@ -229,11 +229,10 @@ td.date-cell.day-marked{background:var(--success-bg);}
   font-size:11px;
   line-height:2;
   z-index:200;
-  white-space:nowrap;
+  white-space:normal;
   box-shadow:0 4px 16px rgba(0,0,0,.3);
   pointer-events:none;
   max-width:280px;
-  white-space:normal;
 }
 footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;border-top:1px solid var(--border);}
 
@@ -354,7 +353,6 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
 <div class="container">
 
 <div class="sec" id="sec-info">
-<div class="sec">
 <div class="sec-title"><span class="icon">i</span> 기본 정보</div>
 <div class="grid3">
   <div class="card"><div class="card-label">여행지</div><div class="card-value">미야코지마 (宮古島)</div><div class="card-sub">오키나와현. 오키나와 본섬에서 남서 280km. 아열대 기후. '일본의 몰디브'</div></div>
@@ -362,6 +360,7 @@ footer{text-align:center;font-size:10px;color:var(--ink-pale);padding:1.5rem;bor
   <div class="card"><div class="card-label">핵심 특징</div><div class="card-value">미야코 블루</div><div class="card-sub">야비지 산호 군락 · 바다거북 스노클링 · 이라부 대교 드라이브</div></div>
 </div>
 </div>
+
 
 <!-- 확정 예약 -->
 <div class="sec" id="sec-bookings">
@@ -1883,22 +1882,6 @@ function saveRestaurant(rid){
   }
   window.addEventListener('scroll', updateToc, { passive: true });
 
-  // IntersectionObserver는 observeSections 호환을 위해 유지하되 실제 active 갱신은 scroll 이벤트로
-  const observer = new IntersectionObserver(() => {}, { threshold: 0 });
-
-  // 섹션 로드 후 관찰 시작 (Firebase 렌더 후 섹션이 생기므로 지연)
-  function observeSections(){
-    const ids = ['sec-info','sec-bookings','sec-tour','sec-schedule',
-                 'sec-resto','sec-pack','sec-todo','sec-budget','sec-emergency'];
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if(el) observer.observe(el);
-    });
-  }
-
-  // DOM 준비 후 + 렌더 후 두 번 실행
-  observeSections();
-  setTimeout(observeSections, 2000);
   updateToc();
   setTimeout(updateToc, 2000);
 })();
@@ -1915,9 +1898,6 @@ function toggleHoursDetail(e, td){
     if(existing._td === td) return; // 같은 셀 재클릭 → 닫기
   }
 
-  // r 객체 가져오기 (data-rid로 Firebase 데이터에서)
-  const rid = td.closest('tr') ? td.closest('tr').querySelector('td[data-rid]') : null;
-  // 렌더링 시 data-rid를 td에 직접 붙임
   const row = td.closest('tr');
   if(!row) return;
   const dataCells = row.querySelectorAll('td.date-cell');
