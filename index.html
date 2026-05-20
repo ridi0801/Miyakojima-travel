@@ -1869,17 +1869,22 @@ function saveRestaurant(rid){
     });
   });
 
-  // IntersectionObserver로 현재 섹션 감지
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        const id = entry.target.id;
-        items.forEach(item => {
-          item.classList.toggle('active', item.dataset.target === id);
-        });
-      }
+  // 현재 뷰포트 상단 30% 기준으로 가장 아래에 있는 섹션을 active로 표시
+  const SEC_IDS = ['sec-info','sec-bookings','sec-tour','sec-schedule',
+                   'sec-resto','sec-pack','sec-todo','sec-budget','sec-emergency'];
+  function updateToc(){
+    const threshold = window.scrollY + window.innerHeight * 0.3;
+    let activeId = SEC_IDS[0];
+    SEC_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if(el && el.getBoundingClientRect().top + window.scrollY <= threshold) activeId = id;
     });
-  }, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
+    items.forEach(item => item.classList.toggle('active', item.dataset.target === activeId));
+  }
+  window.addEventListener('scroll', updateToc, { passive: true });
+
+  // IntersectionObserver는 observeSections 호환을 위해 유지하되 실제 active 갱신은 scroll 이벤트로
+  const observer = new IntersectionObserver(() => {}, { threshold: 0 });
 
   // 섹션 로드 후 관찰 시작 (Firebase 렌더 후 섹션이 생기므로 지연)
   function observeSections(){
@@ -1894,6 +1899,8 @@ function saveRestaurant(rid){
   // DOM 준비 후 + 렌더 후 두 번 실행
   observeSections();
   setTimeout(observeSections, 2000);
+  updateToc();
+  setTimeout(updateToc, 2000);
 })();
 
 // ── 영업시간 렌더링 ─────────────────────────────────────────
