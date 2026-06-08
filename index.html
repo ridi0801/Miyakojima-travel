@@ -578,6 +578,18 @@ function initApp(){
     renderBookings(d);
   });
 
+  // 스노클링 장비 항목 초기화 (Firebase에 없으면 기본값 생성)
+  get(r('miyako/bookings/snorkeling')).then(snap => {
+    if(!snap.val()) {
+      set(r('miyako/bookings/snorkeling'), {
+        label: '스노클링 장비',
+        value: '미예약',
+        sub: '',
+        status: 'pending'
+      });
+    }
+  });
+
   // ── 투어 ──────────────────────────────────────────────
   onValue(r('miyako/tour'), snap => {
     const d = snap.val() || {};
@@ -678,7 +690,7 @@ else window.addEventListener('firebase-ready', initApp);
 
 // ── 예약 렌더 ──
 function renderBookings(data){
-  const keys = ['flight','hotel','car'];
+  const keys = ['flight','hotel','car','snorkeling'];
   let html = '';
   keys.forEach(k => {
     const b = data[k]; if(!b) return;
